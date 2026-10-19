@@ -16,8 +16,9 @@ html,body{margin:0;padding:0}
 /* Layout: a site-model table (3D canvas) beside a specification sheet that reads like a drawing's general notes. */
 :root{
   --bg:#e9e7e1; --panel:#f6f5f1; --ink:#22251f; --muted:#62665c; --line:#cfccc2;
-  --accent:#2f5d8a; --done:#3f8a63; --prog:#c9862b; --plan:#a9a69c; --water:#7fa7bf; --ground:#d9d5c8; --road:#bdb8aa;
+  --accent:#2f5d8a; --done:#3f8a63; --prog:#c9862b; --plan:#a9a69c; --water:#7fa7bf; --ground:#a4ad8e; --road:#bdb8aa;
   --concrete:#c8c5bc; --sel:#2f5d8a; --life:#b4442f; --money:#b8901c; --none:#c8c5bc;
+  --walk:#cfcbc0; --lineW:#f4f3ee; --lineY:#d8a521; --person:#3b4a5c; --car:#5d7f9e; --carcab:#2b3338;
   --f-display:"Hanken Grotesk","Arial Narrow",Arial,sans-serif;
   --f-body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:ui-monospace,Menlo,Consolas,monospace;
@@ -25,11 +26,11 @@ html,body{margin:0;padding:0}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#15181b; --panel:#1c2024; --ink:#e7e5de; --muted:#9aa09a; --line:#30363b;
   --accent:#7fb0de; --done:#5cb586; --prog:#e2a24a; --plan:#5e6466; --water:#2f5568; --ground:#23282b; --road:#33393d;
-  --concrete:#7d8180; --sel:#7fb0de; --life:#e2735c; --money:#e0bd52; --none:#7d8180; color-scheme:dark}}
+  --concrete:#7d8180; --sel:#7fb0de; --life:#e2735c; --money:#e0bd52; --none:#7d8180; --walk:#3a4044; --lineW:#c9c9c2; --lineY:#c49a2a; --person:#c9d3dc; --car:#6f8fae; --carcab:#1a1e21; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#15181b; --panel:#1c2024; --ink:#e7e5de; --muted:#9aa09a; --line:#30363b;
   --accent:#7fb0de; --done:#5cb586; --prog:#e2a24a; --plan:#5e6466; --water:#2f5568; --ground:#23282b; --road:#33393d;
-  --concrete:#7d8180; --sel:#7fb0de; --life:#e2735c; --money:#e0bd52; --none:#7d8180; color-scheme:dark}
+  --concrete:#7d8180; --sel:#7fb0de; --life:#e2735c; --money:#e0bd52; --none:#7d8180; --walk:#3a4044; --lineW:#c9c9c2; --lineY:#c49a2a; --person:#c9d3dc; --car:#6f8fae; --carcab:#1a1e21; color-scheme:dark}
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.5}
 .app{display:grid;grid-template-columns:minmax(0,1fr) 400px;height:100%;min-height:560px}
@@ -92,6 +93,7 @@ ol.plan{margin:0;padding-left:18px;display:grid;gap:3px}
 .trap dd.ask{color:var(--ink)}
 .protocol{border:1px solid var(--line);border-radius:3px;padding:10px 12px;background:var(--bg)}
 .protocol ol{margin:4px 0 0;padding-left:18px;display:grid;gap:4px;font-size:13px}
+.src{width:100%;border-collapse:collapse;font-size:12.5px}.src td{border-top:1px solid var(--line);padding:5px 6px 5px 0;vertical-align:top}.src td:first-child{font-weight:600;white-space:nowrap;padding-right:8px}.src td:last-child{font:500 11px var(--f-mono);color:var(--accent)}.srcref{font-size:12.5px;color:var(--muted);margin:0 0 6px}
 .fallback[hidden]{display:none}
 .fallback{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--muted)}
 @media (max-width:860px){
@@ -106,9 +108,9 @@ ol.plan{margin:0;padding-left:18px;display:grid;gap:3px}
 <div class="app">
   <div class="stage">
     <canvas id="c" tabindex="0" aria-label="3D model of the town. Drag to orbit, scroll to zoom, click a structure or a part."></canvas>
-    <div class="hud"><div class="brand"><h1>RC Code Town</h1><p>Where AI review of US reinforced concrete drawings goes wrong</p></div></div>
+    <div class="hud"><div class="brand"><h1>RC Code Town</h1><p>US concrete structures at true scale (1 unit = 1 ft), geometry from FEMA, FHWA and code sources</p></div><button class="chip tool" id="below" aria-pressed="false" style="pointer-events:auto;background:var(--panel)">Show below grade</button><button class="chip tool" id="overview" style="pointer-events:auto;background:var(--panel)">Whole site</button></div>
     <div class="legend" id="legend" aria-label="Legend"></div>
-    <div class="hint">Drag to orbit · scroll to zoom · click a part</div>
+    <div class="hint">Drag to orbit · scroll to zoom · click a part · people 5'-9" and 5'-3½"</div>
     <div class="fallback" id="fallback" hidden>The 3D view needs WebGL. The structure list on the right still works.</div>
   </div>
   <aside id="panel" aria-live="polite"></aside>

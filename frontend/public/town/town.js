@@ -124,30 +124,30 @@ let mode='status';
 
 const STRUCTURES = {
   bldg:{name:"Commercial and office building",status:"prog",phase:"Structure type 1 · checks written",
-    lede:"Cast-in-place office floors over a commercial podium with a transfer slab, the kind of project built in practice. Every critical member and construction stage gets its own checks.",
+    lede:"A 12-story cast-in-place office with retail at the ground floor: special moment frames, shear walls on four grid lines, pan-joist floors and pile foundations, built from the FEMA P-751 design example. Every critical member and construction stage gets its own checks.",
     codes:["ACI 318-19","ASCE 7-16","IBC 2021","ACI 301-20","ACI 117-10","ACI 347"],
     parts:["footing","column","beam","oneway","flat","joint","wall","seismic","construction"],
-    cam:[46,34,52], target:[0,9,0]},
+    cam:[-250,210,-330], target:[0,70,0]},
   res:{name:"Residential tower",status:"plan",phase:"Structure type 2 · planned",
-    lede:"Mid-rise apartment building on a mat: flat-plate floors, shear-wall core, balconies and stairs. Slab deflection, wall detailing and seismic analysis carry most of the risk.",
+    lede:"A 22-story apartment tower with flat-plate floors and a core of four coupled L-shaped walls, built from the FEMA P-2192 design example. Slab deflection, wall and coupling-beam detailing and seismic analysis carry most of the risk.",
     codes:["ACI 318-19","ASCE 7-16","IBC 2021"],
     parts:["rmat","column","rslab","rshear","rcant","seismic","construction"],
-    cam:[98,52,-84], target:[36,12,-26]},
+    cam:[470,330,-360], target:[211,110,-52]},
   park:{name:"Public parking structure",status:"plan",phase:"Structure type 3 · planned",
     lede:"Multi-level cast-in-place garage with ramps, open to weather and deicing salts. Durability, vehicle barriers and restraint cracking drive most failures.",
     codes:["ACI 318-19 Ch. 19, 20, 24","ASCE 7-16 Ch. 4","ACI 362.1R","IBC 2021 406"],
     checks:[["Table 19.3.1.1","Exposure classes F, S, C and the w/cm, air and strength limits they set"],["20.5.1.3","Cover for exposed decks"],["ASCE 7 4.5.3","Vehicle barrier loads"],["ASCE 7 4.10","Concentrated vehicle loads"],["24.4","Restraint from shrinkage and temperature on long decks"],["","Ramps, drainage slopes, expansion joints"]],
-    cam:[-62,32,-48], target:[-34,4,-26]},
+    cam:[430,150,330], target:[204,20,128]},
   wall:{name:"Foundations, basements and retaining walls",status:"plan",phase:"Structure type 4 · planned",
     lede:"Site work under and around the buildings: basement walls, mats, retaining walls and excavation support. Site supervision of foundation work is part of this set.",
     codes:["ACI 318-19 Ch. 11, 13","ASCE 7-16 Ch. 3","IBC 2021 Ch. 18"],
     checks:[["13.3","Footing and mat bearing, one-way and two-way shear"],["ASCE 7 3.2","Lateral soil loads and hydrostatic pressure"],["IBC 1807","Foundation and retaining walls"],["","Overturning and sliding stability, key design"],["","Buoyancy of basement slabs"],["","Excavation shoring next to existing buildings"]],
-    cam:[-62,26,52], target:[-34,3,28]},
+    cam:[-130,30,470], target:[-17,-18,360]},
   bridge:{name:"Bridge condition assessment",status:"plan",phase:"Structure type 5 · planned",
     lede:"Existing concrete girder bridge: inspection findings, load rating and vibration-based damage detection, the area of the MSc research.",
     codes:["AASHTO MBE","AASHTO LRFD BDS 9th ed.","ACI 228.1R-19","ACI 228.2R"],
     checks:[["MBE Sec. 6","Load rating (LRFR) with condition and system factors"],["MBE Sec. 4","Inspection findings into member capacity"],["ACI 228.1R","In-place strength from nondestructive tests"],["","Damage detection from modal data and environmental effects"],["LRFD Sec. 5","Capacity of deteriorated prestressed girders"]],
-    cam:[62,26,58], target:[34,4,32]}
+    cam:[330,70,620], target:[94,-14,420]}
 };
 
 const PARTS = {
@@ -212,6 +212,7 @@ function trapCards(list){
   return list.map(x=>`<div class="trap ${x.sev==='both'?'life':x.sev}"><div class="th"><span class="sev">${esc(SEVTXT[x.sev])}</span><span class="ref">${esc(x.ref)}</span></div>
   <dl><dt>Error</dt><dd>${esc(x.err)}</dd><dt>Result</dt><dd>${esc(x.cons)}</dd><dt>Check</dt><dd>${esc(x.look)}</dd><dt>If missing</dt><dd class="ask">Ask the user for ${esc(x.ask.charAt(0).toLowerCase()+x.ask.slice(1))} Do not assume a value.</dd></dl></div>`).join('');
 }
+function sourcesBox(k){const M=MODEL_SOURCES[k]; if(!M) return ''; return `<p class="srcref">${esc(M.ref)}</p><table class="src">${M.rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join('')}</table>`}
 function protocolBox(){return `<div class="protocol"><div class="eyebrow">Execution supervisor · standing rules</div><ol>${PROTOCOL.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></div>`}
 function legend(){
   const L=document.getElementById('legend'); if(!L) return;
@@ -238,14 +239,15 @@ function render(){
   } else {
     h+=`<div class="eyebrow">${esc(S.phase)}</div><h2>${esc(S.name)}</h2>${pill(S.status)}
     <p class="lede" style="margin-top:8px">${esc(S.lede)}</p>
-    <h3>Codes</h3><div class="codes">${S.codes.map(c=>`<span class="code">${esc(c)}</span>`).join('')}</div>`;
+    <h3>Codes</h3><div class="codes">${S.codes.map(c=>`<span class="code">${esc(c)}</span>`).join('')}</div>
+    <h3>Model geometry and sources</h3>${sourcesBox(current.s)}<h3>Site, scale and people</h3>${sourcesBox('site')}`;
     if(S.parts){
       h+=`<h3>How the supervisor works</h3>${protocolBox()}<h3>Parts · click one here or in the model</h3><div class="parts">${S.parts.map(k=>{const P=PARTS[k];return `<button class="part" data-p="${k}"><i class="sw" style="background:var(--${P.status})"></i><span class="n">${esc(P.name)}</span><span class="s">${(TRAPS[k]||[]).length} failure cards</span></button>`}).join('')}</div>`;
     } else {
       h+=`<h3>Critical checks to cover</h3>${checksList(S.checks)}<h3>Where AI goes wrong</h3>${trapCards(TRAPS[SKEY[current.s]])}<p class="note">Planned after the structure types before it.</p>`;
     }
   }
-  h+=`<p class="note">Clause numbers refer to ACI 318-19 unless another standard is named. General engineering content from the public codes. These are the checks Tnega's review agent is being built to run; the agent is in development and not available yet.</p>`;
+  h+=`<p class="note">Clause numbers refer to ACI 318-19 unless another standard is named. General engineering content from the public codes. These are the checks Tnega's review agent is being built to run; the agent is in development and not available yet. Model geometry: see the source table of each structure.</p>`;
   panel.innerHTML=h; legend();
 }
 panel.addEventListener('click',e=>{
@@ -254,10 +256,75 @@ panel.addEventListener('click',e=>{
   if(c){select(c.dataset.s,null,true)} else if(p){select(current.s,p.dataset.p,false)} else if(b){select(current.s,null,false)}
 });
 
-/* ---------------- 3D scene ---------------- */
-let renderer,scene,camera,controls,pickables=[],matCache={},tween=null;
+/* Model geometry: every dimension in the 3D model and where it comes from. "Not given" items are left out of the model or marked. */
+const MODEL_SOURCES = {
+  bldg:{ref:"FEMA P-751 (2009) NEHRP Design Examples, Ch. 7: 12-story reinforced concrete office, Berkeley configuration (pp. 7-3 to 7-76); foundations from Sec. 5.2 (deep foundations for a similar 12-story building).",
+    rows:[
+      ["Stories","12 above grade + 1 basement","p. 7-3"],
+      ["Story heights","basement 15'-0\", first 18'-0\", 11 at 13'-0\"; roof at 161 ft","Fig. 7-2, p. 7-5"],
+      ["Grids","1 to 8 at 30'-0\" (N-S); A, A', B, C, C', D at 20'-0\" (E-W); 212'-6\" x 102'-6\" overall","Fig. 7-1, p. 7-4"],
+      ["Columns","36 columns, 30 x 30 in. at all levels; A' and C' only on grids 1 and 8","p. 7-12; p. 5-50"],
+      ["Frame beams","24 in. wide x 32 in. deep on grids A-D (N-S) and 1-8 (E-W)","p. 7-12"],
+      ["Shear walls","16 in. panels between the B and C columns on grids 3, 4, 5 and 6 (clear 17.5 ft; 22.5 ft overall)","pp. 7-12, 7-60, 7-61"],
+      ["Floor","one-way pan joists spanning 30 ft N-S, 36 in. o.c., 6 in. web, 16 in. deep + 4 in. slab","p. 7-3"],
+      ["Pile caps and piles","2x2 piles, 22 in. dia at 66 in.; caps 9'-2\" x 9'-2\" x 4'-0\"; piles 46 ft (corner) and 49 ft (side), Site Class C; shown at corner and side columns only","Sec. 5.2: pp. 5-33, 5-36, 5-43"],
+      ["Not given (not modeled)","foundation of the Ch. 7 building itself, interior-column foundations, basement walls and slab, floor openings, parapet, cladding","p. 7-3; p. 5-47"],
+      ["Construction stage","roof edge guardrails: top rail 42 in., midrail at mid-height, toeboard 3 1/2 in.","29 CFR 1926.502(b)(1), (b)(2)(i), (j)(3)"]]},
+  res:{ref:"FEMA P-2192-V1 (2020) NEHRP Provisions Design Examples, Ch. 4.5: 22-story residential building, ductile coupled walls (pp. 142-167).",
+    rows:[
+      ["Stories and heights","22 stories: 16.25 ft, 15 ft, 13 ft, then 19 at 10 ft; roof 234.25 ft","Table 4-6, p. 149"],
+      ["Floor plate","2nd-floor plan of Fig. 4-4b used for every floor (the text says the plan changes with height); outline scaled from the figure, 142.33 x 94.54 ft extents","Fig. 4-4b, p. 143"],
+      ["Core","four L-shaped walls, 26 in. thick, legs 164 in. (x) and 152 in. (y); core 33.67 x 31.67 ft","pp. 143-144; Fig. 4-5, p. 151"],
+      ["Coupling beams","76 in. clear x 28 in. deep x 26 in. wide, every floor, both axes","pp. 144, 166"],
+      ["Slabs","flat plate 8 in. (floors 2-3), 7.5 in. (floor 4 and up)","p. 144"],
+      ["Gravity columns","18 columns; positions and sizes (1.6 to 2.3 ft) scaled from Fig. 4-4b; the text gives \"various sizes\"","Fig. 4-4b; p. 144"],
+      ["Not given (not modeled)","foundation, basement, plans above floor 2, core openings, balconies, stairs","p. 148"],
+      ["Construction stage","roof-edge guardrails per OSHA 1926.502(b)","29 CFR 1926.502"]]},
+  park:{ref:"Geometry from IBC 406 / 1015, ASCE 7-16 4.5.3, 2010 ADA Standards 502 and public owner parking design standards; members sized for this model to ACI 318-19 minimums (no federal garage design example exists).",
+    rows:[
+      ["Module","62 ft clear: 9.0 x 18.0 ft stalls each side of a 26 ft aisle","Boise CCDC Parking Structure Design Guidelines (2016) pp. 24-25; U-M SBA-E (2009) p. 2 (62 ft)"],
+      ["Clear height","8'-2\" at every level (U-M SBA-E p. 2: 8'-2\" at grade, 7'-6\" above); IBC 406.2.2 min. 7 ft","U-M SBA-E; IBC 406.2.2"],
+      ["Speed ramps","rise 12'-2\" over 162 ft = 7.5 % (no parking on ramps; U-M max 10 %; under the 8 % transition trigger of the Boise guideline)","U-M SBA-E p. 3; Boise p. 14"],
+      ["Guards","42 in. on elevated deck edges (also over the 2'-9\" vehicle barrier height); barrier load 6,000 lb at 1'-6\" to 2'-3\"","IBC 1015.3, 406.4.2; ASCE 7-16 4.5.3"],
+      ["Beams","24 x 48 in., 64 ft c/c columns, 27 ft o.c.: min. depth l/18.5 = 41.5 in. (one end continuous); Mu = 7.26 klf x 64 ft^2/10 = 2,974 k-ft, As = 16.5 in.^2 (rho 1.5 %)","ACI 318-19 Table 9.3.1.1; loads ASCE 7-16 Table 4.3-1 (40 psf)"],
+      ["Slab","12 in. one-way, 27 ft span: l/28 = 11.6 in. (both ends continuous)","ACI 318-19 Table 7.3.1.1"],
+      ["Columns","24 x 24 in., f'c 5,000 psi, 2 %: phiPn,max = 1,606 kips vs Pu = 1,394 kips (interior, 3 decks)","ACI 318-19 22.4.2"],
+      ["Cars","AASHTO P design vehicle 7 ft x 19 ft (1 ft longer than the stall); height 4.25 ft","Green Book (2004) as cited by Chester County PC; height Green Book Table 2-1a (to verify)"],
+      ["Not given (not modeled)","lateral system, stairs and elevators, drainage slopes, transitions"," - "]]},
+  wall:{ref:"FHWA LRFD Steel Girder Superstructure Bridge Design Example, Design Step 7: full-depth reinforced concrete cantilever abutment, used here as a cantilever retaining wall.",
+    rows:[
+      ["Retained height","22 ft (stem 15 ft + backwall 7 ft)","DS 7, Figs. 7-2, 7-8, 7-9"],
+      ["Stem","3'-6\" thick; backwall 1'-3\" wide","Fig. 7-2"],
+      ["Footing","10'-3\" wide (toe 2'-9\", heel 4'-0\"), 2'-6\" thick; length 46.875 ft","Fig. 7-2; DS 7"],
+      ["Backfill","120 pcf, Ka = 0.3; drained (no detail given)","DS 7"],
+      ["Not given","shear key (none), drainage detail; wall ends and end slopes (2H:1V shown)","DS 7"]]},
+  bridge:{ref:"FHWA NHI-04-043 (2003) LRFD Design Example for a Prestressed Concrete Girder Bridge (Modjeski and Masters for FHWA); AASHTO LRFD BDS 9th ed. for lanes and truck.",
+    rows:[
+      ["Spans","2 x 110 ft, 20 deg skew","DS 2.1"],
+      ["Girders","6 AASHTO Type VI, 72 in. deep, at 9'-8\"; top flange 42 in., bottom 28 in. (flange thicknesses simplified)","DS 2.1"],
+      ["Deck","8 in. (overhang 9 in.), 55'-4 1/2\" out-to-out, 52'-0\" roadway: 6 ft + 3 x 12 ft + 10 ft","DS 2.1, 4.2, 4.3"],
+      ["Parapets","Type F, 42 in. high, 1'-8 1/4\" base (profile simplified)","DS 4.4, Fig. 4-2"],
+      ["Pier","4 columns 3'-6\" dia at 14'-1\", 18 ft; cap 4 x 4 ft, 58'-11 1/8\", tapering to 2 ft; footings 12 x 12 x 3 ft","DS 7.2"],
+      ["Bearings","elastomeric 7.5 x 24 x 1.86 in., 2 per girder at the pier","DS 6.1"],
+      ["Abutments","integral, 3 ft thick, 10'-3 3/4\" high, 58.93 ft; wingwalls 15 ft, 20.25 in., 10.31 to 2 ft; approach slab 25 ft x 1'-6\"","DS 7.1"],
+      ["Diaphragms","midspan, 10 x 50 in.","DS 2.1"],
+      ["HL-93 truck","axles 14 ft + 14 ft (min.), gage 6 ft, tire contact 20 x 10 in.","AASHTO LRFD 3.6.1.2.2, 3.6.1.2.5"],
+      ["Not given (display only)","clearance under the bridge, pier diaphragm, piles, embankment slope (2H:1V shown), haunch (4 in. max. used)","DS 2.2, 7.1"]]},
+  site:{ref:"Town-wide elements",
+    rows:[
+      ["Scale","1 model unit = 1 ft; true scale throughout",""],
+      ["People","mean US adult height: men 68.9 in., women 63.5 in.; shoulder breadth 20.1 / 17.9 in. (body proportions schematic)","NCHS Vital Health Stat 3(50), 2025, Tables 7-8; FAA HFDS App. B, Table 2"],
+      ["Lanes","12.0 ft","AASHTO LRFD 3.6.1.1.1"],
+      ["Pavement markings","broken lines 10 ft / 30 ft gaps, 4 in. wide; yellow left edge on one-way roadways","MUTCD 2009 (rev. 2012) 3A.06, 3B.06"],
+      ["Sidewalks","4.0 ft (minimum pedestrian access route)","PROWAG R302.3 (2013 SNPRM text; 2023 final rule to confirm)"],
+      ["Layout","positions of the structures on the site, the valley and its 2H:1V banks are display choices, not from a source",""]]}
+};
+
+/* ---------------- 3D scene (v4: true scale, 1 unit = 1 ft; every dimension from MODEL_SOURCES) ---------------- */
+let renderer,scene,camera,controls,pickables=[],matCache={},tween=null,terrain=null,belowGrade=[];
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const IN=1/12, D2R=Math.PI/180;
 
 function init(){
   const canvas=document.getElementById('c');
@@ -265,15 +332,15 @@ function init(){
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));
   renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
   scene=new THREE.Scene();
-  camera=new THREE.PerspectiveCamera(38,1,0.5,600);
-  camera.position.set(95,80,105);
+  camera=new THREE.PerspectiveCamera(38,1,1,6000);
+  camera.position.set(-560,430,760);
   controls=new THREE.OrbitControls(camera,canvas);
-  controls.enableDamping=true; controls.maxPolarAngle=Math.PI*0.47; controls.minDistance=12; controls.maxDistance=260;
-  controls.target.set(0,4,6);
-  scene.add(new THREE.HemisphereLight(0xffffff,0x888877,0.75));
-  const sun=new THREE.DirectionalLight(0xffffff,0.8); sun.position.set(60,90,40); sun.castShadow=true;
-  sun.shadow.mapSize.set(2048,2048); Object.assign(sun.shadow.camera,{left:-90,right:90,top:90,bottom:-90,near:10,far:260});
-  scene.add(sun);
+  controls.enableDamping=true; controls.maxPolarAngle=Math.PI*0.495; controls.minDistance=8; controls.maxDistance=2600;
+  controls.target.set(110,10,160);
+  scene.add(new THREE.HemisphereLight(0xffffff,0x77776a,0.55));
+  const sun=new THREE.DirectionalLight(0xffffff,0.72); sun.position.set(-300,600,-200); sun.castShadow=true;
+  sun.shadow.mapSize.set(4096,4096); Object.assign(sun.shadow.camera,{left:-650,right:650,top:650,bottom:-650,near:50,far:1600});
+  sun.target.position.set(60,0,150); scene.add(sun.target); scene.add(sun);
   build(); applyTheme(); resize();
   addEventListener('resize',resize);
   new MutationObserver(applyTheme).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
@@ -285,135 +352,364 @@ function resize(){
   renderer.setSize(r.width,r.height,false); camera.aspect=r.width/Math.max(r.height,1); camera.updateProjectionMatrix();
 }
 function mat(key){ if(!matCache[key]) matCache[key]=new THREE.MeshStandardMaterial({roughness:.85,metalness:0}); return matCache[key]; }
-function box(w,h,d,x,y,z,mkey,tag){
-  const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(mkey)); m.position.set(x,y+h/2,z);
-  m.castShadow=true; m.receiveShadow=true; if(tag){m.userData=tag; pickables.push(m)} scene.add(m); return m;
+function tagMesh(m,tag,below){ m.castShadow=true; m.receiveShadow=true; if(tag){m.userData=tag; pickables.push(m)} if(below) belowGrade.push(m); scene.add(m); return m; }
+/* single box: x,z = centre in plan, y0 = bottom; ry = rotation about vertical (rad) */
+function box(w,h,d,x,y0,z,mkey,tag,ry=0,below=false){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(mkey)); m.position.set(x,y0+h/2,z); m.rotation.y=ry; return tagMesh(m,tag,below);
 }
-function cyl(rt,rb,h,x,y,z,mkey,tag,seg=40,open=false){
-  const m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg,1,open),mat(mkey)); m.position.set(x,y+h/2,z);
-  m.castShadow=true; m.receiveShadow=true; if(tag){m.userData=tag; pickables.push(m)} scene.add(m); return m;
+/* many boxes in one instanced mesh: items {x,yc,z,w,h,d,ry,rx} (yc = centre) */
+const _o=new THREE.Object3D();
+function boxes(items,mkey,tag,below=false){
+  if(!items.length) return null;
+  const m=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),mat(mkey),items.length);
+  items.forEach((b,i)=>{_o.position.set(b.x,b.yc,b.z); _o.rotation.set(b.rx||0,b.ry||0,0); _o.scale.set(b.w,b.h,b.d); _o.updateMatrix(); m.setMatrixAt(i,_o.matrix)});
+  return tagMesh(m,tag,below);
+}
+function cyls(items,mkey,tag,below=false,seg=24){
+  if(!items.length) return null;
+  const m=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.5,0.5,1,seg),mat(mkey),items.length);
+  items.forEach((c,i)=>{_o.position.set(c.x,c.yc,c.z); _o.rotation.set(c.rx||0,0,c.rz||0); _o.scale.set(c.dia,c.h,c.dia); _o.updateMatrix(); m.setMatrixAt(i,_o.matrix)});
+  return tagMesh(m,tag,below);
+}
+/* plan polygon slab: pts [[x,z]...] world, top at yTop, thickness t */
+function slab(pts,yTop,t,mkey,tag){
+  const s=new THREE.Shape(); pts.forEach((p,i)=>i?s.lineTo(p[0],-p[1]):s.moveTo(p[0],-p[1]));
+  const g=new THREE.ExtrudeGeometry(s,{depth:t,bevelEnabled:false}); g.rotateX(-Math.PI/2); g.translate(0,yTop-t,0);
+  return tagMesh(new THREE.Mesh(g,mat(mkey)),tag);
+}
+/* profile (s,y) extruded along a horizontal axis: profile in local (s = along axis 'u', y up), width w across, centred at (x,z), axis angle ang */
+function profileExtrude(prof,w,x,z,ang,mkey,tag,below=false){
+  const s=new THREE.Shape(); prof.forEach((p,i)=>i?s.lineTo(p[0],p[1]):s.moveTo(p[0],p[1]));
+  const g=new THREE.ExtrudeGeometry(s,{depth:w,bevelEnabled:false}); g.translate(0,0,-w/2);
+  const m=new THREE.Mesh(g,mat(mkey)); m.position.set(x,0,z); m.rotation.y=ang; return tagMesh(m,tag,below);
 }
 const T=(s,p)=>({s,p});
 
+/* ===== Terrain (town at EL 0; valley for the bridge) ===== */
+const VAL={zTopN:291.0, zToeN:349.31, zToeS:490.69, zTopS:548.99, floor:-29.155};
+function groundY(z){
+  if(z<=VAL.zTopN||z>=VAL.zTopS) return 0;
+  if(z<VAL.zToeN) return -(z-VAL.zTopN)/2;
+  if(z>VAL.zToeS) return -(VAL.zTopS-z)/2;
+  return VAL.floor;
+}
+function buildTerrain(){
+  const g=new THREE.PlaneGeometry(1800,1500,90,300); g.rotateX(-Math.PI/2); g.translate(80,0,150);
+  const p=g.attributes.position; const col=new Float32Array(p.count*3);
+  for(let i=0;i<p.count;i++){const y=groundY(p.getZ(i)); p.setY(i,y); const f=y===0?1:(y<=VAL.floor+0.01?0.9:0.8); col.set([f,f*0.97,f*0.9],i*3)}
+  g.setAttribute('color',new THREE.BufferAttribute(col,3)); g.computeVertexNormals();
+  terrain=new THREE.Mesh(g,new THREE.MeshStandardMaterial({roughness:1,metalness:0,transparent:true,opacity:1,vertexColors:true}));
+  terrain.receiveShadow=true; scene.add(terrain);
+}
+function strip(x0,x1,z0,z1,mkey,y=0.03){const m=new THREE.Mesh(new THREE.PlaneGeometry(x1-x0,z1-z0),mat(mkey));m.rotation.x=-Math.PI/2;m.position.set((x0+x1)/2,y,(z0+z1)/2);m.receiveShadow=true;scene.add(m);return m}
+/* MUTCD 3A.05/3B: broken line 10 ft segments, 30 ft gaps; normal line width 4 to 6 in (4 in used) */
+function dashedZ(x,z0,z1,mkey,y=0.05){const L=[];for(let z=z0;z+10<=z1;z+=40)L.push({x,yc:y,z:z+5,w:4*IN,h:0.01,d:10});boxes(L,mkey,null)}
+function dashedX(z,x0,x1,mkey,y=0.05){const L=[];for(let x=x0;x+10<=x1;x+=40)L.push({x:x+5,yc:y,z,w:10,h:0.01,d:4*IN});boxes(L,mkey,null)}
+function solidZ(x,z0,z1,mkey,y=0.05){box(4*IN,0.01,z1-z0,x,y,(z0+z1)/2,mkey,null)}
+function solidX(z,x0,x1,mkey,y=0.05){box(x1-x0,0.01,4*IN,(x0+x1)/2,y,z,mkey,null)}
+
+/* ===== People: mean US adult height, men 68.9 in, women 63.5 in (NCHS 3(50), 2021-2023); shoulder breadth 20.1 / 17.9 in (FAA HFDS App. B) ===== */
+const PEOPLE=[];
+function person(x,y,z,sex){PEOPLE.push({x,y,z,sex})}
+function buildPeople(){
+  const body=[],head=[];
+  PEOPLE.forEach(p=>{const H=p.sex==='m'?68.9*IN:63.5*IN, S=p.sex==='m'?20.1*IN:17.9*IN;
+    const hh=0.13*H; /* head: display proportion only */
+    body.push({x:p.x,yc:p.y+(H-hh)/2,z:p.z,dia:S,h:H-hh}); head.push({x:p.x,yc:p.y+H-hh/2,z:p.z,dia:hh*0.85,h:hh});});
+  cyls(body,'people',null,false,10); cyls(head,'people',null,false,10);
+}
+/* AASHTO passenger car design vehicle P: 7 ft x 19 ft (Green Book, as cited); overall height 4.25 ft (Green Book Table 2-1a, to verify) */
+const CARS=[];
+function car(x,y,z,alongZ){CARS.push({x,y,z,alongZ})}
+function buildCars(){
+  const lower=[],cab=[];
+  CARS.forEach(c=>{const L=19,W=7,H=4.25; const w=c.alongZ?W:L, d=c.alongZ?L:W;
+    lower.push({x:c.x,yc:c.y+0.25+H*0.3,z:c.z,w,h:H*0.6-0.5,d}); /* body */
+    cab.push({x:c.x,yc:c.y+H*0.8,z:c.z,w:c.alongZ?W*0.86:L*0.5,h:H*0.4,d:c.alongZ?L*0.5:W*0.86});});
+  boxes(lower,'car',null); boxes(cab,'carcab',null);
+}
+
+/* ===== OSHA 29 CFR 1926.502(b): top rail 42 in, midrail at mid-height; (j): toeboard 3.5 in ===== */
+function guardrail(x0,z0,x1,z1,y,tag){
+  const L=Math.hypot(x1-x0,z1-z0), ang=Math.atan2(x1-x0,z1-z0), cx=(x0+x1)/2, cz=(z0+z1)/2, it=[];
+  it.push({x:cx,yc:y+42*IN,z:cz,w:1.5*IN,h:1.5*IN,d:L,ry:ang});
+  it.push({x:cx,yc:y+21*IN,z:cz,w:1.5*IN,h:1.5*IN,d:L,ry:ang});
+  it.push({x:cx,yc:y+1.75*IN,z:cz,w:1*IN,h:3.5*IN,d:L,ry:ang});
+  const n=Math.max(1,Math.round(L/8)); for(let i=0;i<=n;i++){const t=i/n; it.push({x:x0+(x1-x0)*t,yc:y+21*IN,z:z0+(z1-z0)*t,w:2*IN,h:42*IN,d:2*IN})}
+  boxes(it,'construction',tag);
+}
+
 function build(){
-  /* ground, roads, creek */
-  const g=new THREE.Mesh(new THREE.PlaneGeometry(220,200),mat('ground')); g.rotation.x=-Math.PI/2; g.receiveShadow=true; scene.add(g);
-  const road=(w,d,x,z)=>{const r=new THREE.Mesh(new THREE.PlaneGeometry(w,d),mat('road'));r.rotation.x=-Math.PI/2;r.position.set(x,0.02,z);r.receiveShadow=true;scene.add(r)};
-  road(220,6,0,-10.5-6); road(7,200,-23,0); road(7,120,23,-40);
-  const creek=new THREE.Mesh(new THREE.PlaneGeometry(10,90),mat('water')); creek.rotation.x=-Math.PI/2; creek.position.set(34,0.03,52); scene.add(creek);
+  buildTerrain();
+  buildStreets();
+  buildOffice();
+  buildResidential();
+  buildGarage();
+  buildBridge();
+  buildRetainingWall();
+  buildPeople(); buildCars();
+}
 
-  /* --- Mixed-use building (podium 36x30, tower 24x18) --- */
+/* ===== Streets: AASHTO LRFD 3.6.1.1.1 / design lanes 12.0 ft; N-S street = bridge roadway 52'-0" (6 ft left shoulder, 3 x 12 ft, 10 ft right shoulder, FHWA NHI-04-043 DS 2.1); sidewalks 4.0 ft (PROWAG R302.3 min.) ===== */
+const ST={x0:68,x1:120};
+function buildStreets(){
+  strip(ST.x0,ST.x1,-330,284,'road'); strip(64,ST.x0,-330,284,'walk'); strip(ST.x1,124,-330,284,'walk');
+  /* one-way southbound: right shoulder (10 ft) on the west, left shoulder (6 ft) on the east */
+  solidZ(78,-330,284,'lineW'); dashedZ(90,-330,284,'lineW'); dashedZ(102,-330,284,'lineW'); solidZ(114,-330,284,'lineY');
+  /* E-W street, two-way, 4 x 12 ft = 48 ft */
+  strip(-330,ST.x0,-164,-116,'road'); strip(ST.x1,520,-164,-116,'road'); strip(ST.x0,ST.x1,-164,-116,'road',0.035);
+  [[-330,ST.x0],[ST.x1,520]].forEach(([a,b])=>{solidX(-140-2*IN,a,b,'lineY');solidX(-140+6*IN,a,b,'lineY');dashedX(-152,a,b,'lineW');dashedX(-128,a,b,'lineW')});
+  strip(-330,ST.x0-4,-168,-164,'walk'); strip(-330,64,-116,-112,'walk'); strip(124,520,-168,-164,'walk'); strip(124,520,-116,-112,'walk');
+  /* valley road under the bridge, 2 x 12 ft */
+  strip(-330,520,445,469,'road',VAL.floor+0.03); dashedX(457,-330,520,'lineY',VAL.floor+0.05);
+  [[96,-125],[96,-30],[66,40],[66,140],[122,-60],[122,200],[-20,-114],[-60,-166],[200,-166],[300,-114]].forEach(([x,z],i)=>person(x,0,z,i%2?'f':'m'));
+  car(84,0,-60,true); car(96,0,40,true); car(108,0,180,true); car(-100,0,-146,false); car(260,0,-134,false); car(-150,VAL.floor,451,false); car(200,VAL.floor,463,false);
+}
+
+/* ===== Office: FEMA P-751 (2009) Ch. 7, 12-story RC office, Berkeley configuration ===== */
+function buildOffice(){
   const B=T('bldg');
-  const px=[-18,-12,-6,0,6,12,18], pz=[-15,-9,-3,3,9,15];
-  const tx=[-12,-6,0,6,12], tz=[-9,-3,3,9];
-  const hP=3.6, nP=2, tTr=0.9, hT=3.0, nT=5;
-  px.forEach(x=>pz.forEach(z=>box(2.4,0.45,2.4,x,0,z,'footing',{...B,p:'footing'})));
-  for(let l=0;l<nP;l++){
-    const y0=l*hP+(l?0.3:0.45);
-    px.forEach(x=>pz.forEach(z=>box(0.8,hP-(l?0.3:0.45)-(l===nP-1?tTr:0.3),0.8,x,y0,z,'column',{...B,p:'column'})));
-    if(l<nP-1) box(36.8,0.3,30.8,0,(l+1)*hP-0.3,0,'flat',{...B,p:'flat'});
+  const X={A:-50,Ap:-30,B:-10,C:10,Cp:30,D:50}, Zg=[...Array(8)].map((_,i)=>-105+30*i); /* grids 1..8 at 30'-0", A-D at 20'-0" */
+  const LV=[-15,0,18]; for(let n=3;n<=12;n++) LV.push(18+13*(n-2)); LV.push(161); /* B, G, 2..12, R */
+  const C=2.5, BW=2, BD=32*IN, SL=4*IN, JW=6*IN, JD=16*IN, WT=16*IN;
+  const colsAt=i=>(i===0||i===7)?['A','Ap','B','C','Cp','D']:['A','B','C','D'];
+  const cols=[],joints=[],beams=[],joists=[],walls=[],caps=[],piles=[];
+  for(let li=0;li<LV.length;li++){
+    const y=LV[li];
+    Zg.forEach((z,gi)=>colsAt(gi).forEach(k=>{
+      if(li>0) joints.push({x:X[k],yc:y-BD/2,z,w:C,h:BD,d:C});
+      if(li<LV.length-1){const top=LV[li+1]-BD, bot=(li===0?y:y); cols.push({x:X[k],yc:(bot+top)/2,z,w:C,h:top-bot,d:C})}
+    }));
+    if(li===0) continue;
+    /* N-S frame beams on A, B, C, D */
+    ['A','B','C','D'].forEach(k=>{for(let gi=0;gi<7;gi++){const z0=Zg[gi]+C/2,z1=Zg[gi+1]-C/2; beams.push({x:X[k],yc:y-BD/2,z:(z0+z1)/2,w:BW,h:BD,d:z1-z0})}});
+    /* E-W beams on grids 1..8 between columns; grids 3..6 have the wall in bay B-C */
+    Zg.forEach((z,gi)=>{const ks=colsAt(gi); for(let j=0;j<ks.length-1;j++){
+      if(gi>=2&&gi<=5&&ks[j]==='B') continue;
+      const x0=X[ks[j]]+C/2,x1=X[ks[j+1]]-C/2; beams.push({x:(x0+x1)/2,yc:y-BD/2,z,w:x1-x0,h:BD,d:BW})}});
+    /* pan joists, span N-S between E-W beams, 36 in. o.c., 6 in. web, 16 in. below a 4 in. slab */
+    for(let gi=0;gi<7;gi++){const z0=Zg[gi]+BW/2,z1=Zg[gi+1]-BW/2;
+      [[-50,-10],[-10,10],[10,50]].forEach(([a,b])=>{const n=Math.floor((b-a)/3)-1, s0=(a+b)/2-(n-1)*1.5; for(let k=0;k<n;k++) joists.push({x:s0+3*k,yc:y-SL-JD/2,z:(z0+z1)/2,w:JW,h:JD,d:z1-z0})});}
+    slab([[-51.25,-106.25],[51.25,-106.25],[51.25,106.25],[-51.25,106.25]],y,SL,'oneway',{...B,p:'oneway'});
   }
-  const yTr=nP*hP-tTr; box(36.8,tTr,30.8,0,yTr,0,'flat',{...B,p:'flat'});
-  const yTop=nP*hP;
-  for(let l=0;l<nT;l++){
-    const y0=yTop+l*hT, ySlab=y0+hT-0.25;
-    tx.forEach(x=>tz.forEach(z=>box(0.7,hT-0.25-0.6,0.7,x,y0,z,'column',{...B,p:'column'})));
-    tz.forEach(z=>box(24.5,0.6,0.5,0,ySlab-0.6,z,'beam',{...B,p:'beam'}));
-    tx.forEach(x=>box(0.5,0.6,18.5,x,ySlab-0.6,0,'beam',{...B,p:'beam'}));
-    tx.forEach(x=>tz.forEach(z=>box(0.95,0.85,0.95,x,ySlab-0.6,z,'joint',{...B,p:'joint'})));
-    if(l<nT-1) box(24.8,0.25,18.8,0,ySlab,0,'oneway',{...B,p:'oneway'});
+  /* shear walls: 16 in. panels on grids 3-6 between the B and C columns, basement to roof */
+  for(let gi=2;gi<=5;gi++) walls.push({x:0,yc:(-15+161)/2,z:Zg[gi],w:20-C,h:176,d:WT});
+  /* FEMA P-751 Sec. 5.2 (similar building): 2x2 piles, 22 in. dia at 66 in., caps 9'-2" x 9'-2" x 4'-0", top 1'-6" below the lowest floor; lengths 46 ft corner / 49 ft side (Site Class C). Interior columns: not given. */
+  Zg.forEach((z,gi)=>colsAt(gi).forEach(k=>{
+    const perim=(gi===0||gi===7||k==='A'||k==='D'); if(!perim) return;
+    const corner=(gi===0||gi===7)&&(k==='A'||k==='D'); const top=-15-1.5;
+    caps.push({x:X[k],yc:top-2,z,w:9+2/12,h:4,d:9+2/12});
+    const Lp=corner?46:49; [-2.75,2.75].forEach(dx=>[-2.75,2.75].forEach(dz=>piles.push({x:X[k]+dx,yc:top-4+4*IN-Lp/2,z:z+dz,dia:22*IN,h:Lp})));
+  }));
+  boxes(cols,'column',{...B,p:'column'}); boxes(joints,'joint',{...B,p:'joint'}); boxes(beams,'beam',{...B,p:'beam'});
+  boxes(joists,'oneway',{...B,p:'oneway'}); boxes(walls,'wall',{...B,p:'wall'});
+  boxes(caps,'footing',{...B,p:'footing'},true); cyls(piles,'footing',{...B,p:'footing'},true,14);
+  /* roof under construction: OSHA guardrails at the roof edge, crew */
+  const R=161; guardrail(-51.25,-106.25,51.25,-106.25,R,{...B,p:'construction'}); guardrail(51.25,-106.25,51.25,106.25,R,{...B,p:'construction'});
+  guardrail(51.25,106.25,-51.25,106.25,R,{...B,p:'construction'}); guardrail(-51.25,106.25,-51.25,-106.25,R,{...B,p:'construction'});
+  [[-30,-60],[-26,-58],[10,20],[30,70],[-40,90]].forEach(([x,z],i)=>person(x,R,z,i%3?'m':'f'));
+  [[-20,-112],[0,-112],[20,-112],[-56,0],[58,-20],[58,60]].forEach(([x,z],i)=>person(x,0,z,i%2?'f':'m'));
+}
+
+/* ===== Residential tower: FEMA P-2192 (2020) Ch. 4.5, 22-story ductile coupled-wall building ===== */
+const RES={x0:140,z0:-100};
+function buildResidential(){
+  const Rt=T('res'), X=x=>RES.x0+x, Z=y=>RES.z0+y;
+  const LV=[0,16.25,31.25,44.25]; for(let i=1;i<=19;i++) LV.push(44.25+10*i); /* base, L02..L23 (234.25) */
+  /* floor plate scaled from Fig. 4-4b (2nd-floor plan, used for all floors), rounded to 0.25 ft */
+  const P=[[45.5,3.25],[131,3.25],[131,18.75],[135.25,18.75],[135.25,29.75],[131.25,29.75],[131.25,45.75],[129.5,45.75],[129.5,51.75],[137.25,51.75],[137.25,87.75],[96.75,87.75],[96.75,91.25],[11.25,91.25],[11.25,74.75],[7,74.75],[7,63.5],[11,63.5],[11,51.75],[15.5,51.75],[15.5,45.75],[5,45.75],[5,7],[45.5,7]].map(p=>[X(p[0]),Z(p[1])]);
+  for(let i=1;i<LV.length;i++) slab(P,LV[i],i<=2?8*IN:7.5*IN,'rslab',{...Rt,p:'rslab'});
+  /* gravity columns: positions and sizes scaled from Fig. 4-4b ("various sizes" in the text) */
+  const CL=[[6.8,10.5,1.71,1.81],[71.2,11.3,1.81,2.19],[97.2,11.3,1.81,2.19],[123.7,11.3,2.19,2.1],[18.5,11.3,1.71,1.81],[44.7,11.3,1.81,1.81],[6.1,35.3,1.62,1.72],[18.5,35.3,2.28,1.72],[125.2,35.3,2.19,1.72],[123.7,62.9,1.81,2.29],[17.1,62.9,2.28,1.72],[135.8,62.9,1.81,1.72],[12.4,86.6,2.19,2.19],[32.6,86.6,1.81,1.81],[58.8,86.6,1.62,1.81],[82.6,86.6,1.81,1.81],[109.1,86.6,1.71,1.91],[135.8,86.6,1.81,1.91]];
+  const cols=[]; for(let i=0;i<LV.length-1;i++){const b=LV[i],t=LV[i+1]-(i+1<=2?8*IN:7.5*IN); CL.forEach(c=>cols.push({x:X(c[0]),yc:(b+t)/2,z:Z(c[1]),w:c[2],h:t-b,d:c[3]}))}
+  boxes(cols,'column',{...Rt,p:'column'});
+  /* core: four L walls 26 in. thick, legs 164 in. (x) and 152 in. (y); coupling beams 76 in. clear x 28 in. deep x 26 in. wide at every floor */
+  const cx0=54.3357, cy0=33.5111, t=26*IN, lx=164*IN, ly=152*IN, gap=76*IN, Hc=234.25, wl=[], cb=[];
+  [[0,0,1,1],[lx+gap,0,-1,1],[0,ly+gap,1,-1],[lx+gap,ly+gap,-1,-1]].forEach(([ox,oy,sx,sy])=>{
+    const x0=cx0+ox+(sx<0?0:0), y0=cy0+oy;
+    const xa=x0, xb=x0+lx, ya=y0, yb=y0+ly;
+    const yEdge=sy>0?ya:yb-t, xEdge=(sx>0?xa:xb-t);
+    wl.push({x:X((xa+xb)/2),yc:Hc/2,z:Z(yEdge+t/2),w:lx,h:Hc,d:t});
+    wl.push({x:X(xEdge+t/2),yc:Hc/2,z:Z((ya+yb)/2),w:t,h:Hc,d:ly});
+  });
+  const W=lx*2+gap, Hh=ly*2+gap;
+  for(let i=1;i<LV.length;i++){const y=LV[i];
+    cb.push({x:X(cx0+lx+gap/2),yc:y-14*IN,z:Z(cy0+t/2),w:gap,h:28*IN,d:t});
+    cb.push({x:X(cx0+lx+gap/2),yc:y-14*IN,z:Z(cy0+Hh-t/2),w:gap,h:28*IN,d:t});
+    cb.push({x:X(cx0+t/2),yc:y-14*IN,z:Z(cy0+ly+gap/2),w:t,h:28*IN,d:gap});
+    cb.push({x:X(cx0+W-t/2),yc:y-14*IN,z:Z(cy0+ly+gap/2),w:t,h:28*IN,d:gap});}
+  boxes(wl,'rshear',{...Rt,p:'rshear'}); boxes(cb,'rshear',{...Rt,p:'rshear'});
+  const R=234.25; for(let i=0;i<P.length;i++){const a=P[i],b=P[(i+1)%P.length]; guardrail(a[0],a[1],b[0],b[1],R,{...Rt,p:'construction'})}
+  [[60,20],[100,60],[30,40]].forEach(([x,y],i)=>person(X(x),R,Z(y),i%2?'f':'m'));
+  [[40,1],[44,1],[100,93],[104,93]].forEach(([x,y],i)=>person(X(x),0,Z(y),i%2?'m':'f'));
+}
+
+/* ===== Parking structure: geometry from IBC 406 / ADA 502 / owner design standards; members sized to ACI 318-19 minimums (see MODEL_SOURCES) ===== */
+const GAR={x0:140,z0:20};
+function buildGarage(){
+  const Pk=T('park'), X=x=>GAR.x0+x, Z=z=>GAR.z0+z;
+  const XL=[0,64,128], ZL=[...Array(9)].map((_,i)=>27*i), H=8+2/12+4, LV=[0,H,2*H,3*H]; /* 8'-2" clear + 48 in. beam */
+  const C=2, BW=2, BD=4, SL=1, RAMP_END=162;
+  const cols=[],beams=[],slabsF=[],ramps=[],guards=[],lines=[];
+  XL.forEach(x=>ZL.forEach(z=>cols.push({x:X(x),yc:(3*H-BD)/2,z:Z(z),w:C,h:3*H-BD,d:C})));
+  const rampY=(k,z)=>k*H+H*(RAMP_END-z)/RAMP_END;
+  for(let k=1;k<=3;k++){
+    const y=LV[k];
+    /* west module: flat deck full length */
+    slabsF.push({x:X(32),yc:y-SL/2,z:Z(108),w:64+C,h:SL,d:216+C});
+    ZL.forEach(z=>beams.push({x:X(32),yc:y-BD/2,z:Z(z),w:64-C,h:BD,d:BW}));
+    /* east module: flat deck from the ramp end to the south end */
+    slabsF.push({x:X(96),yc:y-SL/2,z:Z((RAMP_END+216)/2),w:64+C,h:SL,d:216-RAMP_END+C/2});
+    ZL.filter(z=>z>=RAMP_END).forEach(z=>beams.push({x:X(96),yc:y-BD/2,z:Z(z),w:64-C,h:BD,d:BW}));
   }
-  /* core walls through full height */
-  const hCore=yTop+(nT-1)*hT+0.3;
-  box(6,hCore,0.4,0,0.45,-3,'wall',{...B,p:'wall'}); box(6,hCore,0.4,0,0.45,3,'wall',{...B,p:'wall'});
-  box(0.4,hCore,6,-3,0.45,0,'wall',{...B,p:'wall'}); box(0.4,hCore,6,3,0.45,0,'wall',{...B,p:'wall'});
-  /* top level under construction: shores + crane */
-  const yC=yTop+(nT-1)*hT;
-  for(let x=-10.5;x<=10.5;x+=3) for(let z=-7.5;z<=7.5;z+=3){ if(Math.abs(x)<3.5&&Math.abs(z)<3.5) continue; cyl(0.07,0.07,hT-0.6,x,yC-hT+0.25,z,'construction',{...B,p:'construction'},6) }
-  box(1.2,40,1.2,22,0,10,'construction',{...B,p:'construction'});
-  box(30,0.9,0.9,14,40,10,'construction',{...B,p:'construction'});
-  box(5,1.4,1.4,-2,39.6,10,'construction',{...B,p:'construction'});
-  box(2,2,2,22,40.9,10,'construction',{...B,p:'construction'});
-
-  /* --- Parking structure (ramped decks) --- */
-  const Pk=T('park');
-  for(let l=0;l<4;l++){ box(26,0.35,16,-34,l*2.8,-26,'park',Pk) }
-  for(let x=-45;x<=-23;x+=5.5) for(let z=-32;z<=-20;z+=6) box(0.6,11.2,0.6,x,0,z,'park',Pk);
-  const ramp=new THREE.Mesh(new THREE.BoxGeometry(22,0.3,5),mat('park')); ramp.position.set(-34,1.4,-36.5); ramp.rotation.z=Math.atan(2.8/22); ramp.castShadow=true; ramp.userData=Pk; pickables.push(ramp); scene.add(ramp);
-
-  /* --- Residential tower on a mat (east lot) --- */
-  const R=T('res'); const rx=[27,31.5,36,40.5,45], rz=[-32,-28,-24,-20], hR=3.0, nR=9;
-  box(22,1.0,16,36,0,-26,'rmat',{...R,p:'rmat'});
-  for(let l=0;l<nR;l++){
-    const y0=1.0+l*hR;
-    rx.forEach(x=>rz.forEach(z=>{ if(Math.abs(x-36)<3&&Math.abs(z+26)<3) return; box(0.6,hR-0.25,0.6,x,y0,z,'column',{...R,p:'column'}) }));
-    box(20.6,0.25,14.6,36,y0+hR-0.25,-26,'rslab',{...R,p:'rslab'});
-    [30,34,38,42].forEach(x=>box(3.2,0.18,1.7,x,y0+hR-0.22,-17.85,'rcant',{...R,p:'rcant'}));
+  /* east module speed ramps: rise H over 162 ft (7.5 %), level k to k+1 */
+  for(let k=0;k<3;k++){
+    const len=Math.hypot(RAMP_END,H), ang=Math.atan2(H,RAMP_END), yMid=k*H+H/2;
+    ramps.push({x:X(96),yc:yMid-SL/2,z:Z(RAMP_END/2),w:64+C,h:SL,d:len,rx:ang});
+    ZL.filter(z=>z<RAMP_END).forEach(z=>{ const yt=rampY(k,z); if(yt-BD<0.5) return; beams.push({x:X(96),yc:yt-BD/2,z:Z(z),w:64-C,h:BD,d:BW})});
   }
-  const hW=nR*hR;
-  box(5,hW,0.35,36,1.0,-28.4,'rshear',{...R,p:'rshear'}); box(5,hW,0.35,36,1.0,-23.6,'rshear',{...R,p:'rshear'});
-  box(0.35,hW,4.4,33.6,1.0,-26,'rshear',{...R,p:'rshear'});
-  box(0.35,hW*0.98,3.6,26.0,1.0,-30.2,'rshear',{...R,p:'rshear'}); box(0.35,hW*0.98,3.6,46.0,1.0,-30.2,'rshear',{...R,p:'rshear'});
-  for(let l=0;l<nR;l++){ const st=new THREE.Mesh(new THREE.BoxGeometry(1.4,0.2,4.6),mat('rcant')); st.position.set(47.6,1.0+l*hR+hR/2,-24); st.rotation.x=Math.atan(hR/4.2); st.castShadow=true; st.userData={...R,p:'rcant'}; pickables.push(st); scene.add(st) }
+  /* perimeter guards 42 in. (IBC 1015.3; also exceed the 2'-9" vehicle barrier of 406.4.2) on the elevated decks */
+  for(let k=1;k<=3;k++){const y=LV[k], g=42*IN, t=6*IN;
+    guards.push({x:X(-C/2-t/2),yc:y+g/2,z:Z(108),w:t,h:g,d:216+C});
+    guards.push({x:X(128+C/2+t/2),yc:y+g/2,z:Z(108),w:t,h:g,d:216+C});
+    guards.push({x:X(32),yc:y+g/2,z:Z(-C/2-t/2),w:64+C,h:g,d:t});
+    guards.push({x:X(64),yc:y+g/2,z:Z(216+C/2+t/2),w:128+C,h:g,d:t});}
+  /* stalls 9.0 ft x 18.0 ft each side of a 26 ft aisle (62 ft module, Boise guideline pp. 24-25) */
+  const stallY=[0,H,2*H,3*H]; stallY.forEach((y,k)=>{
+    for(let z=0;z<=216;z+=9){ lines.push({x:X(1+9),yc:y+0.03,z:Z(z),w:18,h:0.01,d:4*IN}); lines.push({x:X(63-9),yc:y+0.03,z:Z(z),w:18,h:0.01,d:4*IN}); }
+  });
+  boxes(cols,'park',Pk); boxes(beams,'park',Pk); boxes(slabsF,'park',Pk); boxes(ramps,'park',Pk); boxes(guards,'park',Pk); boxes(lines,'lineW',null);
+  /* cars in stalls (P vehicle 19 ft is 1 ft longer than the 18 ft stall: it overhangs into the 26 ft aisle) */
+  stallY.forEach((y,k)=>{ for(let i=0;i<24;i++){ if((i*7+k*3)%5===0) continue; const zc=Z(4.5+9*i);
+      if(i%2===0) car(X(1+9.5),y,zc,false); if(i%3!==1) car(X(63-9.5),y,zc,false);} });
+  [[20,30],[44,100],[30,190]].forEach(([x,z],i)=>person(X(x),H,Z(z),i%2?'f':'m'));
+  [[-6,10],[-6,60]].forEach(([x,z],i)=>person(X(x),0,Z(z),'m'));
+}
 
-  /* --- Retaining wall with footing and backfill --- */
-  const Rw=T('wall');
-  box(30,0.8,6,-34,0,30,'rwall',Rw); box(30,6.5,0.8,-34,0.8,28.2,'rwall',Rw);
-  const fill=new THREE.Mesh(new THREE.BoxGeometry(30,7,14),mat('ground')); fill.position.set(-34,3.5,36.2); fill.castShadow=true; fill.receiveShadow=true; scene.add(fill);
+/* ===== Bridge: FHWA NHI-04-043 PSC girder design example (two 110 ft spans, 20 deg skew) ===== */
+const BR={x:94, zN:310, zP:420, zS:530, sk:20*D2R};
+function buildBridge(){
+  const Br=T('bridge'), tan=Math.tan(BR.sk);
+  const zLine=(z0,x)=>z0+(x-BR.x)*tan;
+  const gX=[-2.5,-1.5,-0.5,0.5,1.5,2.5].map(k=>BR.x+k*(9+8/12)); /* 6 girders at 9'-8" */
+  const deckTop=0, deckT=8*IN, haunch=4*IN, GD=6, brg=1.86*IN, capTop=deckTop-deckT-haunch-GD-brg, capD=4, colH=18, ftgTop=capTop-capD-colH;
+  const half=55.375/2, gdr=[], dia=[];
+  /* AASHTO Type VI girders, 72 in. deep, top flange 42 in., bottom flange 28 in. (flange thicknesses simplified) */
+  const gTop=deckTop-deckT-haunch;
+  gX.forEach(x=>{
+    [[zLine(BR.zN,x)-0.5,zLine(BR.zP,x)-0.25],[zLine(BR.zP,x)+0.25,zLine(BR.zS,x)+0.5]].forEach(([a,b])=>{
+      const L=b-a,zc=(a+b)/2;
+      gdr.push({x,yc:gTop-0.5,z:zc,w:42*IN,h:1,d:L}); gdr.push({x,yc:gTop-2.75,z:zc,w:8*IN,h:3.5,d:L}); gdr.push({x,yc:gTop-GD+0.75,z:zc,w:28*IN,h:1.5,d:L});
+    });
+  });
+  /* intermediate diaphragms at midspan, 10 in. x 50 in. */
+  for(let i=0;i<5;i++){const xm=(gX[i]+gX[i+1])/2; [(BR.zN+BR.zP)/2,(BR.zP+BR.zS)/2].forEach(zm=>dia.push({x:xm,yc:gTop-50*IN/2,z:zLine(zm,xm),w:9+8/12-8*IN,h:50*IN,d:10*IN}))}
+  boxes(gdr,'bridge',Br); boxes(dia,'bridge',Br);
+  /* deck 8 in. (overhang 9 in.), out-to-out 55'-4 1/2", skewed ends at the abutment back faces */
+  const dz=(x)=>(x-BR.x)*tan, xa=BR.x-half, xb=BR.x+half, zA=BR.zN-1.5, zB=BR.zS+1.5;
+  slab([[xa,zA+dz(xa)],[xb,zA+dz(xb)],[xb,zB+dz(xb)],[xa,zB+dz(xa)]],deckTop,deckT,'bridge',Br);
+  /* Type F parapets, 42 in. high, 1'-8 1/4" base (profile simplified to a taper) */
+  [xa,xb].forEach((xe,i)=>{const s=i?-1:1, bw=20.25*IN; const prof=[[0,0],[bw,0],[bw*0.55,42*IN],[0,42*IN]].map(p=>[p[0]*s,p[1]]);
+    const L=zB-zA; const sh=new THREE.Shape(); prof.forEach((p,j)=>j?sh.lineTo(p[0],p[1]):sh.moveTo(p[0],p[1]));
+    const g=new THREE.ExtrudeGeometry(sh,{depth:L,bevelEnabled:false}); const m=new THREE.Mesh(g,mat('bridge')); m.position.set(xe,deckTop,zA+dz(xe)); tagMesh(m,Br);});
+  /* lane lines: 52 ft roadway, 6 ft left shoulder (east), 3 x 12 ft lanes, 10 ft right shoulder (west) */
+  [[78,'lineW',1],[90,'lineW',0],[102,'lineW',0],[114,'lineY',1]].forEach(([x,mk,solid])=>{const z0=zA+dz(x)+2,z1=zB+dz(x)-2; solid?solidZ(x,z0,z1,mk,deckTop+0.02):dashedZ(x,z0,z1,mk,deckTop+0.02)});
+  /* pier: 4 columns 3'-6" dia at 14'-1" along the skew, 18 ft tall; cap 4 ft x 4 ft, 58'-11 1/8" long, tapering to 2 ft; footings 12 x 12 x 3 ft */
+  const ux=Math.cos(BR.sk), uz=Math.sin(BR.sk), capL=58+11.125/12, ext=21.125+1.75;
+  const prof=[[-capL/2,capTop-2],[-ext,capTop-capD],[ext,capTop-capD],[capL/2,capTop-2],[capL/2,capTop],[-capL/2,capTop]];
+  profileExtrude(prof,4,BR.x,BR.zP,-BR.sk,'bridge',Br);
+  const pc=[],pf=[],pads=[];
+  [-21.125,-7.0417,7.0417,21.125].forEach(s=>{const x=BR.x+s*ux, z=BR.zP+s*uz;
+    pc.push({x,yc:ftgTop+colH/2,z,dia:3.5,h:colH}); pf.push({x,yc:ftgTop-1.5,z,w:12,h:3,d:12,ry:-BR.sk});});
+  cyls(pc,'bridge',Br); boxes(pf,'footing',Br,true);
+  /* elastomeric bearings at the pier, 7.5 in. x 24 in. x 1.86 in., 2 per girder line */
+  gX.forEach(x=>[-0.4,0.4].forEach(o=>pads.push({x,yc:capTop+brg/2,z:zLine(BR.zP,x)+o,w:24*IN,h:brg,d:7.5*IN})));
+  boxes(pads,'bridge',Br);
+  /* integral abutments: 3 ft thick, 10'-3 3/4" high, 58.93 ft along the skew; U-wingwalls 15 ft long, 20.25 in. thick, 10.31 ft to 2 ft; approach slab 25 ft x 1'-6" */
+  const abH=10+3.75/12, abL=58.93;
+  [[BR.zN,-1],[BR.zS,1]].forEach(([z0,dir])=>{
+    box(abL,abH,3,BR.x,deckTop-abH,z0,'bridge',Br,-BR.sk);
+    [xa+20.25*IN/2,xb-20.25*IN/2].forEach(xw=>{const zb=z0+dz(xw)+dir*1.5;
+      const prof=[[0,deckTop],[15,deckTop],[15,deckTop-2],[0,deckTop-abH]];
+      const sh=new THREE.Shape(); prof.forEach((p,j)=>j?sh.lineTo(p[0],p[1]):sh.moveTo(p[0],p[1]));
+      const g=new THREE.ExtrudeGeometry(sh,{depth:20.25*IN,bevelEnabled:false}); g.translate(0,0,-20.25*IN/2);
+      const m=new THREE.Mesh(g,mat('bridge')); m.position.set(xw,0,zb); m.rotation.y=dir>0?-Math.PI/2:Math.PI/2; tagMesh(m,Br);});
+    const zs=z0+dir*(1.5+12.5); box(55.34,1.5,25,BR.x,deckTop-1.5-0.02,zs,'bridge',Br);
+  });
+  /* HL-93 design truck (AASHTO LRFD 3.6.1.2.2): axles 14 ft + 14 ft (min.), gage 6 ft; tires 20 in. x 10 in. */
+  const tx=96, tz0=380, tires=[];
+  [0,14,28].forEach(a=>{[-3,3].forEach(g=>tires.push({x:tx+g,yc:deckTop+1*IN,z:tz0+a,w:20*IN,h:2*IN,d:10*IN})); tires.push({x:tx,yc:deckTop+2*IN,z:tz0+a,w:6,h:2*IN,d:2*IN});});
+  boxes(tires,'lineY',null);
+  [[70,330],[118,500],[50,420],[54,424]].forEach(([x,z],i)=>person(x,groundY(z)<0&&i>1?VAL.floor:0,z,i%2?'f':'m'));
+}
 
-  /* --- Bridge over the creek --- */
-  const Br=T('bridge');
-  [24,44].forEach(x=>box(3,4.5,12,x,0,52,'bridge',Br));
-  box(1.6,4.5,9,34,0,52,'bridge',Br);
-  for(let z=48;z<=56;z+=2) box(24,1.1,0.6,34,4.5,z,'bridge',Br);
-  box(26,0.5,12,34,5.6,52,'bridge',Br);
+/* ===== Retaining wall: geometry of the FHWA LRFD steel girder example, Design Step 7 cantilever abutment ===== */
+function buildRetainingWall(){
+  const Rw=T('wall'), x0=-40, L=46.875, xc=x0+L/2, yF=VAL.floor, zFace=362;
+  /* footing 10'-3" wide x 2'-6" thick: toe 2'-9" (south), stem 3'-6", heel 4'-0" (north, retained side) */
+  const toe=2.75, stem=3.5, heel=4, ft=2.5;
+  box(L,ft,toe+stem+heel,xc,yF-ft,zFace+toe-(toe+stem+heel)/2,'rwall',Rw,0,true);
+  box(L,15,stem,xc,yF,zFace-stem/2,'rwall',Rw);
+  box(L,7,1.25,xc,yF+15,zFace-stem+1.25/2,'rwall',Rw);
+  /* retained fill to the top of the wall, 22 ft above the footing (gamma = 120 pcf, Ka = 0.3 in the example) */
+  const top=yF+22, zBack=zFace-stem, zTopFill=VAL.zTopN+2*(-top);
+  const fill=new THREE.Mesh(new THREE.BoxGeometry(L,22,zBack-zTopFill),mat('ground')); fill.position.set(xc,yF+11,(zBack+zTopFill)/2); fill.receiveShadow=true; scene.add(fill);
+  /* fill graded down at 2H:1V beyond each end of the wall (display choice, same slope as the valley banks) */
+  [[x0,-1],[x0+L,1]].forEach(([xe,sg])=>{const sh=new THREE.Shape(); sh.moveTo(0,0); sh.lineTo(0,22); sh.lineTo(sg*44,0); sh.lineTo(0,0);
+    const w=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:zBack-zTopFill,bevelEnabled:false}),mat('ground')); w.position.set(xe,yF,zTopFill); w.receiveShadow=true; w.castShadow=true; scene.add(w)});
+  person(xc-6,yF,zFace+8,'m'); person(xc+4,yF,zFace+10,'f');
 }
 
 function applyTheme(){
   if(!renderer) return;
-  const bg=new THREE.Color(css('--bg')); scene.background=bg; scene.fog=new THREE.Fog(bg,170,330);
+  const bg=new THREE.Color(css('--bg')); scene.background=bg; scene.fog=new THREE.Fog(bg,1400,3600);
   const st=k=>({done:css('--done'),prog:css('--prog'),plan:css('--concrete')}[k]);
   const rk=k=>css('--'+partSev(k));
   for(const [k,P] of Object.entries(PARTS)) if(matCache[k]) matCache[k].color.set(mode==='risk'?rk(k):st(P.status));
   for(const k of ['park','bridge']) if(matCache[k]) matCache[k].color.set(mode==='risk'?rk(k):css('--concrete'));
   if(matCache.rwall) matCache.rwall.color.set(mode==='risk'?rk('wall2'):css('--concrete'));
-  matCache.ground.color.set(css('--ground')); matCache.road.color.set(css('--road')); matCache.water.color.set(css('--water'));
+  if(terrain) terrain.material.color.set(css('--ground'));
+  const fix={ground:'--ground',road:'--road',walk:'--walk',lineW:'--lineW',lineY:'--lineY',people:'--person',car:'--car',carcab:'--carcab'};
+  for(const [k,v] of Object.entries(fix)) if(matCache[k]) matCache[k].color.set(css(v));
   highlight();
 }
-
 function highlight(){
   const sel=new THREE.Color(css('--sel'));
   for(const m of Object.values(matCache)) m.emissive&&m.emissive.set(0x000000);
   const key=current.p || ({park:'park',wall:'rwall',bridge:'bridge'}[current.s]);
   if(key&&matCache[key]){ matCache[key].emissive.copy(sel).multiplyScalar(.55) }
 }
-
+let showBelow=false;
+function setBelow(on){ showBelow=on; if(terrain){terrain.material.opacity=on?0.28:1; terrain.material.depthWrite=!on; terrain.material.needsUpdate=true} }
 function setupPicking(canvas){
   const ray=new THREE.Raycaster(), v=new THREE.Vector2(); let down=null;
-  const hit=e=>{const r=canvas.getBoundingClientRect(); v.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1); ray.setFromCamera(v,camera); const h=ray.intersectObjects(pickables,false); return h[0]&&h[0].object.userData};
+  const hit=e=>{const r=canvas.getBoundingClientRect(); v.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1); ray.setFromCamera(v,camera);
+    const objs=showBelow?pickables:pickables.filter(o=>!belowGrade.includes(o)); const h=ray.intersectObjects(objs,false); return h[0]&&h[0].object.userData};
   canvas.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY]});
   canvas.addEventListener('pointerup',e=>{
     if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>5) return;
-    const u=hit(e); if(!u) return;
+    const u=hit(e); if(!u||!u.s) return;
     if(u.s!==current.s) select(u.s,null,true); else if(u.p) select(u.s,u.p,false);
   });
-  canvas.addEventListener('pointermove',e=>{ if(e.buttons) return; canvas.style.cursor=hit(e)?'pointer':'grab' });
+  canvas.addEventListener('pointermove',e=>{ if(e.buttons) return; const u=hit(e); canvas.style.cursor=(u&&u.s)?'pointer':'grab' });
 }
-
 function select(s,p,move){
   current={s,p}; render(); if(!renderer) return; highlight();
   if(move){ const S=STRUCTURES[s]; fly(new THREE.Vector3(...S.cam),new THREE.Vector3(...S.target)) }
 }
 function fly(pos,tgt){
   if(reduce){camera.position.copy(pos);controls.target.copy(tgt);return}
-  tween={t:0,p0:camera.position.clone(),t0:controls.target.clone(),p1:pos,t1:tgt};
+  tween={t:0,s0:performance.now(),p0:camera.position.clone(),t0:controls.target.clone(),p1:pos,t1:tgt};
 }
 function loop(){
   requestAnimationFrame(loop);
-  if(tween){tween.t=Math.min(1,tween.t+0.025); const k=1-Math.pow(1-tween.t,3);
+  if(tween){tween.t=Math.min(1,(performance.now()-tween.s0)/1400); const k=1-Math.pow(1-tween.t,3);
     camera.position.lerpVectors(tween.p0,tween.p1,k); controls.target.lerpVectors(tween.t0,tween.t1,k); if(tween.t>=1) tween=null}
   controls.update(); renderer.render(scene,camera);
 }
+document.getElementById('overview').addEventListener('click',()=>fly(new THREE.Vector3(-560,430,760),new THREE.Vector3(110,10,160)));
+document.getElementById('below').addEventListener('click',e=>{const b=e.currentTarget; const on=b.getAttribute('aria-pressed')!=='true'; b.setAttribute('aria-pressed',on); setBelow(on)});
 
 render();
 if(window.THREE&&THREE.OrbitControls){ init(); select('bldg',null,true) } else { document.getElementById('fallback').hidden=false }
+
