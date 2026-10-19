@@ -398,7 +398,8 @@ function buildTerrain(){
   const p=g.attributes.position; const col=new Float32Array(p.count*3);
   for(let i=0;i<p.count;i++){const y=groundY(p.getZ(i)); p.setY(i,y); const f=y===0?1:(y<=VAL.floor+0.01?0.9:0.8); col.set([f,f*0.97,f*0.9],i*3)}
   g.setAttribute('color',new THREE.BufferAttribute(col,3)); g.computeVertexNormals();
-  terrain=new THREE.Mesh(g,new THREE.MeshStandardMaterial({roughness:1,metalness:0,transparent:true,opacity:1,vertexColors:true}));
+  /* the ground is pushed back in depth so the faces that sit exactly on it (the office's ground-floor slab, beams and joints at EL 0) never flicker against it */
+  terrain=new THREE.Mesh(g,new THREE.MeshStandardMaterial({roughness:1,metalness:0,transparent:false,opacity:1,vertexColors:true,polygonOffset:true,polygonOffsetFactor:2,polygonOffsetUnits:4}));
   terrain.receiveShadow=true; scene.add(terrain);
 }
 function strip(x0,x1,z0,z1,mkey,y=0.03){const m=new THREE.Mesh(new THREE.PlaneGeometry(x1-x0,z1-z0),mat(mkey));m.rotation.x=-Math.PI/2;m.position.set((x0+x1)/2,y,(z0+z1)/2);m.receiveShadow=true;scene.add(m);return m}
@@ -680,7 +681,7 @@ function highlight(){
   if(key&&matCache[key]){ matCache[key].emissive.copy(sel).multiplyScalar(.55) }
 }
 let showBelow=false;
-function setBelow(on){ showBelow=on; if(terrain){terrain.material.opacity=on?0.28:1; terrain.material.depthWrite=!on; terrain.material.needsUpdate=true} }
+function setBelow(on){ showBelow=on; if(terrain){terrain.material.transparent=on; terrain.material.opacity=on?0.28:1; terrain.material.depthWrite=!on; terrain.material.needsUpdate=true} }
 function setupPicking(canvas){
   const ray=new THREE.Raycaster(), v=new THREE.Vector2(); let down=null;
   const hit=e=>{const r=canvas.getBoundingClientRect(); v.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1); ray.setFromCamera(v,camera);
@@ -705,7 +706,10 @@ function loop(){
   requestAnimationFrame(loop);
   if(tween){tween.t=Math.min(1,(performance.now()-tween.s0)/1400); const k=1-Math.pow(1-tween.t,3);
     camera.position.lerpVectors(tween.p0,tween.p1,k); controls.target.lerpVectors(tween.t0,tween.t1,k); if(tween.t>=1) tween=null}
-  controls.update(); renderer.render(scene,camera);
+  controls.update();
+  /* near plane follows the zoom: a fixed 1 ft near plane with a 6000 ft far plane leaves too little depth precision at the overview distance */
+  const nr=Math.min(20,Math.max(0.5,camera.position.distanceTo(controls.target)/150)); if(Math.abs(nr-camera.near)>0.01){camera.near=nr; camera.updateProjectionMatrix()}
+  renderer.render(scene,camera);
 }
 document.getElementById('overview').addEventListener('click',()=>fly(new THREE.Vector3(-560,430,760),new THREE.Vector3(110,10,160)));
 document.getElementById('below').addEventListener('click',e=>{const b=e.currentTarget; const on=b.getAttribute('aria-pressed')!=='true'; b.setAttribute('aria-pressed',on); setBelow(on)});
