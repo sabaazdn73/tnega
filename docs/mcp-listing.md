@@ -23,7 +23,7 @@ Short (under 100 characters): `Real cost of buying tokenized stocks on every cha
 | Install (Claude Code) | `npx tnega-mcp` |
 | npm | `tnega-mcp` |
 | Website | https://www.tnega.app |
-| Source | https://github.com/sabaazdn73/Agents-Marketplace |
+| Source | https://github.com/sabaazdn73/tnega |
 | Icon | https://www.tnega.app/app-icon-512.png (Fendi) |
 | Tools | tnega_catalogue, tnega_resolve, tnega_get, tnega_list, tnega_summary, tnega_series, tnega_prepare_buy, tnega_prepare_sell, tnega_wallet_holdings |
 | Tags | tokenized-stocks, rwa, defi, erc-8004, ai-agents, solana, base, bnb-chain, finance |
@@ -49,7 +49,7 @@ asks the publisher to authenticate with GitHub. That login is hers to do.
   "description": "Real cost of buying tokenized stocks on every chain, then sign in your own wallet. Read only.",
   "version": "0.1.0",
   "websiteUrl": "https://www.tnega.app",
-  "repository": { "url": "https://github.com/sabaazdn73/Agents-Marketplace", "source": "github" },
+  "repository": { "url": "https://github.com/sabaazdn73/tnega", "source": "github" },
   "remotes": [
     { "type": "streamable-http", "url": "https://mcp.tnega.app/mcp" }
   ]
@@ -71,7 +71,7 @@ mcp-publisher publish             # run in the repo root
 - Claude's connector directory: has its own review; apply only when the server is
   stable on a domain of its own (see below).
 - `awesome-mcp-servers` (GitHub lists): a one-line pull request. Line to add:
-  `- [Tnega](https://github.com/sabaazdn73/Agents-Marketplace) - Real cost of buying tokenized stocks on every chain, wallet holdings, ERC-8004 agent data; prepares orders you sign yourself. Read only, no key.`
+  `- [Tnega](https://github.com/sabaazdn73/tnega) - Real cost of buying tokenized stocks on every chain, wallet holdings, ERC-8004 agent data; prepares orders you sign yourself. Read only, no key.`
 
 ## Why Claude shows Render's logo, and the fix
 

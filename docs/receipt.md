@@ -9,7 +9,7 @@ anyone can check it from a browser without trusting Tnega's servers.
 It runs on **Solana devnet** today. The program is
 [6Nzn82QGVZTiU3iv26ZT9UKQFfyYyjyCoWqUZJ5LLrxP](https://explorer.solana.com/address/6Nzn82QGVZTiU3iv26ZT9UKQFfyYyjyCoWqUZJ5LLrxP?cluster=devnet)
 (Anchor, version 2), and its source and tests are in this repository under
-[solana/tnega-receipt/](https://github.com/sabaazdn73/Agents-Marketplace/tree/main/solana/tnega-receipt).
+[solana/tnega-receipt/](https://github.com/sabaazdn73/tnega/tree/main/solana/tnega-receipt).
 
 ## The first receipt
 

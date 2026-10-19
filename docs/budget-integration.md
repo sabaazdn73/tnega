@@ -191,7 +191,7 @@ def run_job(budget_id: int, steps):
             break
 ```
 
-A reference implementation of this pattern lives in [`reference-agent/`](https://github.com/sabaazdn73/Agents-Marketplace/tree/main/reference-agent). It is a worked example written by Tnega, not a third-party integration.
+A reference implementation of this pattern lives in [`reference-agent/`](https://github.com/sabaazdn73/tnega/tree/main/reference-agent). It is a worked example written by Tnega, not a third-party integration.
 
 ## The client can revoke at any time
 
