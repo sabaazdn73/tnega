@@ -34,6 +34,7 @@ import { setNoIndex } from '../seoMeta';
 import { normalizeChainAgent } from './normalizeChainAgent';
 import { ChainCapabilities, EXPLORER_BASE } from './ChainViewShared';
 import { chainName, nativeSymbol } from '../chainContracts';
+import { appPathname, publicPath } from '../basePath.js';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
@@ -48,7 +49,7 @@ export function chainAgentPath(chainId, tokenId) {
   return `/chain-agent/${chainId}/${encodeURIComponent(tokenId)}`;
 }
 
-export function readChainAgentRoute(pathname = window.location.pathname) {
+export function readChainAgentRoute(pathname = appPathname()) {
   const m = pathname.match(/^\/chain-agent\/(\d+)\/([^/?#]+)/);
   return m ? { chainId: Number(m[1]), tokenId: decodeURIComponent(m[2]) } : null;
 }
@@ -92,7 +93,7 @@ export default function ChainAgentDetail({ chainId, tokenId, onBack }) {
   useEffect(() => setNoIndex(Boolean(state.notFound)), [state.notFound]);
 
   const onShare = async () => {
-    const ok = await copyShareLink(`${window.location.origin}${chainAgentPath(chainId, tokenId)}`);
+    const ok = await copyShareLink(`${window.location.origin}${publicPath(chainAgentPath(chainId, tokenId))}`);
     if (ok) { setCopied(true); setTimeout(() => setCopied(false), 1800); }
   };
 

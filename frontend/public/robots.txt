@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /canary
+Disallow: /finance/canary
 
 Sitemap: https://www.tnega.app/sitemap.xml

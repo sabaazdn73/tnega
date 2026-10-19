@@ -15,6 +15,7 @@
 // tells Google those pages are duplicates of the homepage and shouldn't
 // be indexed separately, actively harmful for discoverability of every
 // non-homepage page, not just a missed opportunity.
+import { publicPath } from './basePath.js';
 
 const BASE_URL = 'https://www.tnega.app';
 
@@ -44,7 +45,9 @@ export function updatePageMeta({ title, ogTitle, docTitle, description, ogDescri
   // carries the banner's own words, and every other route its description.
   const socialDescription = ogDescription || description;
   document.title = fullTitle;
-  const url = path === '/' ? BASE_URL : `${BASE_URL}${path}`;
+  // On a finance page the address carries /finance (basePath.js).
+  const shown = publicPath(path);
+  const url = shown === '/' ? BASE_URL : `${BASE_URL}${shown}`;
 
   setMeta('meta[name="description"]', 'content', description);
   setMeta('link[rel="canonical"]', 'href', url);

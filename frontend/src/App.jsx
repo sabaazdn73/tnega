@@ -12,6 +12,7 @@ import CanaryTestingPanel from './CanaryTestingPanel.jsx';
 import { EcosystemBoundary, EcosystemFallback, hasWebGL } from './shell/EcosystemFallback.jsx';
 import { NAV_TO_PATH, resolvePath, tabForPath, isExplorePath, isSignPath, isReceiptPath } from './routePaths.js';
 import { updatePageMeta } from './seoMeta.js';
+import { appPathname, stripBase } from './basePath.js';
 import { SITE_COPY } from './siteCopy.js';
 import MobileWelcome, { shouldWelcome } from './shell/MobileWelcome.jsx';
 
@@ -84,7 +85,9 @@ function useRoute() {
   // to a URL that only bounces, and the canonical is never a junk URL. The
   // query and the hash travel with it.
   const settle = () => {
-    const { pathname, search, hash } = window.location;
+    const { search, hash } = window.location;
+    // The in-app path: the address bar's, with /finance taken off (basePath.js).
+    const pathname = appPathname();
     const { path, changed } = resolvePath(pathname);
     if (changed) {
       try { window.history.replaceState(window.history.state, '', `${path}${search}${hash}`); } catch { /* non-fatal */ }
@@ -101,7 +104,9 @@ function useRoute() {
   // path is resolved on its own; the query is kept separately for the page
   // that reads it, and the hash stays on the routed path, which is where
   // DocsPage.jsx reads it from.
-  const navigate = (to, { replace = false } = {}) => {
+  const navigate = (rawTo, { replace = false } = {}) => {
+    // A link may hand over the address as the browser shows it.
+    const to = stripBase(rawTo);
     const h = to.indexOf('#');
     const hash = h >= 0 ? to.slice(h) : '';
     const beforeHash = h >= 0 ? to.slice(0, h) : to;
@@ -146,7 +151,7 @@ export default function App({ tree = 'site' }) {
   // Not over a signing link: someone arriving to sign one order, with ten
   // minutes on the clock, is not shown the welcome first.
   const [welcome, setWelcome] = useState(() => shouldWelcome(typeof window !== 'undefined' && window.innerWidth < MOBILE_BREAKPOINT)
-    && !(typeof window !== 'undefined' && isSignPath(window.location.pathname.replace(/\/+$/, ''))));
+    && !(typeof window !== 'undefined' && isSignPath(appPathname().replace(/\/+$/, ''))));
   return (
     <>
       <AppRoutes tree={tree} />

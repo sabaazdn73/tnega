@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RC Code Town, Tnega</title>
+<meta name="description" content="An interactive 3D town of US reinforced concrete structures: for each member, the governing ACI 318-19 and ASCE 7-16 provisions, the checks that matter and where a general AI model is likely to go wrong.">
+<link rel="canonical" href="https://www.tnega.app/town/">
+<style>
+@font-face{font-family:'Hanken Grotesk';font-style:normal;font-display:swap;font-weight:100 900;src:url('/fonts/hanken-grotesk-latin-wght-normal.woff2') format('woff2-variations')}
+html,body{margin:0;padding:0}
+/* Layout: a site-model table (3D canvas) beside a specification sheet that reads like a drawing's general notes. */
+:root{
+  --bg:#e9e7e1; --panel:#f6f5f1; --ink:#22251f; --muted:#62665c; --line:#cfccc2;
+  --accent:#2f5d8a; --done:#3f8a63; --prog:#c9862b; --plan:#a9a69c; --water:#7fa7bf; --ground:#d9d5c8; --road:#bdb8aa;
+  --concrete:#c8c5bc; --sel:#2f5d8a; --life:#b4442f; --money:#b8901c; --none:#c8c5bc;
+  --f-display:"Hanken Grotesk","Arial Narrow",Arial,sans-serif;
+  --f-body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#15181b; --panel:#1c2024; --ink:#e7e5de; --muted:#9aa09a; --line:#30363b;
+  --accent:#7fb0de; --done:#5cb586; --prog:#e2a24a; --plan:#5e6466; --water:#2f5568; --ground:#23282b; --road:#33393d;
+  --concrete:#7d8180; --sel:#7fb0de; --life:#e2735c; --money:#e0bd52; --none:#7d8180; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15181b; --panel:#1c2024; --ink:#e7e5de; --muted:#9aa09a; --line:#30363b;
+  --accent:#7fb0de; --done:#5cb586; --prog:#e2a24a; --plan:#5e6466; --water:#2f5568; --ground:#23282b; --road:#33393d;
+  --concrete:#7d8180; --sel:#7fb0de; --life:#e2735c; --money:#e0bd52; --none:#7d8180; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.5}
+.app{display:grid;grid-template-columns:minmax(0,1fr) 400px;height:100%;min-height:560px}
+.stage{position:relative;min-width:0;min-height:0}
+#c{display:block;width:100%;height:100%;cursor:grab;outline:none}
+#c:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
+.hud{position:absolute;left:16px;top:14px;right:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start;pointer-events:none}
+.brand{pointer-events:auto;background:var(--panel);border:1px solid var(--line);padding:8px 12px 9px;border-radius:4px}
+.brand h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:22px;letter-spacing:.02em;line-height:1.1;text-wrap:balance}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:12px}
+.legend{position:absolute;left:16px;bottom:14px;display:flex;flex-wrap:wrap;gap:6px 14px;background:var(--panel);border:1px solid var(--line);padding:7px 12px;border-radius:4px;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:11px;height:11px;border-radius:2px;display:inline-block}
+.hint{position:absolute;right:16px;bottom:14px;font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--line);padding:6px 10px;border-radius:4px}
+aside{background:var(--panel);border-left:1px solid var(--line);overflow:auto;padding-block:18px 28px;padding-inline:20px;min-width:0}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.meter{margin:6px 0 4px;height:8px;background:var(--line);border-radius:2px;overflow:hidden;display:flex}
+.meter i{display:block;height:100%}
+.stats{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.stats b{color:var(--ink);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 4px}
+.chip{font:500 12.5px var(--f-body);border:1px solid var(--line);background:transparent;color:var(--ink);padding:5px 10px;border-radius:3px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.chip:focus-visible,.part:focus-visible,.back:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+hr{border:0;border-top:1px solid var(--line);margin:16px 0}
+h2{font-family:var(--f-display);font-weight:600;font-size:24px;margin:2px 0 4px;line-height:1.15;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:.04em;text-transform:uppercase;margin:16px 0 6px;color:var(--muted)}
+.lede{margin:0 0 6px;max-width:62ch}
+.pill{display:inline-block;font:500 11px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:2px;border:1px solid currentColor}
+.pill.done{color:var(--done)} .pill.prog{color:var(--prog)} .pill.plan{color:var(--muted)}
+.codes{display:flex;flex-wrap:wrap;gap:6px}
+.code{font:500 12px var(--f-mono);background:var(--bg);border:1px solid var(--line);padding:2px 7px;border-radius:2px}
+ul.checks{margin:0;padding-left:0;list-style:none;display:grid;gap:6px}
+ul.checks li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;align-items:baseline}
+ul.checks .ref{font:500 11.5px var(--f-mono);color:var(--accent);white-space:nowrap}
+.task{border:1px solid var(--line);border-radius:3px;padding:8px 10px;display:grid;gap:3px;margin-bottom:6px}
+.task .t{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.task .id{font:600 12px var(--f-mono)}
+.task p{margin:0;color:var(--muted);font-size:13px}
+ol.plan{margin:0;padding-left:18px;display:grid;gap:3px}
+.parts{display:grid;gap:4px}
+.part{all:unset;cursor:pointer;display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 8px;border-radius:3px;border:1px solid transparent}
+.part:hover{border-color:var(--line);background:var(--bg)}
+.part .n{font-weight:500}
+.part .s{font:11px var(--f-mono);color:var(--muted)}
+.back{all:unset;cursor:pointer;font:500 12.5px var(--f-body);color:var(--accent)}
+.note{font-size:12px;color:var(--muted);margin-top:18px}
+.mode{display:flex;gap:0;margin:12px 0 0;border:1px solid var(--line);border-radius:3px;width:max-content;max-width:100%}
+.mode button{all:unset;cursor:pointer;font:500 12px var(--f-body);padding:5px 12px;color:var(--muted)}
+.mode button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+.mode button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.trap{border:1px solid var(--line);border-left:3px solid var(--sevc,var(--line));border-radius:3px;padding:9px 11px;display:grid;gap:5px;margin-bottom:8px;background:var(--panel)}
+.trap.life{--sevc:var(--life)} .trap.money{--sevc:var(--money)}
+.trap .th{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.sev{font:600 10.5px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--sevc)}
+.trap .ref{font:500 11.5px var(--f-mono);color:var(--accent)}
+.trap dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;font-size:13px}
+.trap dt{font:600 10.5px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+.trap dd{margin:0;min-width:0}
+.trap dd.ask{color:var(--ink)}
+.protocol{border:1px solid var(--line);border-radius:3px;padding:10px 12px;background:var(--bg)}
+.protocol ol{margin:4px 0 0;padding-left:18px;display:grid;gap:4px;font-size:13px}
+.fallback[hidden]{display:none}
+.fallback{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--muted)}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr;grid-template-rows:56vh auto;height:auto}
+  aside{border-left:0;border-top:1px solid var(--line);overflow:visible}
+  .hint{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="stage">
+    <canvas id="c" tabindex="0" aria-label="3D model of the town. Drag to orbit, scroll to zoom, click a structure or a part."></canvas>
+    <div class="hud"><div class="brand"><h1>RC Code Town</h1><p>Where AI review of US reinforced concrete drawings goes wrong</p></div></div>
+    <div class="legend" id="legend" aria-label="Legend"></div>
+    <div class="hint">Drag to orbit · scroll to zoom · click a part</div>
+    <div class="fallback" id="fallback" hidden>The 3D view needs WebGL. The structure list on the right still works.</div>
+  </div>
+  <aside id="panel" aria-live="polite"></aside>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="town.js"></script>
+</body>
+</html>

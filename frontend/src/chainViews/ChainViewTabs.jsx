@@ -23,6 +23,7 @@ import ArbitrumView from './ArbitrumView';
 import RobinhoodView from './RobinhoodView';
 import MonadView from './MonadView';
 import ChainChooser from './ChainChooser';
+import { appPathname } from '../basePath.js';
 
 // The chooser is the Explore tab's first screen, every time Explore is opened.
 //
@@ -106,7 +107,7 @@ const FALLBACK_TABS = [
 // sends any other path to "/", so a stale or mistyped link lands on the
 // Dashboard instead of on nothing.
 function viewFromLocation() {
-  const path = window.location.pathname;
+  const path = appPathname();
   const direct = path.match(/^\/chain\/([a-z-]+)\/?$/);
   if (direct && FALLBACK_TABS.some((t) => t.id === direct[1])) return direct[1];
   const m = path.match(/^\/chain-agent\/(\d+)\//);

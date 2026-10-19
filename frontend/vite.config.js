@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { SITE_COPY } from './src/siteCopy.js';
+import { ENGINEERING_COPY as SITE_COPY } from './src/siteCopy.js';
 
 // NO THIRD-PARTY FONT HOST. The WalletConnect modal (@reown/appkit-ui,
 // utils/ThemeUtil.js) writes `@import url('https://fonts.googleapis.com/
@@ -25,7 +25,9 @@ function stripGoogleFonts() {
   };
 }
 
-// THE SITE'S TITLE AND DESCRIPTION, from src/siteCopy.js (which follows
+// THE SITE'S TITLE AND DESCRIPTION: the engineering home's ("/", since
+// 2026-10-19), ENGINEERING_COPY in src/siteCopy.js. Before that, the finance
+// copy, from src/siteCopy.js (which follows
 // DATA_LIVE) into index.html's __TNEGA_*__ placeholders, and into the
 // built manifest.json, so the static tags a scraper reads, the manifest and
 // what App.jsx sets at runtime are one copy.
