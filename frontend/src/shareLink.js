@@ -8,6 +8,7 @@
 // agent's on-chain token id (or its marketplace id) as `?agent=<id>`; on load
 // the app opens that agent's existing detail view if it's in the served set.
 // Shared by web and mobile so both behave identically.
+import { appPathname, publicPath } from './basePath.js';
 
 /** An agent's id for URLs (prefers the on-chain ERC-8004 token id). */
 export function agentUrlId(agent) {
@@ -28,7 +29,7 @@ export function agentPath(agent) {
 
 /** The full shareable URL for an agent. */
 export function agentShareUrl(agent) {
-  return `${window.location.origin}${agentPath(agent)}`;
+  return `${window.location.origin}${publicPath(agentPath(agent))}`;
 }
 
 /** The agent id in the current URL, or null.
@@ -38,7 +39,7 @@ export function agentShareUrl(agent) {
  * already out in the world, so they keep resolving. */
 export function readDeepLinkAgentId() {
   try {
-    const m = window.location.pathname.match(/^\/agent\/([^/?#]+)/);
+    const m = appPathname().match(/^\/agent\/([^/?#]+)/);
     if (m) return decodeURIComponent(m[1]);
     return new URLSearchParams(window.location.search).get('agent');
   } catch { return null; }

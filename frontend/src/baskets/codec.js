@@ -12,6 +12,7 @@
 // A pinned version `k` is written exactly as GET /api/te/underlying serves
 // the version's key ("4663/0xd060...", the address in lowercase): it is
 // never checksummed or otherwise rewritten. Base64 padding is stripped.
+import { publicPath } from '../basePath.js';
 
 export const MAX_LEGS = 5;
 export const BPS = 10000;
@@ -114,5 +115,5 @@ export const legsParam = (legs) => legs.map((l) => `${l.t}:${l.w}${l.k ? `@${l.k
 export const shareUrl = (legs, size, bParam = null) => {
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.tnega.app';
   const b = (typeof bParam === 'string' && bParam ? bParam : encodeB(legs)).replace(/=+$/, '');
-  return `${origin}/my-etfs?b=${b}${size && size !== 1000 ? `&size=${size}` : ''}`;
+  return `${origin}${publicPath('/my-etfs')}?b=${b}${size && size !== 1000 ? `&size=${size}` : ''}`;
 };

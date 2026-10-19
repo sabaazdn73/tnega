@@ -48,6 +48,10 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 load_dotenv(ROOT / "backend" / ".env")
 
 BASE = "https://www.tnega.app"
+# Since 2026-10-19 the tokenized-stock product lives under /finance and "/" is
+# the structural engineering home (frontend/src/basePath.js). Every route
+# below is an in-app path of the finance product and is published with FIN.
+FIN = f"{BASE}/finance"
 OUT = ROOT / "frontend" / "public" / "sitemap.xml"
 DOCS_DIR = ROOT / "docs"
 
@@ -55,7 +59,7 @@ DOCS_DIR = ROOT / "docs"
 # `/market` is first after the homepage because it is the page this site is
 # for; it was the one missing from the hand-written file.
 STATIC = [
-    ("/", "daily", "1.0"),
+    ("", "daily", "0.9"),
     # The product pages, 2026-09-25. The old tabs (/wallet, /native-agents,
     # /skills, /how-it-works, /learn, /report, /build, /sell) are gone from
     # this list: each now redirects (frontend/src/routePaths.js REDIRECTS),
@@ -104,7 +108,8 @@ def url_el(loc: str, changefreq: str, priority: str, lastmod: str) -> str:
 
 async def main() -> None:
     today = date.today().isoformat()
-    rows: list[str] = [url_el(f"{BASE}{p}", cf, pr, today) for p, cf, pr in STATIC]
+    rows: list[str] = [url_el(f"{BASE}/", "weekly", "1.0", today)]
+    rows += [url_el(f"{FIN}{p}", cf, pr, today) for p, cf, pr in STATIC]
 
     # Slugs are lowercased by DocsPage.filenameToSlug, and README maps to the
     # empty slug -- it IS /docs, so listing /docs/README would submit a second
@@ -116,7 +121,7 @@ async def main() -> None:
         if p.stem.upper() not in {"SUMMARY", "README", "DEFERRED"}
     )
     for slug in docs:
-        rows.append(url_el(f"{BASE}/docs/{slug}", "monthly", "0.5", today))
+        rows.append(url_el(f"{FIN}/docs/{slug}", "monthly", "0.5", today))
 
     client = AsyncIOMotorClient(os.environ["MONGODB_URI"])
     db = client[os.environ["MONGODB_DB_NAME"]]
@@ -127,7 +132,7 @@ async def main() -> None:
         tid = d.get("token_id")
         if tid is None:
             continue
-        loc = f"{BASE}/agent/{tid}"
+        loc = f"{FIN}/agent/{tid}"
         if loc in seen:
             continue
         seen.add(loc)
@@ -143,7 +148,7 @@ async def main() -> None:
             tid = d.get("token_id")
             if tid is None:
                 continue
-            loc = f"{BASE}/chain-agent/{cid}/{tid}"
+            loc = f"{FIN}/chain-agent/{cid}/{tid}"
             if loc in seen:
                 continue
             seen.add(loc)

@@ -1,0 +1,1 @@
+three.min.js and OrbitControls.js: three.js r128 (0.128.0), MIT licence, copyright 2010-2021 three.js authors (https://github.com/mrdoob/three.js/blob/r128/LICENSE). Served from this site so the page needs no CDN.

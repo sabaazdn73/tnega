@@ -36,3 +36,16 @@ const LIVE = {
 };
 
 export const SITE_COPY = DATA_LIVE ? LIVE : TODAY;
+
+// THE ENGINEERING HOME, "/" since 2026-10-19 (basePath.js). This is the copy
+// index.html and the manifest carry, because "/" is what a shared tnega.app
+// link opens. Finance pages set their own at runtime (App.jsx PAGE_META,
+// whose "/" entry is SITE_COPY above). It says "in development" because the
+// review agent is not available to use yet.
+export const ENGINEERING_COPY = {
+  docTitle: 'Tnega: An AI reviewer for structural drawings, in development',
+  ogTitle: 'Structural drawings, checked where AI goes wrong.',
+  ogDescription: 'Tnega is building an agent that checks reinforced concrete drawings against ACI 318-19 and ASCE 7-16 and sends every life-safety finding to an engineer.',
+  description: 'Tnega is building an AI agent that checks reinforced concrete drawings against the code of record, marks where a general AI model is likely to go wrong, and sends every life-safety finding to an engineer. In development.',
+  appDescription: 'An AI reviewer for structural drawings, in development, and Tnega Finance: tokenized stocks and what each costs to buy.',
+};

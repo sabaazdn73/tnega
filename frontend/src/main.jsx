@@ -10,8 +10,28 @@ import App from './App';
 import { ThemeProvider } from './theme/ThemeProvider';
 import ThemedRainbowKit from './theme/ThemedRainbowKit';
 import { SignInProvider } from './wallet/SignInProvider';
-import { isSignPath, stripTrailingSlash } from './routePaths';
+import { isSignPath, stripTrailingSlash, resolvePath } from './routePaths';
+import { appPathname, fp, installFinanceBase, isFinancePath } from './basePath';
 import './index.css';
+
+// WHICH PRODUCT THIS ADDRESS IS (basePath.js). "/" is the structural
+// engineering review agent; everything under /finance is the tokenized-stock
+// product. A finance address from before the move (/stocks, /sign/<id>,
+// /market, "/?agent=<id>") is moved under /finance here, replaced rather than
+// pushed, before anything renders. An address that is neither goes to "/".
+function bootProduct() {
+  const { pathname, search, hash } = window.location;
+  const p = stripTrailingSlash(pathname);
+  if (isFinancePath(p)) return 'finance';
+  if (p === '/' && !/[?&]agent=/.test(search)) return 'engineering';
+  const { unknown } = resolvePath(p);
+  try {
+    window.history.replaceState(window.history.state, '', unknown ? `/${hash}` : `${fp(p)}${search}${hash}`);
+  } catch { /* non-fatal */ }
+  return unknown ? 'engineering' : 'finance';
+}
+const PRODUCT = bootProduct();
+if (PRODUCT === 'finance') installFinanceBase();
 
 // Installed before anything renders, so every backend call in the app is
 // covered rather than only the ones that were remembered. GET/HEAD only --
@@ -55,7 +75,16 @@ const renderSite = (fallback = false) => root.render(
 // A signing link (/sign/<id>) gets its own providers instead of the site's
 // (sign/SignRoot.jsx says why), loaded only for such a page load. If that
 // code cannot load, the site renders as usual and the page says what it can.
-if (isSignPath(stripTrailingSlash(window.location.pathname))) {
+if (PRODUCT === 'engineering') {
+  // The engineering home needs no wallet providers; it is loaded on its own.
+  import('./engineering/EngineeringHome.jsx').then(({ default: EngineeringHome }) => root.render(
+    <React.StrictMode>
+      <ThemeProvider>
+        <EngineeringHome />
+      </ThemeProvider>
+    </React.StrictMode>
+  ));
+} else if (isSignPath(stripTrailingSlash(appPathname()))) {
   import('./sign/SignRoot.jsx').then(({ default: SignRoot }) => root.render(
     <React.StrictMode>
       <ThemeProvider>

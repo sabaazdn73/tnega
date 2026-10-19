@@ -1,5 +1,9 @@
 # Tnega
 
+Tnega has two parts. The home page, https://www.tnega.app/, is a structural engineering review agent in development: it is being built to check reinforced concrete drawings against ACI 318-19 and ASCE 7-16, mark where a general AI model is likely to go wrong, and send every life-safety finding to an engineer. It is not available to use yet. Everything below is Tnega Finance, at https://www.tnega.app/finance, which is live.
+
+## Tnega Finance
+
 > Tnega measures what it really costs to buy a tokenized stock or ETF, on every chain it trades on, and prepares the order for you to sign in your own wallet. It also reads on-chain AI agents, jobs, budgets and stablecoin vaults. Every number carries its coverage and an as_of time. Tnega never signs, holds funds or asks for a key.
 
 Tnega has a free hosted MCP server. No account, no API key.
@@ -18,20 +22,20 @@ Tnega has a free hosted MCP server. No account, no API key.
 
 ## Receipts
 
-- An optional on-chain receipt of a purchase, on Solana devnet, written only with the buyer's own signature and re-checked in the browser: https://www.tnega.app/docs/receipt
+- An optional on-chain receipt of a purchase, on Solana devnet, written only with the buyer's own signature and re-checked in the browser: https://www.tnega.app/finance/docs/receipt
 
 ## Docs
 
-- [Use with AI](https://www.tnega.app/ai): the endpoint, the one-line install and the tools it serves
-- [Guide](https://www.tnega.app/guide): what each part of Tnega means, how costs are measured, what is checked before a trade, signing
-- [Data sources](https://www.tnega.app/data-sources): where each number comes from
-- [Docs](https://www.tnega.app/docs)
+- [Use with AI](https://www.tnega.app/finance/ai): the endpoint, the one-line install and the tools it serves
+- [Guide](https://www.tnega.app/finance/guide): what each part of Tnega means, how costs are measured, what is checked before a trade, signing
+- [Data sources](https://www.tnega.app/finance/data-sources): where each number comes from
+- [Docs](https://www.tnega.app/finance/docs)
 
 ## Site
 
-- [Stocks](https://www.tnega.app/stocks): tokenized stocks and ETFs with the measured cost per issuer's version and chain
-- [Vaults](https://www.tnega.app/vaults)
-- [Issuer controls](https://www.tnega.app/issuer-controls)
+- [Stocks](https://www.tnega.app/finance/stocks): tokenized stocks and ETFs with the measured cost per issuer's version and chain
+- [Vaults](https://www.tnega.app/finance/vaults)
+- [Issuer controls](https://www.tnega.app/finance/issuer-controls)
 
 ## Notes for assistants
 

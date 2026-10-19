@@ -1,6 +1,16 @@
 # Tnega
 
-Live: [https://www.tnega.app](https://www.tnega.app) · Docs: [docs/](docs/README.md), also on the site at [/docs](https://www.tnega.app/docs) · Demo video: [YouTube](https://www.youtube.com/watch?v=AlatZXpy6Vo)
+Live: [https://www.tnega.app](https://www.tnega.app) · Docs: [docs/](docs/README.md), also on the site at [/finance/docs](https://www.tnega.app/finance/docs) · Demo video: [YouTube](https://www.youtube.com/watch?v=AlatZXpy6Vo)
+
+**Two products, one domain (since 19 October 2026).** The home page,
+[tnega.app](https://www.tnega.app), is a structural engineering review agent in
+development: it is being built to check reinforced concrete drawings against
+ACI 318-19 and ASCE 7-16 and send every life-safety finding to an engineer. It
+does not review drawings yet; the page shows its check library as a 3D town
+([/town/](https://www.tnega.app/town/), `frontend/public/town/`). Everything
+below is **Tnega Finance**, now at [tnega.app/finance](https://www.tnega.app/finance).
+Every older finance address (`/stocks`, `/sign/<id>`, `/market`, ...) still
+works and is moved under `/finance` when it opens (`frontend/src/basePath.js`).
 
 Tnega lists the tokenized versions of stocks and ETFs across chains and
 measures what each one costs to buy. The same share is issued as separate
