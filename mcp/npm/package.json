@@ -16,7 +16,7 @@
   "homepage": "https://www.tnega.app",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sabaazdn73/Agents-Marketplace.git",
+    "url": "git+https://github.com/sabaazdn73/tnega.git",
     "directory": "mcp/npm"
   },
   "keywords": [

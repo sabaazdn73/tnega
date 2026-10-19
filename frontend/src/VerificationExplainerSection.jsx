@@ -220,7 +220,7 @@ export default function VerificationExplainerSection({
           </div>
 
           <a
-            href="https://github.com/sabaazdn73/Agents-Marketplace/blob/main/docs/verification-methodology.md"
+            href="https://github.com/sabaazdn73/tnega/blob/main/docs/verification-methodology.md"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"

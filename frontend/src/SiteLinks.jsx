@@ -27,7 +27,7 @@ import { CHROME_EXTENSION_URL } from './extensionLink';
 import { PRODUCT_NAV, EXTRA_PAGES } from './shell/productNav';
 import { weeklyLinks } from './weeklyUpdates';
 
-export const GITHUB_URL = 'https://github.com/sabaazdn73/Agents-Marketplace';
+export const GITHUB_URL = 'https://github.com/sabaazdn73/tnega';
 export const LINKEDIN_URL = 'https://www.linkedin.com/in/saba-azadegan-2974b622a';
 export const X_URL = 'https://x.com/SabaAzadegan';
 export const YOUTUBE_URL = 'https://www.youtube.com/@sabaazadegan';

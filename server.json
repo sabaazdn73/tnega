@@ -5,7 +5,7 @@
   "description": "Real cost of buying tokenized stocks on every chain, then sign in your own wallet. Read only.",
   "version": "0.1.0",
   "websiteUrl": "https://www.tnega.app",
-  "repository": { "url": "https://github.com/sabaazdn73/Agents-Marketplace", "source": "github" },
+  "repository": { "url": "https://github.com/sabaazdn73/tnega", "source": "github" },
   "remotes": [
     { "type": "streamable-http", "url": "https://mcp.tnega.app/mcp" }
   ]
