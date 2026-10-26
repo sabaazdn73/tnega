@@ -79,7 +79,7 @@ export default function EngineeringHome() {
               <div>
                 <h2 className="text-[24px] leading-[30px] font-semibold tracking-[-0.01em]">The code town</h2>
                 <p className="mt-1 max-w-[720px] text-[14px] leading-[22px] text-muted">
-                  Five kinds of concrete structure and their members. Click one to see the governing provisions,
+                  Six kinds of concrete structure and their members. Click one to see the governing provisions,
                   the checks that matter, and where a general AI model is likely to go wrong, with what that error costs.
                 </p>
               </div>
