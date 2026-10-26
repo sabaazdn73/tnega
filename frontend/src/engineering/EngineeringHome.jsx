@@ -12,13 +12,16 @@
 // providers, so the home page carries none of that code.
 
 import React, { useEffect } from 'react';
-import { ArrowRight, Maximize2, FileSearch, ListChecks, Calculator, Users, ShieldAlert, Linkedin } from 'lucide-react';
+import { ArrowRight, Maximize2, FileSearch, ListChecks, Calculator, Users, ShieldAlert, Linkedin, PlayCircle } from 'lucide-react';
 import Brand from '../shell/Brand';
 import ThemeToggle from '../theme/ThemeToggle';
 import { updatePageMeta } from '../seoMeta';
 import { ENGINEERING_COPY } from '../siteCopy';
 
 const LINKEDIN = 'https://www.linkedin.com/in/saba-azadegan-2974b622a/';
+// The owner's talk on YouTube (2026-10-26), embedded from youtube-nocookie.com (allowed in vercel.json frame-src).
+const VIDEO_ID = 'JYRgS2VCLQQ';
+const VIDEO_URL = `https://www.youtube.com/watch?v=${VIDEO_ID}`;
 
 const STEPS = [
   { icon: FileSearch, title: 'Read the drawing set', text: 'Every sheet of the PDF, at full resolution: plans, sections, schedules and general notes, with the code edition of record taken from the notes, never assumed.' },
@@ -45,6 +48,7 @@ export default function EngineeringHome() {
           <nav className="flex items-center gap-4 sm:gap-6 text-[13px] font-semibold">
             <a href="#how" className="hidden sm:inline hover:underline">How it works</a>
             <a href="#town" className="hidden sm:inline hover:underline">Code town</a>
+            <a href="#talk" className="hidden md:inline hover:underline">Talk</a>
             <a href="/finance" className="inline-flex items-center gap-1 hover:underline">Tnega Finance <ArrowRight size={13} aria-hidden="true" /></a>
             <ThemeToggle />
           </nav>
@@ -66,11 +70,41 @@ export default function EngineeringHome() {
             <a href="#town" className="h-11 px-5 rounded bg-accent text-accent-fg text-[14px] font-semibold inline-flex items-center gap-2">
               Explore the code town <ArrowRight size={15} aria-hidden="true" />
             </a>
+            <a href="#talk" className="h-11 px-5 rounded border border-line-strong text-[14px] font-semibold inline-flex items-center gap-2">
+              <PlayCircle size={15} aria-hidden="true" /> Watch the talk
+            </a>
             <a href={LINKEDIN} target="_blank" rel="noreferrer" className="h-11 px-5 rounded border border-line-strong text-[14px] font-semibold inline-flex items-center gap-2">
               <Linkedin size={15} aria-hidden="true" /> Talk to us about a pilot
             </a>
           </div>
           <p className="mt-4 text-[12px] text-muted">The agent does not review drawings yet. This page shows what it is being built to check.</p>
+        </section>
+
+        <section id="talk" className="max-w-[1180px] mx-auto px-4 sm:px-6 pb-12 scroll-mt-4">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] items-start">
+            <div className="rounded-lg border border-line overflow-hidden bg-black aspect-video">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?rel=0`}
+                title="How AI is trained on structural engineering, a talk by Saba Azadegan"
+                className="block w-full h-full border-0"
+                loading="lazy"
+                allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
+            </div>
+            <div>
+              <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted">Talk · 4 minutes</p>
+              <h2 className="mt-2 text-[24px] leading-[30px] font-semibold tracking-[-0.01em]">How AI is trained on structural engineering</h2>
+              <p className="mt-3 text-[14px] leading-[22px] text-muted">
+                How a realistic engineering task is designed, how models attempt it and are graded against an answer key,
+                and why a structural engineer who knows the governing codes has to stay in control of the loop.
+              </p>
+              <a href={VIDEO_URL} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-semibold hover:underline">
+                <PlayCircle size={14} aria-hidden="true" /> Watch on YouTube
+              </a>
+            </div>
+          </div>
         </section>
 
         <section id="town" className="border-y border-line bg-surface scroll-mt-4">
