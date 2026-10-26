@@ -4,6 +4,7 @@
     if(v==='dark'||v==='light') document.documentElement.setAttribute('data-theme',v); else document.documentElement.removeAttribute('data-theme');};
   apply(); addEventListener('storage',e=>{if(e.key==='tnega_theme') apply()});
 })();
+
 /* ---------------- Content ---------------- */
 /* Review scenarios where a general AI model is likely to go wrong. General examples, from the public codes. */
 const SCENARIOS = {
@@ -18,7 +19,14 @@ const SCENARIOS = {
   s9:{title:"Special moment frame beam review before permit",topic:"Probable moment strength with the bar grade actually used, design shear with the concrete contribution set to zero in the hinge zones, hoop spacing for Grade 80 bars, and unequal gravity shear along the span."},
   s10:{title:"Reducing mat reinforcement, a value-engineering proposal",topic:"One-way shear of a thick mat without stirrups: which row of Table 22.5.5.1 applies, the size-effect waiver for foundations, and which bars count in the longitudinal ratio."},
   s11:{title:"Column dowels at the mat, a contractor's RFI",topic:"Whether compression lap splices are allowed at the column base when wind load cases, including the combined-direction cases, put corner bars in tension."},
-  s12:{title:"Moment frame joint check in a peer review",topic:"Joint shear in intermediate moment frames: demand from the beams' nominal strength and the seismic joint table, where the columns step down in size but the beams stay the same."}
+  s12:{title:"Moment frame joint check in a peer review",topic:"Joint shear in intermediate moment frames: demand from the beams' nominal strength and the seismic joint table, where the columns step down in size but the beams stay the same."},
+  s13:{title:"Low-strength concrete in gravity columns",topic:"Acceptance of a low strength test: the individual-test limit, length-to-diameter correction of cores, and an analytical strength evaluation with the right strength reduction factors."},
+  s14:{title:"Wall pier review before permit",topic:"A short wall segment between openings that the code treats as a wall pier, and the special moment frame column rules it then has to meet."},
+  s15:{title:"Compatibility torsion in a spandrel beam",topic:"Reducing the torsion in a spandrel to the cracking torque, and carrying the released moment into the framing beam; torsion steel limits in special moment frame beams."},
+  s16:{title:"Gravity columns and deformation compatibility",topic:"Gravity columns checked at the design displacement with the deflection amplification and importance factors, from a model with released gravity framing."},
+  s17:{title:"Strapped footing at the property line",topic:"Reaction of an eccentric footing tied by a strap beam, vertical seismic load in allowable-stress bearing, and column hoops carried into the footing."},
+  s18:{title:"Mechanical splices and bar substitution in special moment frame beams, a contractor's RFI",topic:"Joint depth for Grade 80 beam bars passing through a column, where Type 2 couplers may sit when the bars are Grade 80, and position couplers for prefabricated cages."},
+  s19:{title:"Tied-back shoring before the engineer of record signs, a deferred submittal",topic:"Apparent earth pressure for a tied-back wall, passive resistance over three hole diameters, and whether the soldier piles can carry the downward pull of a steep tieback."}
 };
 
 /* Where an AI reviewer goes wrong, what it costs, and what an execution supervisor must open before accepting the result.
@@ -32,17 +40,21 @@ const PROTOCOL = [
 ];
 const TRAPS = {
   footing:[
+    {sev:"life",ref:"Strap footing",err:"The reaction on an eccentric property-line footing is taken as the column load only, without the extra load the strap beam adds.",cons:"The exterior footing is undersized in bearing and the strap is underdesigned; the column base rotates and settles.",look:"Statics of the footing and strap with the real eccentricity; ASCE 7 12.4.2.2 vertical seismic effect in allowable-stress bearing; ACI 318-19 18.13.2.4 column hoops into the footing.",ask:"The foundation plan with the property line, the strap section and the footing loads."},
     {sev:"life",ref:"22.6.5.2",err:"Two-way shear in a thick footing is checked without the size-effect factor λs, which ACI 318-19 added.",cons:"Concrete shear strength is overestimated in deep members. Punching at the column is sudden and gives no warning.",look:"ACI 318-19 Table 22.6.5.2 and 13.2.7; footing depth d and whether shear reinforcement is provided.",ask:"The ACI 318-19 Chapter 22 text, if the reviewer cannot open it."},
     {sev:"both",ref:"Geotech",err:"An allowable bearing pressure is assumed (for example a 'typical' 3,000 psf) because no soil value is given.",cons:"Footings sized too small settle or fail in bearing; sized too large waste concrete and steel.",look:"The project geotechnical report: allowable bearing, settlement limits, groundwater, frost depth.",ask:"The geotechnical report or the bearing value stated on the foundation plan."},
     {sev:"life",ref:"Table 22.5.5.1",err:"One-way shear of a mat without stirrups checked with the simple 2λ√f'c expression although Av is below the minimum, or with ρw counted from the top and bottom bars together.",cons:"Shear strength of the mat is overestimated exactly where bars were reduced; a brittle diagonal crack forms under the heaviest columns.",look:"ACI 318-19 Table 22.5.5.1, 22.5.5.1.3 and 13.2.6.2 (λs in foundations); only the flexural tension bars count in ρw.",ask:"The mat reinforcement at both faces and the strip shears from the analysis."},
     {sev:"life",ref:"10.7.5.2",err:"Compression lap splices accepted at the column base because each single wind direction keeps the column in compression. The combined-direction wind cases are not checked.",cons:"Corner bars go into tension under combined wind; a compression lap pulls apart at the base of the column.",look:"ASCE 7-16 Fig. 27.3-8 (Cases 1 to 4), combinations with 0.9D, ACI 318-19 10.7.5.2 and 25.5.",ask:"Unfactored column base reactions by load case, for both wind directions."},
     {sev:"life",ref:"16.3.4.1",err:"Column-to-footing dowels below 0.005Ag, or column bars hooked into the footing for compression.",cons:"The column load is not transferred into the footing; hooks do not develop bars in compression.",look:"ACI 318-19 16.3.4.1, 25.4.9 (compression development), 25.4.1.2.",ask:"Column schedule and footing details."}],
   column:[
+    {sev:"life",ref:"18.14",err:"Gravity columns checked at the elastic drift from the analysis, or with the deflection amplification but forces from a model that keeps the gravity beams rigidly framed.",cons:"Gravity columns lose their vertical capacity at the design drift; collapse can follow even when the moment frames survive.",look:"ASCE 7 12.8.6 (Cd, Ie) and ACI 318-19 18.14.3.",ask:"The drift output and how the gravity framing is modeled."},
     {sev:"life",ref:"6.2.5",err:"Slenderness is ignored, or the non-sway limit is applied to a frame that sways.",cons:"Second-order moments are missed and the column is under-designed against instability.",look:"ACI 318-19 6.2.5, 6.6.4 and 6.6.4.4; the lateral system and story stability index Q.",ask:"The lateral analysis results (story drifts, Q) for the floor in question."},
     {sev:"life",ref:"10.7.5",err:"Column splices sized as compression laps where load combinations put the bars in tension.",cons:"Splices pull apart under lateral load or uplift.",look:"ACI 318-19 10.7.5.2; the bar stress range from all load combinations.",ask:"The factored load combinations and the interaction results for the column."},
     {sev:"life",ref:"18.7.5.2(f)",err:"In a special moment frame column with high axial load (Pu with earthquake effects above 0.3Ag f'c), crossties are placed on every other bar only, and the kf and kn factors of Table 18.7.5.4 are left out.",cons:"The core is not confined where the axial load is highest; the column fails in a brittle way in its hinge zone.",look:"ACI 318-19 18.7.5.2(f), Table 18.7.5.4 and the factored axial loads including the vertical earthquake effect, level by level.",ask:"The column axial loads from the seismic load combinations."},
     {sev:"life",ref:"25.7.2",err:"Tie spacing taken from a typical detail without checking 16db, 48 tie diameters and least dimension.",cons:"Bars buckle and the core loses confinement before the design load is reached.",look:"ACI 318-19 25.7.2.1 and, in seismic regions, 18.7.5.",ask:"The seismic design category, which decides whether Chapter 18 applies."}],
   beam:[
+    {sev:"life",ref:"18.2.7.2",err:"Type 2 mechanical splices accepted at any location in a special moment frame beam with Grade 80 bars. ACI 318-19 allows any location only for Type 2 splices on Grade 60 bars.",cons:"Couplers sit in the plastic hinge region where bar stresses can exceed what the splice can carry; splices fail in an earthquake.",look:"ACI 318-19 18.2.7.2 and R18.2.7; the bar grade on the general notes.",ask:"The coupler locations from the column faces and the bar grade."},
+    {sev:"life",ref:"22.7.3.3",err:"Spandrel torsion reduced to the cracking torque, but the framing beam is still designed for the original end moment.",cons:"The beam that picks up the released moment is underdesigned at midspan and cracks or fails in flexure.",look:"ACI 318-19 22.7.3.2 and 22.7.3.3 (redistribution to the adjoining members).",ask:"The framing beam design moments after the torsion reduction."},
     {sev:"life",ref:"25.5.2.1",err:"Class A lap used where Class B is required (As provided less than twice As required, or more than half the bars spliced).",cons:"Lap splices fail in a brittle manner at the most stressed section.",look:"ACI 318-19 Table 25.5.2.1; As provided and required at the splice location; the percentage spliced.",ask:"The flexural design output at the splice location."},
     {sev:"life",ref:"25.4.2.5",err:"Development length computed without ψt for top bars, ψe for epoxy coating or ψg for Grade 80 bars.",cons:"Bars are anchored short and can pull out before yielding.",look:"ACI 318-19 Table 25.4.2.5; bar grade, coating and casting position from the general notes.",ask:"The reinforcement specification (grade, coating) if the notes do not state it."},
     {sev:"life",ref:"18.6.5.2",err:"Design shear of a special moment frame beam taken from the analysis, or Vc kept although the earthquake shear is at least half of the maximum shear in the hinge zone.",cons:"Too few hoops at the beam ends; the beam fails in shear before it yields in flexure.",look:"ACI 318-19 18.6.5.1 and 18.6.5.2; Mpr at both ends with 1.25 fy of the bar grade actually used; the gravity shear at each end, which differs when the loads are not symmetric.",ask:"Bar grade, beam reinforcement at both column faces and the gravity loads on the span."},
@@ -59,6 +71,7 @@ const TRAPS = {
     {sev:"life",ref:"22.6.4.3",err:"Openings within 4h of the column are not deducted from the critical perimeter b0.",cons:"Shear capacity is overestimated right where MEP penetrations cluster.",look:"ACI 318-19 22.6.4.3; the MEP penetration drawings.",ask:"Coordinated MEP or sleeve drawings for the slab."},
     {sev:"life",ref:"8.7.4.2",err:"Integrity bottom bars through the column are left out or not continuous.",cons:"After a local punching failure the slab cannot hang from the column; progressive collapse.",look:"ACI 318-19 8.7.4.2.",ask:"The bottom reinforcement plan at columns."}],
   joint:[
+    {sev:"life",ref:"18.8.2.3",err:"Larger Grade 80 beam bars accepted through a special moment frame joint with the 20db rule, which applies to Grade 60 bars. Grade 80 bars need a joint depth of 26db.",cons:"Bars slip through the joint under cyclic loading; the frame loses stiffness and strength.",look:"ACI 318-19 18.8.2.3(a) and (b) and the column dimension parallel to the bars.",ask:"The bar size and grade and the column dimensions at each joint."},
     {sev:"life",ref:"25.4.3",err:"Hooked-bar development computed with the ACI 318-14 expression. ACI 318-19 uses a new equation with ψp, ψc, ψr and db^1.5.",cons:"Large-diameter hooked bars are anchored short and can pull out of an exterior joint.",look:"ACI 318-19 25.4.3.1 and Table 25.4.3.2; the edition of record.",ask:"The general notes (edition) and the column and beam dimensions at the joint."},
     {sev:"life",ref:"18.4.4.7",err:"An intermediate moment frame joint checked with forces from the analysis and the Chapter 15 table, as for a non-seismic joint. The joint with the largest analysis moments is taken as governing.",cons:"Joint demand set by beam strength is missed. Where the columns get smaller and the beams stay the same, the joint fails in shear before the beams yield.",look:"ACI 318-19 18.4.4.7.2 (Vu from beam Mn, 18.3.4), 18.4.4.7.4 and Table 18.8.4.3; check the joint with the smallest column in each beam band.",ask:"The frame beam schedule and the column schedule for every level band."},
     {sev:"life",ref:"18.8",err:"A special moment frame joint is detailed with Chapter 15 rules only.",cons:"Joint shear and anchorage fail under cyclic seismic loading.",look:"ACI 318-19 18.8.2 to 18.8.5; the seismic design category and frame type.",ask:"Seismic design category and the lateral system designation."}],
@@ -111,6 +124,19 @@ const TRAPS = {
     {sev:"both",ref:"At-rest",err:"Basement walls braced by floor slabs designed with active pressure Ka, as if the wall could rotate.",cons:"Walls restrained at the top see at-rest pressure; flexural cracking and leaks, or failure.",look:"Geotechnical report (K0 and Ka values); support conditions from the slab framing.",ask:"The geotechnical report and the sequence in which floors are built against the wall."},
     {sev:"life",ref:"Buoyancy",err:"Basement slab checked for gravity loads only, with the design groundwater level ignored.",cons:"Uplift cracks or lifts the slab; flooding of the basement.",look:"Design groundwater level in the geotechnical report; ASCE 7-16 3.2.2.",ask:"Design groundwater level and any dewatering assumptions."},
     {sev:"life",ref:"Shoring",err:"Excavation next to an existing building approved without checking its footings or underpinning.",cons:"Settlement or collapse of the neighbouring structure.",look:"IBC 2021 3307 protection of adjoining property; shoring design; survey of adjacent foundations.",ask:"Survey of adjacent foundations and the shoring design submittal."}],
+  xfer:[
+    {sev:"life",ref:"9.9.1.1",err:"A transfer girder with a residential column 5 ft from its support designed as an ordinary beam with sectional shear (Chapter 22).",cons:"Struts and nodes are never checked; the girder can fail in a brittle way under a column that carries eight floors.",look:"ACI 318-19 9.9.1.1(b), 9.9.1.3, 9.9.2.1 and Chapter 23; the distance from each column to the support face compared with 2h.",ask:"The framing plan with the residential column positions over the transfer girders."},
+    {sev:"life",ref:"ASCE 7 12.3.3.3",err:"Nobody checks whether a wall or frame of the lateral system stops at the podium, so a discontinued wall ends up on a girder designed with the basic combinations only.",cons:"The girder or the columns under it fail before the wall above reaches its strength; the lateral load path is lost in an earthquake.",look:"ASCE 7-16 Table 12.3-2 Type 4, 12.3.3.3 and 12.4.3; wall elevations from the foundation to the roof.",ask:"Wall elevations marking every wall that stops at the transfer level."},
+    {sev:"money",ref:"24.2.4",err:"Transfer girder deflection checked for the immediate load only, without creep and shrinkage under eight floors of sustained load.",cons:"The girder keeps sagging for years; flat plates and partitions over that bay crack on every floor and doors bind.",look:"ACI 318-19 24.2.3, 24.2.4.1 and Table 24.2.2; the shoring sequence under the transfer level.",ask:"The shoring and reshoring sequence and the deflection limit agreed for the transfer girders."}],
+  pgdeck:[
+    {sev:"life",ref:"GEC 4 5.6",err:"A tied-back shoring submittal is accepted after checking the anchors and the pile bending only; nobody checks whether the embedded soldier piles can carry the downward pull of a steep tieback.",cons:"The piles settle under the vertical anchor component, the anchors lose load and the wall, the street and the utilities behind it move.",look:"FHWA GEC 4 Fig. 24 (apparent pressure for tied-back walls), 5.6 and Table 14 (axial capacity of drilled-in soldier piles); the boring N values below subgrade; the anchor angle.",ask:"The shoring calculations, the geotechnical report with SPT values below subgrade, and the anchor angle and loads."},
+    {sev:"money",ref:"Table 19.3.1.1",err:"Below-grade garage decks treated as dry interior concrete (C0) because rain does not reach them.",cons:"Cars bring in deicing salt water; chlorides reach the top bars and the deck spalls under the stalls within a few years.",look:"ACI 318-19 19.3.1.1, Table 19.3.2.1 and 20.5.1.3; ACI 362.1R; the regional use of deicing salts.",ask:"Whether deicing salts are used in the region and the owner's durability requirements."},
+    {sev:"life",ref:"At-rest",err:"Basement walls designed as cantilevers with active pressure, or backfilled before the P1 and L1 decks that brace them are cast.",cons:"Walls braced by the decks carry at-rest pressure; backfilled early, the unbraced wall cracks or moves before the decks are in place.",look:"The geotechnical report (K0 and Ka); ASCE 7-16 3.2; the construction sequence on the drawings.",ask:"The geotechnical report and the backfill and deck casting sequence."},
+    {sev:"money",ref:"ADA 502.5",err:"Clear height checked at the slab soffit only, not under the edges of the ramp openings, sprinkler mains and ducts.",cons:"The van-accessible route loses its 98 in. clearance; ducts are rerouted or the route moved after construction.",look:"2010 ADA Standards 502.5 and IBC 2021 406.2.2; the coordinated MEP drawings along the vehicular route.",ask:"The coordinated MEP and sprinkler drawings for the garage levels."}],
+  retail:[
+    {sev:"life",ref:"ASCE 7 Table 12.3-2",err:"The 20 ft retail story with an open storefront is not checked for soft-story or weak-story irregularity because the core walls are continuous.",cons:"Drift concentrates at Level 1, and the prohibitions of 12.3.3.1 (Type 5b in SDC D; Types 1b, 5a, 5b in SDC E-F) and the 2-story / 30 ft limit of 12.3.3.2 are missed.",look:"ASCE 7-16 Table 12.3-2 Types 1a, 1b, 5a and 5b, 12.3.3.1 and 12.3.3.2; story stiffness and strength by level.",ask:"Story stiffness and story shear strength of Levels 1 and 2 from the analysis."},
+    {sev:"life",ref:"ASCE 7 4.7.5",err:"Live load reduction applied to the fitness room and the event hall, or the courtyard soil weighed dry.",cons:"Beams, girders and podium columns are designed for less load than the code requires.",look:"ASCE 7-16 Table 4.3-1, 4.7.5 (no reduction in assembly uses) and 3.1.4 (saturated and dry soil).",ask:"The Level 2 occupancy plan and the courtyard landscape section with soil depths."},
+    {sev:"money",ref:"Table 9.3.1.1",err:"Long-span podium beams sized from the Table 9.3.1.1 minimum depth although they support storefront glazing and partitions.",cons:"The table applies only to beams not supporting construction likely to be damaged; deflection cracks the glazing and finishes.",look:"ACI 318-19 9.3.1.1, 24.2.2 and Table 24.2.2.",ask:"What the beams support (glazing, partitions) and the deflection limit in the general notes."}],
   bridge:[
     {sev:"life",ref:"MBE 6A",err:"An existing bridge checked with design provisions only, without the condition factor φc and system factor φs of the Manual for Bridge Evaluation.",cons:"Load rating is overstated for a deteriorated bridge; overweight trucks are allowed onto it.",look:"AASHTO MBE Section 6, Part A (LRFR).",ask:"The latest inspection report with condition ratings and the MBE edition required by the owner."},
     {sev:"life",ref:"MBE 4",err:"Section loss and broken strands from the inspection report not carried into the girder capacity.",cons:"Capacity is overestimated where corrosion is worst.",look:"Inspection report element data; AASHTO LRFD Section 5 with reduced areas.",ask:"Element-level inspection data and photographs of the damaged girders."},
@@ -147,19 +173,24 @@ const STRUCTURES = {
     lede:"Existing concrete girder bridge: inspection findings, load rating and vibration-based damage detection, the area of the MSc research.",
     codes:["AASHTO MBE","AASHTO LRFD BDS 9th ed.","ACI 228.1R-19","ACI 228.2R"],
     checks:[["MBE Sec. 6","Load rating (LRFR) with condition and system factors"],["MBE Sec. 4","Inspection findings into member capacity"],["ACI 228.1R","In-place strength from nondestructive tests"],["","Damage detection from modal data and environmental effects"],["LRFD Sec. 5","Capacity of deteriorated prestressed girders"]],
-    cam:[330,70,620], target:[94,-14,420]}
+    cam:[330,70,620], target:[94,-14,420]},
+  mixed:{name:"Mixed-use podium building",status:"prog",phase:"Structure type 6 · in progress",
+    lede:"A fictional mid-rise block: a grocery and retail podium over two below-grade parking levels, an amenity level whose ceiling holds the transfer girders, and eight floors of apartments on a 20 ft grid that does not line up with the 30 ft podium grid. Transfer girders, the tall retail story and garage durability carry most of the risk.",
+    codes:["ACI 318-19","ASCE 7-16","IBC 2021 406, 510","ACI 362.1R"],
+    parts:["footing","rmat","pgdeck","column","retail","xfer","flat","rslab","rshear","seismic","construction"],
+    cam:[690,200,270], target:[405,30,-40]}
 };
 
 const PARTS = {
   footing:{name:"Footings and mat",status:"done",codes:["ACI 318-19 Ch. 13","Ch. 16","Ch. 22","ASCE 7-16 Ch. 27"],
     checks:[["13.3.1.1","Footing area sized for service loads and allowable bearing"],["13.2.7.2","One-way and two-way shear in footings"],["16.3.4.1","Minimum dowel area at column-to-footing interface"],["25.4","Development of column bars into the footing"],["Table 22.5.5.1","One-way shear without stirrups: row choice, ρw and λs"],["13.2.6.2","Size-effect waiver for foundations and its conditions"],["10.7.5.2","Compression laps at the column base only where bars stay in compression"]],
-    plan:["Spread footings: two-way shear and dowels","Pile caps (strut-and-tie)","Mat thermal control and pour joints"],scen:["s10","s11"]},
+    plan:["Spread footings: two-way shear and dowels","Pile caps (strut-and-tie)","Mat thermal control and pour joints"],scen:["s10","s11","s17"]},
   column:{name:"Columns",status:"done",codes:["ACI 318-19 Ch. 10","Ch. 6","Ch. 22"],
     checks:[["10.6.1.1","Longitudinal reinforcement ratio 0.01 to 0.08"],["6.6.4","Slenderness and moment magnification"],["22.4","Axial and combined axial-flexural strength"],["25.7.2","Tie size and spacing"],["10.7.5","Column lap splices"],["18.7.5.2(f)","Crosstie support of every bar in special moment frame columns with high axial load"]],
-    plan:["Second-order effects and slenderness","Mechanical splices and bundled bars","Strong-column / weak-beam (seismic phase)"],scen:["s5"]},
+    plan:["Second-order effects and slenderness","Bundled bars","Strong-column / weak-beam (seismic phase)"],scen:["s5","s16"]},
   beam:{name:"Beams and girders",status:"done",codes:["ACI 318-19 Ch. 9","Ch. 22","Ch. 24","Ch. 25"],
     checks:[["Table 22.5.5.1","One-way shear with size effect and longitudinal ratio"],["24.2.3.5","Effective moment of inertia for deflection"],["9.7.6.2.2","Stirrup spacing limits"],["25.5.2","Tension lap splice Class A / B"],["22.7","Torsion"],["18.6.5","Special moment frame beam design shear from Mpr, Vc = 0 when it applies"],["18.6.4.4","Hinge-zone hoop spacing, 5db for Grade 80 bars"]],
-    plan:["One-way shear with size effect","Deflection and long-term multiplier","Torsion in spandrels","Transfer girders"],scen:["s1","s9"]},
+    plan:["One-way shear with size effect","Deflection and long-term multiplier","Transfer girders"],scen:["s1","s9","s15","s18"]},
   oneway:{name:"One-way slabs",status:"done",codes:["ACI 318-19 Ch. 7","Ch. 24"],
     checks:[["7.6.1.1","Minimum flexural reinforcement"],["24.4.3.2","Shrinkage and temperature reinforcement"],["24.3.2","Spacing for crack control"],["7.3.1.1","Minimum thickness without deflection calculation"],["7.7.2.3","Maximum bar spacing"]],
     plan:["Cover vs exposure class","Openings and penetrations through slabs"],scen:["s4"]},
@@ -171,7 +202,7 @@ const PARTS = {
     plan:["Special moment frame joints (seismic phase)","Headed bars in joints"],scen:["s2","s12"]},
   wall:{name:"Structural walls and core",status:"done",codes:["ACI 318-19 Ch. 11","Ch. 12","Ch. 18"],
     checks:[["11.5.3","Simplified design method limits"],["11.6","Minimum wall reinforcement"],["18.10.3.1","Shear amplification Ve = Ωv ωv Vu in special walls"],["18.10.6.2","Boundary elements: need, height, thickness and drift capacity"],["18.10.2.3(c)","No lap splices in boundary regions at the critical section"],["ASCE 7 12.10.2.1","Collector force with Ω0, largest of three cases"],["25.4.10.2(e)","No As,req/As,prov reduction of laps in seismic systems"],["18.12.7.7","Collector splice-zone spacing, cover or ties"]],
-    plan:["Coupling beams","Diaphragm chords and shear transfer","Gravity columns deformation compatibility (18.14)","Walls with openings and flanged sections"],scen:["s7","s8"]},
+    plan:["Coupling beams","Diaphragm chords and shear transfer","Walls with openings and flanged sections"],scen:["s7","s8","s14"]},
   seismic:{name:"Lateral system and seismic analysis",status:"done",codes:["ASCE 7-16 Ch. 11, 12","ACI 318-19 6.6.3, Ch. 18"],
     checks:[["ASCE 7 11.4","Site class and design spectral accelerations"],["ASCE 7 12.8.6","Story drift with Cd and Ie"],["ASCE 7 12.9.1.4","Scaling of modal results to ELF base shear"],["ACI 6.6.3.1.1","Cracked-section stiffness in the analysis model"],["ASCE 7 12.8.4","Accidental torsion and its amplification"],["ASCE 7 12.3.4","Redundancy factor ρ and the drift limit Δa/ρ"]],
     plan:["Drift and P-delta","Horizontal and vertical irregularities","Diaphragm forces"],scen:["s6"]},
@@ -187,9 +218,18 @@ const PARTS = {
   rcant:{name:"Balconies and stairs",status:"plan",codes:["ACI 318-19 Ch. 7, 25","ASCE 7-16 Table 4.3-1","ACI 117-10"],
     checks:[["ASCE 7 Table 4.3-1","Balcony live load"],["25.4","Anchorage of cantilever top bars into the back span"],["ACI 117","Placement tolerance of top bars"],["","Stair-to-floor connections and seismic interaction"]],
     plan:["Cantilever balconies","Stair flights and landings","Long-term cantilever deflection"],scen:[]},
-  construction:{name:"Construction and QA",status:"plan",codes:["ACI 318-19 Ch. 26","ACI 301-20","ACI 347.2R","ACI 305R / 306R","ACI 228.1R"],
+  construction:{name:"Construction and QA",status:"done",codes:["ACI 318-19 Ch. 26","ACI 301-20","ACI 347.2R","ACI 305R / 306R","ACI 228.1R"],
     checks:[["26.12.3","Strength acceptance of standard cylinders"],["26.12.6","Investigation of low-strength results, cores"],["26.11.2","Formwork removal"],["ACI 347.2R","Shoring and reshoring of multistory buildings"],["ACI 306R","Cold-weather protection"]],
-    plan:["Early-age loading and reshoring","Hot and cold weather","Rebar substitution and field bending","Post-installed anchors (Ch. 17)","Repairs (ACI 562)"],scen:[]}
+    plan:["Early-age loading and reshoring","Hot and cold weather","Rebar substitution and field bending","Post-installed anchors (Ch. 17)","Repairs (ACI 562)"],scen:["s13"]},
+  xfer:{name:"Transfer girders at Level 2",status:"plan",codes:["ACI 318-19 Ch. 9, 23","Ch. 24","ASCE 7-16 12.3.3.3"],
+    checks:[["9.9.1.1","Deep beam test: clear span up to 4h, or a concentrated load within 2h of the support face"],["9.9.1.3","Strut-and-tie method of Chapter 23 for deep beam regions"],["9.9.2.1","Dimensional limit Vu ≤ φ10√f'c bw d"],["9.9.3.1","Distributed reinforcement of at least 0.0025 bw s in each direction"],["24.2.4","Long-term deflection under the residential floors and its effect on the floors above"],["ASCE 7 12.3.3.3","Overstrength combinations only where a wall or frame of the lateral system is discontinued"]],
+    plan:["Strut-and-tie model of a girder with an offset column","Construction sequence and shoring under the transfer level","Column bearing on the girder (22.8)","Hanger reinforcement where secondary girders frame into primaries"],scen:[]},
+  pgdeck:{name:"Garage decks, ramp and basement walls",status:"prog",codes:["ACI 318-19 Ch. 8, 11, 19, 20","ASCE 7-16 4.10","IBC 2021 406","ACI 362.1R"],
+    checks:[["Table 8.3.1.1","Flat plate minimum thickness in the 30 ft garage bays"],["22.6.5.2","Punching shear with the size effect at the garage columns"],["19.3.1.1","Exposure classes: chlorides dripping from cars, freeze-thaw near the entrance"],["20.5.1.3","Specified cover for decks and for walls cast against earth"],["ASCE 7 4.10.1","3,000 lb wheel load on 4.5 x 4.5 in."],["IBC 406.2.2","Clear height 7 ft; 98 in. on van-accessible routes (ADA 502.5)"],["FHWA GEC 4 Fig. 24","Apparent earth pressure envelope for tied-back excavation shoring"],["FHWA GEC 4 5.6","Soldier pile support for the vertical component of inclined tiebacks"]],
+    plan:["Ramp slope, transitions and clearance under the slab openings","Basement walls braced by the decks: at-rest pressure and construction sequence","Waterproofing, drainage and buoyancy of the P2 slab","Restraint cracking of long below-grade decks"],scen:["s19"]},
+  retail:{name:"Podium long-span framing",status:"plan",codes:["ACI 318-19 Ch. 7, 9, 24","ASCE 7-16 Table 4.3-1, 3.1.4, 12.3","IBC 2021 510.2"],
+    checks:[["Table 9.3.1.1","Minimum beam depth, only for beams not supporting construction likely to be damaged"],["Table 24.2.2","Deflection limits where glazing, partitions or finishes can be damaged"],["ASCE 7 Table 4.3-1","Retail first floor 100 psf; fitness and event hall 100 psf, not reducible; landscaped deck for assembly 100 psf"],["ASCE 7 3.1.4","Courtyard soil and drainage layers as dead load, saturated and dry"],["ASCE 7 Table 12.3-2","Soft or weak story at the 20 ft retail level"],["IBC 510.2","Horizontal building separation at the podium, only where the podium is treated as a separate building"]],
+    plan:["Long-span beams over the grocery hall","Courtyard deck loads, drainage and waterproofing","Storefront openings and the soft-story check","Floor vibration under fitness and event use"],scen:[]}
 };
 
 /* ---------------- Panel rendering ---------------- */
@@ -310,6 +350,27 @@ const MODEL_SOURCES = {
       ["Diaphragms","midspan, 10 x 50 in.","DS 2.1"],
       ["HL-93 truck","axles 14 ft + 14 ft (min.), gage 6 ft, tire contact 20 x 10 in.","AASHTO LRFD 3.6.1.2.2, 3.6.1.2.5"],
       ["Not given (display only)","clearance under the bridge, pier diaphragm, piles, embankment slope (2H:1V shown), haunch (4 in. max. used)","DS 2.2, 7.1"]]},
+  mixed:{ref:"Fictional US mid-rise mixed-use block; no published design example: grid, levels and uses assumed for this concept, garage geometry from IBC 406, ADA 502 and the owner standards used for the parking structure; members sized for this model to ACI 318-19 minimums with first strength checks (calc_mixed.py, concept sizes, not a design).",
+    rows:[
+      ["Grid and levels", "podium and garage 7 x 30 ft = 210 ft (E-W) by 4 x 30 ft = 120 ft (N-S); P2 -22, P1 -11, L1 0 (20 ft), L2 +20 (14 ft), L3 +34, L3-L10 at 10 ft, roof +114 ft", "concept, assumed"],
+      ["Live loads", "residential 40 psf; retail first floor 100 psf; garage 40 psf (+ 3,000 lb on 4.5 x 4.5 in., 4.10.1); fitness / event hall 100 psf (gymnasiums, ballrooms; not reducible, 4.7.5); courtyard 100 psf (landscaped roof used for assembly); roof 20 psf; no reduction used", "ASCE 7-16 Table 4.3-1, 4.7.5, 4.10.1"],
+      ["Clear height (garage)", "11'-0\" story - 12 in. flat plate = 120 in. = 10'-0\" clear >= 98 in. (8'-2\", as the parking structure) >= 7 ft", "IBC 2021 406.2.2; 2010 ADA Standards 502.5 (98 in.)"],
+      ["Ramps", "two stacked straight single-lane ramps (P2 to P1, P1 to grade), 14 ft wide, rise 11 ft over 150 ft = 7.33 % (<= 7.5 %), no parking, 10 ft clear between them; L1 slab open over the upper ramp except the first 25 ft from its low end (clearance would drop below 8'-2\"); one direction at a time (assumed)", "U-M SBA-E p. 3; Boise p. 14; lane width assumed"],
+      ["Parking layout", "62 ft module (18 ft stalls + 26 ft aisle + 18 ft stalls, 44 to 106 ft from the north wall) plus a single-loaded 26 ft aisle along the north wall; 9.0 x 18.0 ft stalls, 3 per 30 ft bay; the 30 ft column lines stand 2 to 4 ft inside the stall rows, never in an aisle; west and east end bays are turning aisles", "Boise CCDC (2016) pp. 24-25; layout assumed"],
+      ["Residential flat plate", "8 in.; ln = 20 ft - 18 in. = 222 in.: exterior panel without edge beams ln/30 = 7.4 in., interior ln/33 = 6.7 in. (fy 60 ksi)", "ACI 318-19 Table 8.3.1.1"],
+      ["Garage decks (P1, L1)", "12 in. flat plate; ln = 30 ft - 30 in. = 330 in.: ln/30 = 11.0 in.; punching at an interior column, f'c 5,000 psi, d = 10 in.: phiVc = 339 k vs Vu = 222 k (P1, 40 psf) and 313 k (L1, retail 100 psf, 92 % before moment transfer: studs likely)", "ACI 318-19 Table 8.3.1.1, 22.6.5.2"],
+      ["Podium framing at L2", "retail ceiling and amenity floor: slab 8 in. one-way over 15 ft (l/24 = 7.5 in., one end continuous, Table 7.3.1.1); beams 18 x 24 in. at 15 ft, 30 ft span: min. l/18.5 = 19.5 in.; wu = 4.92 klf, Mu = wu ln^2/10 = 386 k-ft, As = 4.3 in.^2 (rho 1.12 %); girders 24 x 36 in. on grid lines: P = 148 k at midspan, Mu = 1202 k-ft (simple span), As = 8.8 in.^2 (rho 1.11 %)", "ACI 318-19 Table 9.3.1.1, Table 7.3.1.1, 6.5.2; loads ASCE 7-16 Table 4.3-1 (100 psf)"],
+      ["Courtyard deck at L3", "slab 10 in.; soil 2 ft saturated, 240 psf (assumed); beams 24 x 30 in. at 15 ft: wu = 9.93 klf, Mu = 751 k-ft, rho 0.99 %; girders 30 x 42 in.: P = 298 k, Mu = 2369 k-ft, rho 1.30 % (all above the l/18.5 = 19.5 in. minimum)", "ACI 318-19 Table 9.3.1.1; ASCE 7-16 3.1.4, Table 4.3-1 (100 psf)"],
+      ["Residential columns", "18 x 18 in. on the 20 ft grid, f'c 5,000 psi, rho 1 %: phiPn,max = 810 k vs Pu = 676 k at L3 (D = 411 k from 7 floors + roof at 120 psf + column; L = 112 k; Lr = 8 k; 400 sq ft each)", "ACI 318-19 22.4.2; ASCE 7-16 2.3.1"],
+      ["Transfer girder (typ.)", "secondary, 36 x 60 in., f'c 6,000 psi, span 30 ft between primary girders (ln = 312 in.), one residential column at midspan: Pu = 676 k + wu = 7.46 klf; Mu = PL/4 + wL^2/8 = 5,912 k-ft (simple span), As = 25.6 in.^2 (rho 1.28 %, tension-controlled: yes); Vu = 435 k <= phi10 sqrt(f'c) bd = 1161 k; ln/h = 5.2 > 4 and the load is 156 in. > 2h = 120 in. from the face: not a deep beam; bays where columns sit 5 ft from the support (load within 2h) are deep-beam regions, strut-and-tie; Table 9.3.1.1 l/16 = 22.5 in. does not govern", "ACI 318-19 9.9.1.1, 9.9.2.1, Ch. 23, Table 9.3.1.1"],
+      ["Primary transfer girder", "48 x 72 in., spans 30 ft between podium columns (ln = 330 in., ln/h = 4.6); each secondary delivers P = 1238 k; Mu = 9,774 k-ft (secondary at midspan, simple span), As = 34.3 in.^2 (rho 1.06 %); Vu = 1298 k <= 1882 k; spans with secondaries 5 ft from the columns (load 45 in. from the face < 2h) are deep beams: strut-and-tie; concept size (assumed proportions)", "ACI 318-19 9.9.1.1(b), 9.9.2.1, Ch. 23"],
+      ["Transfer slab zone", "48 in. under the two side wings, f'c 6,000 psi, d = 44 in., lambda_s = 0.61; residential column: phiVc = 1,543 k vs Pu = 676 k; podium column (30 x 30 ft tributary): Vu = 2,167 k (column self-weight above and Lr neglected; about 2,249 k with them) > phiVc = 1,842 k, so headed shear studs (limit phi8 sqrt(f'c) b0 d = 6,053 k) or a thicker slab; thickness assumed for the concept", "ACI 318-19 22.6.5.2, Table 22.6.6.3, 22.6.8"],
+      ["Podium columns", "podium and garage, 30 x 30 in., f'c 8,000 psi, rho 2 %: phiPn,max = 3,680 k vs Pu = 2,938 k at P2 (interior column under the north wing: 1,987 k from the transfer girders + L2 at 187 psf / 100 psf, L1 160 / 100, P1 155 / 40, column 52 k)", "ACI 318-19 22.4.2; ASCE 7-16 Table 4.3-1"],
+      ["Shear walls (cores)", "two 20 x 20 ft stair and elevator cores, 16 in., special reinforced concrete shear walls continuous P2 to roof: boundary-element width >= hu/16 = 228/16 = 14.2 in. at the 20 ft retail story, and >= 12 in. where 18.10.6.4(c) applies (hw/lw >= 2, continuous, single critical section, c/lw >= 3/8); (Table 11.3.1.1 hu/25 = 9.1 in. applies only with the simplified method of 11.5.3, not to these Chapter 18 walls); no wall or frame of the lateral system stops at the transfer level, so 12.3.3.3 is not triggered (gravity transfer only)", "ACI 318-19 18.10.6.4(b), (c), Table 11.3.1.1; ASCE 7-16 Table 12.2-1 (B4, 160 ft limit in SDC D), 12.3.3.3"],
+      ["Basement walls", "14 in. around P2 and P1, 22 ft retained, braced by the P1 and L1 decks (at-rest pressure); P2 slab on grade 6 in.; thicknesses assumed (no geotechnical data); Table 11.3.1.1(e) 7.5 in. applies only with the simplified method", "assumed; ACI 318-19 Table 11.3.1.1"],
+      ["Foundations", "spread footings 12 x 12 x 4 ft under the podium columns and 5 ft mats under the cores: display only, sizes assumed (no geotechnical report)", "assumed"],
+      ["Guards", "roof (+114 ft) and exposed podium-deck edges (+34 ft) under construction: top rail 42 in., midrail, toeboard 3 1/2 in.", "29 CFR 1926.502(b)(1), (b)(2)(i), (j)(3)"],
+      ["Not given (not modeled)", "stairs and elevators inside the cores, apartment layouts, facade, MEP, drainage slopes, entry ramp details and signals, foundation design", " - "]]},
   site:{ref:"Town-wide elements",
     rows:[
       ["Scale","1 model unit = 1 ft; true scale throughout",""],
@@ -398,7 +459,7 @@ function buildTerrain(){
   const p=g.attributes.position; const col=new Float32Array(p.count*3);
   for(let i=0;i<p.count;i++){const y=groundY(p.getZ(i)); p.setY(i,y); const f=y===0?1:(y<=VAL.floor+0.01?0.9:0.8); col.set([f,f*0.97,f*0.9],i*3)}
   g.setAttribute('color',new THREE.BufferAttribute(col,3)); g.computeVertexNormals();
-  /* the ground is pushed back in depth so the faces that sit exactly on it (the office's ground-floor slab, beams and joints at EL 0) never flicker against it */
+  /* the ground is pushed back in depth so the faces that sit exactly on it (ground-floor slabs, beams and joints at EL 0) never flicker against it */
   terrain=new THREE.Mesh(g,new THREE.MeshStandardMaterial({roughness:1,metalness:0,transparent:false,opacity:1,vertexColors:true,polygonOffset:true,polygonOffsetFactor:2,polygonOffsetUnits:4}));
   terrain.receiveShadow=true; scene.add(terrain);
 }
@@ -448,6 +509,7 @@ function build(){
   buildGarage();
   buildBridge();
   buildRetainingWall();
+  buildMixed();
   buildPeople(); buildCars();
 }
 
@@ -659,6 +721,87 @@ function buildRetainingWall(){
   [[x0,-1],[x0+L,1]].forEach(([xe,sg])=>{const sh=new THREE.Shape(); sh.moveTo(0,0); sh.lineTo(0,22); sh.lineTo(sg*44,0); sh.lineTo(0,0);
     const w=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:zBack-zTopFill,bevelEnabled:false}),mat('ground')); w.position.set(xe,yF,zTopFill); w.receiveShadow=true; w.castShadow=true; scene.add(w)});
   person(xc-6,yF,zFace+8,'m'); person(xc+4,yF,zFace+10,'f');
+}
+
+/* ===== Mixed-use podium building (fictional): 7 x 30 ft by 4 x 30 ft podium over two garage levels, 8 residential floors on a 20 ft grid; sizes from calc_mixed.py (see MODEL_SOURCES) ===== */
+const MX={x0:300,z0:-100}, MXCORES=[[25,25],[165,25]]; /* 20 x 20 ft cores, min. corner in plan */
+function buildMixed(){
+  const Mt=T('mixed'), X=x=>MX.x0+x, Z=z=>MX.z0+z, tg=p=>({...Mt,p});
+  const B=30, E=1.25, CP=2.5, CR=1.5, GS=1, RS=8*IN, L3=34, ROOF=114;
+  const inCore=(x,z,m=0)=>MXCORES.some(([a,b])=>x>=a-m&&x<=a+20+m&&z>=b-m&&z<=b+20+m);
+  const XL=[...Array(8)].map((_,i)=>B*i), ZL=[...Array(5)].map((_,i)=>B*i);
+  const bx=(x0,x1,z0,z1,y0,h)=>({x:X((x0+x1)/2),yc:y0+h/2,z:Z((z0+z1)/2),w:x1-x0,h,d:z1-z0});
+  /* podium and garage columns 30 x 30 in. (f'c 8,000 psi): P2 to the L3 deck; none inside the cores */
+  const pcB=[],pcA=[],ftg=[];
+  XL.forEach(x=>ZL.forEach(z=>{ if(inCore(x,z)) return;
+    pcB.push(bx(x-E,x+E,z-E,z+E,-22,-12+22)); pcB.push(bx(x-E,x+E,z-E,z+E,-11,-1+11));
+    pcA.push(bx(x-E,x+E,z-E,z+E,0,20-3)); pcA.push(bx(x-E,x+E,z-E,z+E,20,L3-10*IN-20));
+    if(!inCore(x,z,10)) ftg.push(bx(x-6,x+6,z-6,z+6,-22.5-4,4)); }));
+  boxes(pcB,'column',tg('column'),true); boxes(pcA,'column',tg('column'));
+  /* foundations: display only, sizes assumed (no geotechnical report): 12 x 12 x 4 ft footings, 5 ft mats under the cores */
+  boxes(ftg,'footing',tg('footing'),true);
+  boxes(MXCORES.map(([a,b])=>bx(a-10,a+30,b-10,b+30,-22.5-5,5)),'rmat',tg('rmat'),true);
+  /* garage: P2 slab on grade 6 in., P1 and L1 flat plates 12 in. with the ramp strip (z 106 to 120) open from x 30 to 155 */
+  const gd=[bx(-E,210+E,-E,120+E,-22.5,0.5)];
+  /* P1: the upper ramp replaces the deck from x 30 to 180; L1: open over the upper ramp from x 30 to 155, where the clearance would drop below 8'-2" */
+  [[-11,180],[0,155]].forEach(([y,xe])=>{ const t=y-GS+(y===0?0.04:0); /* L1 drawn 1/2 in. above the ground plane to avoid z-fighting */
+    gd.push(bx(-E,210+E,-E,106,t,GS)); gd.push(bx(-E,30,106,120+E,t,GS)); gd.push(bx(xe,210+E,106,120+E,t,GS)); });
+  boxes(gd.slice(0,4),'pgdeck',tg('pgdeck'),true); boxes(gd.slice(4),'pgdeck',tg('pgdeck'));
+  /* ramps: 11 ft over 150 ft = 7.33 %, 14 ft lane against the south wall; P2 -> P1 and P1 -> grade, stacked */
+  const rl=Math.hypot(150,11), ra=Math.atan2(11,150);
+  [-22,-11].forEach(y=>{ const m=new THREE.Mesh(new THREE.BoxGeometry(rl,GS,13.4),mat('pgdeck'));
+    m.position.set(X(105),y+5.5-GS/2,Z(112.7)); m.rotation.z=-ra; tagMesh(m,tg('pgdeck'),true); });
+  /* basement walls 14 in. (assumed), P2 to grade */
+  const bw=14*IN; boxes([bx(-bw/2,bw/2,-E,120+E,-22.5,22.5),bx(210-bw/2,210+bw/2,-E,120+E,-22.5,22.5),bx(-E,210+E,-bw/2,bw/2,-22.5,22.5),bx(-E,210+E,120-bw/2,120+bw/2,-22.5,22.5)],'pgdeck',tg('pgdeck'),true);
+  /* stalls 9 x 18 ft, 3 per 30 ft bay, rows 26-44, 44-62 (62 ft module with aisle 62-88) and 88-106; end bays are turning aisles */
+  const stl=[]; [-22,-11].forEach((y,k)=>{ [[26,44,34.5],[44,62,53.5],[88,106,96.5]].forEach(([z0,z1,zc],r)=>{
+    for(let b=1;b<=5;b++) for(let i=0;i<3;i++){ const xs=B*b+1.5+9*i, xc=xs+4.5; if(inCore(xc,zc,1)) continue;
+      stl.push({x:X(xs),yc:y+0.03,z:Z((z0+z1)/2),w:4*IN,h:0.01,d:18}); if(i===2) stl.push({x:X(xs+9),yc:y+0.03,z:Z((z0+z1)/2),w:4*IN,h:0.01,d:18});
+      if((b*3+i*7+r*5+k*2)%5<3) car(X(xc),y,Z(zc),true); } }); });
+  boxes(stl,'lineW',null);
+  /* L2 framing (retail ceiling, amenity floor): slab 8 in., girders 24 x 36 in. on grid lines, beams 18 x 24 in. E-W at mid-bay */
+  const rt=[bx(-E,210+E,-E,120+E,20-8*IN,8*IN)];
+  XL.forEach(x=>{ for(let j=0;j<4;j++){ const z0=B*j+E, z1=B*(j+1)-E; if(inCore(x,(z0+z1)/2)) continue; rt.push(bx(x-1,x+1,z0,z1,20-3,3)); } });
+  ZL.forEach(z=>{ for(let i=0;i<7;i++){ const x0=B*i+E, x1=B*(i+1)-E; if(inCore((x0+x1)/2,z)) continue; rt.push(bx(x0,x1,z-1,z+1,20-3,3)); } });
+  [15,45,75,105].forEach(z=>{ for(let i=0;i<7;i++){ const x0=B*i+1, x1=B*(i+1)-1; if(inCore((x0+x1)/2,z)) continue; rt.push(bx(x0,x1,z-0.75,z+0.75,20-2,2)); } });
+  /* L3 podium deck 10 in.; courtyard framing: girders 30 x 42 in., beams 24 x 30 in. */
+  rt.push(bx(-E,210+E,-E,120+E,L3-10*IN,10*IN));
+  [90,120].forEach(x=>rt.push(bx(x-1.25,x+1.25,90+E,120,L3-3.5,3.5)));
+  [90,120].forEach(z=>rt.push(bx(75,135,z-1.25,z+1.25,L3-3.5,3.5)));
+  [75,105].forEach(z=>rt.push(bx(75,135,z-1,z+1,L3-2.5,2.5)));
+  boxes(rt,'retail',tg('retail'));
+  /* transfer girders at the top of Level 2: primary 48 x 72 in. N-S on podium lines (z 0 to 90), secondary 36 x 60 in. E-W on residential lines z 5, 25, 45, 65 */
+  const xg=[];
+  XL.forEach(x=>{ const segs=MXCORES.some(([a])=>x>=a&&x<=a+20)?[[0,25],[45,90]]:[[0,90]]; segs.forEach(([z0,z1])=>xg.push(bx(x-2,x+2,z0||-E,z1,L3-6,6))); });
+  [5,25,45,65].forEach(z=>{ const segs=(z===25||z===45)?[[0,25],[45,165],[185,210]]:[[0,210]]; segs.forEach(([x0,x1])=>xg.push(bx(x0||-E,x1===210?210+E:x1,z-1.5,z+1.5,L3-5,5))); });
+  boxes(xg,'xfer',tg('xfer'));
+  /* transfer slab zone 48 in. under the side wings */
+  boxes([bx(-E,75,70,120+E,L3-4,4),bx(135,210+E,70,120+E,L3-4,4)],'flat',tg('flat'));
+  /* residential: 18 in. columns on the 20 ft grid (offset 5 ft from the podium grid), flat plates 8 in., U plan around the courtyard */
+  const rc=[], rcols=[];
+  for(let x=5;x<=205;x+=20) [5,25,45,65].forEach(z=>rcols.push([x,z]));
+  [5,25,45,65,145,165,185,205].forEach(x=>[85,105].forEach(z=>rcols.push([x,z])));
+  for(let y=L3;y<ROOF;y+=10) rcols.forEach(([x,z])=>{ if(inCore(x,z)) return; rc.push(bx(x-CR/2,x+CR/2,z-CR/2,z+CR/2,y,10-RS)); });
+  boxes(rc,'column',tg('column'));
+  const U=[[0,0],[210,0],[210,110],[140,110],[140,70],[70,70],[70,110],[0,110]].map(([x,z])=>[X(x),Z(z)]);
+  for(let y=L3+10;y<=ROOF;y+=10) slab(U,y,RS,'rslab',tg('rslab'));
+  /* cores: special RC shear walls 16 in., continuous from P2 to the roof */
+  const cw=[], wt=16*IN, Hc=ROOF+22.5;
+  MXCORES.forEach(([a,b])=>{ cw.push(bx(a-wt/2,a+20+wt/2,b-wt/2,b+wt/2,-22.5,Hc)); cw.push(bx(a-wt/2,a+20+wt/2,b+20-wt/2,b+20+wt/2,-22.5,Hc));
+    cw.push(bx(a-wt/2,a+wt/2,b+wt/2,b+20-wt/2,-22.5,Hc)); cw.push(bx(a+20-wt/2,a+20+wt/2,b+wt/2,b+20-wt/2,-22.5,Hc)); });
+  boxes(cw,'rshear',tg('rshear'));
+  /* storefront on the street (north) side: mullions 4 x 6 in. at 5 ft and a head at 17 ft (display) */
+  const sf=[]; for(let x=0;x<=210;x+=5) sf.push(bx(x-2*IN,x+2*IN,-E-0.5,-E,0,17)); sf.push(bx(0,210,-E-0.5,-E,16.5,0.5));
+  boxes(sf,'carcab',Mt);
+  /* courtyard planting: 2 ft soil (display) */
+  const soil=new THREE.Mesh(new THREE.BoxGeometry(50,2,36),mat('ground')); soil.position.set(X(105),L3+1,Z(94)); tagMesh(soil,Mt);
+  /* OSHA guardrails at the roof edge and the exposed podium-deck edge */
+  for(let i=0;i<U.length;i++){const a=U[i],b=U[(i+1)%U.length]; guardrail(a[0],a[1],b[0],b[1],ROOF,tg('construction'))}
+  [[[-E,110],[-E,120+E]],[[-E,120+E],[210+E,120+E]],[[210+E,120+E],[210+E,110]]].forEach(([a,b])=>guardrail(X(a[0]),Z(a[1]),X(b[0]),Z(b[1]),L3,tg('construction')));
+  /* people: street front, grocery hall, courtyard, roof crew */
+  [[15,-6],[48,-8],[96,-5],[140,-7],[188,-6],[60,40],[120,20],[150,50]].forEach(([x,z],i)=>person(X(x),0,Z(z),i%2?'f':'m'));
+  [[74,100],[100,116],[135,80],[30,115]].forEach(([x,z],i)=>person(X(x),L3,Z(z),i%2?'m':'f'));
+  [[60,30],[150,40],[30,90]].forEach(([x,z],i)=>person(X(x),ROOF,Z(z),i%2?'f':'m'));
 }
 
 function applyTheme(){
