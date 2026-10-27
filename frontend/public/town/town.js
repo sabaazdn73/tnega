@@ -412,7 +412,10 @@ function resize(){
   const r=renderer.domElement.parentElement.getBoundingClientRect();
   renderer.setSize(r.width,r.height,false); camera.aspect=r.width/Math.max(r.height,1); camera.updateProjectionMatrix();
 }
-function mat(key){ if(!matCache[key]) matCache[key]=new THREE.MeshStandardMaterial({roughness:.85,metalness:0}); return matCache[key]; }
+/* members whose top sits flush with the slab or deck they support (beams, joints, transfer girders, the transfer slab zone)
+   are pushed slightly back in depth, so the slab's face wins where the two are coplanar instead of the two flickering */
+const FLUSH_BELOW=new Set(['beam','joint','xfer','flat']);
+function mat(key){ if(!matCache[key]){ const o={roughness:.85,metalness:0}; if(FLUSH_BELOW.has(key)) Object.assign(o,{polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:2}); matCache[key]=new THREE.MeshStandardMaterial(o); } return matCache[key]; }
 function tagMesh(m,tag,below){ m.castShadow=true; m.receiveShadow=true; if(tag){m.userData=tag; pickables.push(m)} if(below) belowGrade.push(m); scene.add(m); return m; }
 /* single box: x,z = centre in plan, y0 = bottom; ry = rotation about vertical (rad) */
 function box(w,h,d,x,y0,z,mkey,tag,ry=0,below=false){
