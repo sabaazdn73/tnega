@@ -12,6 +12,13 @@ below is **Tnega Finance**, now at [tnega.app/finance](https://www.tnega.app/fin
 Every older finance address (`/stocks`, `/sign/<id>`, `/market`, ...) still
 works and is moved under `/finance` when it opens (`frontend/src/basePath.js`).
 
+**Companion repository: [expert-eval-harness](https://github.com/sabaazdn73/expert-eval-harness).**
+Before the review agent is trusted with real drawings, it has to be measured.
+expert-eval-harness holds expert-written structural engineering tasks, runs them
+on Claude models, grades the answers and keeps only the tasks the models find
+hard. How the tasks are designed is set out in
+[Where the Human Belongs](https://github.com/sabaazdn73/expert-eval-harness/blob/main/docs/where-the-human-belongs.md).
+
 Tnega lists the tokenized versions of stocks and ETFs across chains and
 measures what each one costs to buy. The same share is issued as separate
 tokens by different issuers on different chains, each in its own pools with its
