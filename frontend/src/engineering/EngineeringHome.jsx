@@ -48,6 +48,7 @@ export default function EngineeringHome() {
           <nav className="flex items-center gap-4 sm:gap-6 text-[13px] font-semibold">
             <a href="#how" className="hidden sm:inline hover:underline">How it works</a>
             <a href="#town" className="hidden sm:inline hover:underline">Code town</a>
+            <a href="#pipeline" className="hidden sm:inline hover:underline">Task pipeline</a>
             <a href="#talk" className="hidden md:inline hover:underline">Talk</a>
             <a href="/finance" className="inline-flex items-center gap-1 hover:underline">Tnega Finance <ArrowRight size={13} aria-hidden="true" /></a>
             <ThemeToggle />
@@ -129,6 +130,30 @@ export default function EngineeringHome() {
                 loading="lazy"
               />
             </div>
+          </div>
+        </section>
+
+        <section id="pipeline" className="max-w-[1180px] mx-auto px-4 sm:px-6 pt-14 scroll-mt-4">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h2 className="text-[24px] leading-[30px] font-semibold tracking-[-0.01em]">How the test tasks are built</h2>
+              <p className="mt-1 max-w-[720px] text-[14px] leading-[22px] text-muted">
+                Before the agent is trusted, it is measured on expert-written tasks. Each task moves through nine stages;
+                the engineer signs the design basis and the final result, and checks one decisive point at every other stage.
+                The page shows where each task stands and how the models score. Prompts, answer keys and traps stay private.
+              </p>
+            </div>
+            <a href="/eval/" target="_blank" rel="noreferrer" className="text-[13px] font-semibold inline-flex items-center gap-1.5 hover:underline">
+              <ListChecks size={14} aria-hidden="true" /> Open the task pipeline
+            </a>
+          </div>
+          <div className="mt-5 rounded-lg border border-line overflow-hidden bg-page">
+            <iframe
+              src="/eval/"
+              title="Task pipeline: where each expert evaluation task stands, where the engineer signs, and how the models score"
+              className="block w-full h-[900px] md:h-[760px] border-0"
+              loading="lazy"
+            />
           </div>
         </section>
 
