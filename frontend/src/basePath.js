@@ -30,7 +30,7 @@ export const FINANCE_BASE = '/finance';
 
 // Files served as they are from public/, never routed: a link to one must
 // not get the prefix. A path with a file extension is a file too.
-const STATIC_PREFIXES = ['/receipts/', '/fonts/', '/logos/', '/weekly/', '/agent-hero/', '/town/'];
+const STATIC_PREFIXES = ['/receipts/', '/fonts/', '/logos/', '/weekly/', '/agent-hero/', '/town/', '/eval/'];
 const isStaticPath = (p) => STATIC_PREFIXES.some((s) => p.startsWith(s)) || /\.[a-z0-9]{2,5}$/i.test(p);
 
 let active = false;

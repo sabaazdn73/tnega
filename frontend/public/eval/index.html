@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eval Task Pipeline, Tnega</title>
+<meta name="description" content="How each expert evaluation task moves through nine stages, where the human signs, what the grader is given, and how the models score.">
+<link rel="canonical" href="https://www.tnega.app/eval/">
+<link rel="icon" href="/favicon.ico?v=3" sizes="any">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3">
+<style>@font-face{font-family:'Hanken Grotesk';font-style:normal;font-display:swap;font-weight:100 900;src:url('/fonts/hanken-grotesk-latin-wght-normal.woff2') format('woff2-variations')}</style>
+<link rel="stylesheet" href="/eval/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <div>
+      <p class="eyebrow"><a href="/" style="color:inherit">Tnega</a> · expert eval harness · task pipeline</p>
+      <h1>Where the human belongs, task by task</h1>
+    </div>
+    <div class="top-meta">
+      <span id="mode" class="badge"></span>
+      <button id="theme" class="btn ghost" type="button" aria-label="Switch light or dark">Theme</button>
+    </div>
+  </div>
+  <nav class="wrap tabs" role="tablist">
+    <button role="tab" data-tab="projects" aria-selected="true">Tasks</button>
+    <button role="tab" data-tab="pipeline" aria-selected="false">Pipeline</button>
+    <button role="tab" data-tab="grader" aria-selected="false">What the grader needs</button>
+  </nav>
+</header>
+<main class="wrap" id="view" aria-live="polite"></main>
+<footer class="wrap foot">
+  <p id="foot"></p>
+</footer>
+<script src="/eval/app.js"></script>
+</body>
+</html>
