@@ -28,39 +28,44 @@ python build_page.py   # write the study page in frontend/public/bridge/vasco-da
 Units are m, kN, t and s.
 
 - Deck: one beam on the bridge axis with rigid arms to the stay anchorages at y = ±14.65 m. Section properties come from the two girders and the slab (the girder width of 1.7 m is an estimate). Mass includes concrete, steel cross girders, surfacing and barriers, with the mass moment of inertia about the deck axis.
-- Pylons: two legs per pylon, hollow 5 x 7 m with 0.8 m walls (estimate), fixed at river level, with a crossbeam under the deck.
-- Stays: 12 per plane on each side of each pylon in a semi-fan, deck anchors from 20 m off the pylon, pylon anchors from 95 m to 144 m. Areas are sized for the deck dead load at 0.40 of strand strength and then scaled by the calibration. Stiffness uses the Ernst equivalent modulus for sag.
+- Pylons: two legs per pylon at y = ±18.5 m, fixed at river level, with a crossbeam under the deck. Legs are hollow 5 x 7 m with 0.8 m walls above the crossbeam and 8 x 10 m with 1.5 m walls in the massive base zone below it (both estimates). Masses are lumped at nodes about every 5 m.
+- Stays: 12 per plane on each side of each pylon in a semi-fan, deck anchors from 20 m off the pylon, pylon anchors from 95 m to 144 m. Areas are sized for the deck dead load at 0.40 of strand strength and then scaled by the calibration. Stiffness uses the Ernst equivalent modulus for sag, at the stress of the scaled stays. Stay mass, including the sheath, is split between the two ends.
 - Supports: side-span piers and abutments restrain vertical and transverse movement and rotation about the deck axis. At the pylons the deck has no vertical support. Elastic springs stand in for the dampers in the transverse and longitudinal directions.
 
 ## Calibration
 
 Five global parameters are fitted by least squares to measured modes 1, 2, 3, 4 and 7 (FDD frequencies). Modes 8, 9, 10, 11 and 12 are held back as a check. Modes 5 and 6 have no type stated in the paper and are not used.
 
-Measured mode shapes are only published as figures, so model and measured modes are paired by type (lateral, vertical, torsion) and by order of frequency. Model modes in which the deck carries less than half of the kinetic energy are treated as local pylon modes and are not paired, because the test sensors were mostly on the deck.
+Measured mode shapes are only published as figures, so model and measured modes are paired by type (lateral, vertical, torsion) and by order of frequency. Model modes in which the deck carries less than half of the kinetic energy are treated as pylon-dominated and are not paired, because the test sensors were mostly on the deck.
 
-The fitted values and the full comparison are in `results/calibration.json`. In short:
+The five parameters are multipliers on stay area, deck stiffness, deck mass moment of inertia, deck lateral stiffness and pylon leg bending stiffness. The transverse and longitudinal springs at the pylons are fixed at 2e5 and 1e6 kN/m.
+
+The fitted values and the full comparison are in `results/calibration.json`. The fit converged with no parameter at a bound: stay area x1.87, deck stiffness x0.48, deck mass moment x0.60, deck lateral stiffness x0.72, pylon leg stiffness x1.23. In short:
 
 | Measured mode | Type | Measured [Hz] | Model [Hz] | Use |
 |---|---|---|---|---|
 | 1 | lateral | 0.3027 | 0.303 | calibration |
-| 2 | vertical | 0.3385 | 0.340 | calibration |
-| 3 | vertical | 0.4584 | 0.443 | calibration |
+| 2 | vertical | 0.3385 | 0.339 | calibration |
+| 3 | vertical | 0.4584 | 0.458 | calibration |
 | 4 | torsion | 0.4696 | 0.470 | calibration |
-| 7 | vertical | 0.6488 | 0.659 | calibration |
-| 8 | torsion | 0.7123 | 0.640 | check, -10% |
-| 9 | vertical | 0.8177 | 0.830 | check, +1.5% |
-| 10 | torsion | 0.8993 | 0.909 | check, +1.1% |
-| 11 | torsion | 0.9251 | 1.065 | check, +15% |
-| 12 | vertical | 0.9865 | 1.003 | check, +1.7% |
+| 7 | vertical | 0.6488 | 0.649 | calibration |
+| 8 | torsion | 0.7123 | 0.579 | check, -18.8% |
+| 9 | vertical | 0.8177 | 0.768 | check, -6.1% |
+| 10 | torsion | 0.8993 | 0.905 | check, +0.7% |
+| 11 | torsion | 0.9251 | 0.999 | check, +8.0% |
+| 12 | vertical | 0.9865 | 0.908 | check, -8.0% |
 
 ## Limits
 
 - This is not the design model of the bridge. Section sizes, stay areas and pylon dimensions are estimates, and the fitted parameters absorb every other modelling error. Treat them as effective values, not as measured properties.
-- Five parameters fitted to five frequencies reproduce them closely by construction. The held-back modes are the real test: vertical modes and the third torsion mode are within 2%, torsion modes 8 and 11 are off by about 10% and 15%. Mode 11 shows large pylon movement in the test, which this simple pylon does not represent.
-- The lateral stiffness factor and the transverse spring trade off against each other, and one lateral frequency cannot separate them. The low lateral factor is a combined effect.
-- The transverse and longitudinal springs are grounded, so pylon flexibility in that load path is folded into the spring values.
-- The model has a longitudinal deck mode near 0.40 Hz and local pylon modes near 0.40 and 0.47 Hz. The paper does not report them, and the source cannot say whether they exist on the real bridge at these frequencies.
-- Pairing by order is weaker than pairing by mode shape (MAC). A MAC check against measured shapes would be the next step if those shapes become available as numbers.
+- Five parameters fitted to five frequencies reproduce them exactly, so the fit itself proves nothing. The held-back modes are the real test: four of five are within 8%, and torsion mode 8 is about 19% low.
+- The deck stiffness factor comes out near 0.5. That is too low to be the concrete modulus. It more likely reflects what the spine model leaves out: the slab is not fully effective across 31 m (shear lag), torsion and warping of the two-girder deck are simplified (St Venant torsion only, the stays carry the rest), and the pylon sizes are estimates. It is a sign of model-form error.
+- The lateral stiffness factor is a catch-all correction. It also absorbs the transverse springs, which are fixed and grounded, so pylon flexibility in that path is folded in and one lateral frequency cannot separate the two.
+- The calibrated stays work at about 397 MPa under deck dead load, not at the 0.40 f_pu used for the first sizing.
+- Pairing by type and order is weaker than pairing by mode shape (MAC). It depends on the 50% deck-energy line, and on measured modes 5 and 6, whose type is not stated: if either is a torsion mode, every later torsion pair shifts by one. The check is not independent of this assumption.
+- Mode switching across the deck-energy line makes the residual discontinuous, which a finite-difference least-squares solver handles poorly. The solver status and number of evaluations are recorded in `results/calibration.json`.
+- The model has pylon-dominated modes between 0.34 and 0.41 Hz that the paper does not report. With the real pylon sizes they may sit elsewhere. An upper pylon crossbeam, if the real pylons have one, is not modelled.
+- A MAC check against measured shapes would be the next step if those shapes become available as numbers.
 
 ## Sources
 

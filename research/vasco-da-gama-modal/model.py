@@ -4,7 +4,7 @@ Units: m, kN, t (tonne), s.  1 kN = 1 t*m/s^2, so E is in kPa and mass in t.
 
 Geometry is taken from published descriptions (see README.md). Member sizes that are not
 published (edge-girder width, pylon leg sections, stay areas) are engineering estimates, and
-four global parameters are calibrated against the frequencies measured in the ambient
+five global parameters are calibrated (calibrate.py) against the frequencies measured in the ambient
 vibration test (Cunha et al., IMAC-XXII, 2004). This is a teaching and research model, not
 the design model of the bridge.
 """
@@ -41,7 +41,7 @@ def deck_section(bw=1.7):
     zc = (a_s * z_s + a_g * z_g) / A
     Iv = B_DECK * hs**3 / 12 + a_s * (z_s - zc) ** 2 + 2 * bw * (h - hs) ** 3 / 12 + a_g * (z_g - zc) ** 2
     Il = hs * B_DECK**3 / 12 + 2 * ((h - hs) * bw**3 / 12 + bw * (h - hs) * Y_GIRDER**2)
-    J = B_DECK * hs**3 / 3 + 2 * 0.229 * (h - hs) * bw**3      # open section, St Venant
+    J = B_DECK * hs**3 / 3 + 2 * 0.196 * h * bw**3          # open section, St Venant; beta = 0.196 for a 2.6 x 1.7 m rectangle (ratio 1.53)
     # mass per metre: concrete + steel cross girders (I-girders every 4.42 m) + surfacing + barriers
     m_conc = A * RHO_C
     m_steel, m_surf, m_barr = 1.5, 0.08 * 28.0 * 2.3, 2.0
@@ -66,7 +66,8 @@ DEFAULT = dict(k_deck=1.0,       # multiplier on deck stiffness (E of the deck)
                k_lat=1.0,        # multiplier on deck lateral bending stiffness (shear lag in the 31 m slab)
                k_stay=1.0,       # multiplier on stay areas
                ky_pylon=2.0e5,   # transverse deck-pylon spring [kN/m]: the dampers act as elastic supports in service
-               kx_pylon=2.0e5)   # longitudinal deck-pylon spring [kN/m]: assumed, the dampers only free slow movement
+               kx_pylon=1.0e6,   # longitudinal deck-pylon spring [kN/m]: assumed, the dampers only free slow movement
+               k_pyl=1.0)        # multiplier on pylon leg bending stiffness (leg sizes are estimates)
 
 
 def build(p=None, dx=4.0):
@@ -108,14 +109,21 @@ def build(p=None, dx=4.0):
         for x in piers:
             ops.fix(deck[round(s * x, 3)], 0, 1, 1, 1, 0, 0)
 
-    # ---- pylons: two legs at y = +-16.5 m, fixed at river level, H crossbeam under the deck ----
+    # ---- pylons: two legs at y = +-18.5 m (inner face clear of the 15.5 m deck edge), fixed at river level,
+    #      one crossbeam under the deck. An upper crossbeam, if the real pylon has one, is not modelled. ----
     A_l, Iy_l, Iz_l, J_l = hollow_rect(5.0, 7.0, 0.8)      # leg: 5 m transverse x 7 m longitudinal
-    A_c, Iy_c, Iz_c, J_c = hollow_rect(4.0, 5.0, 0.6)      # crossbeam
+    A_b, Iy_b, Iz_b, J_b = hollow_rect(8.0, 10.0, 1.5)     # leg in the massive base zone below the crossbeam (estimate)
+    A_c, Iy_c, Iz_c, J_c = hollow_rect(4.0, 5.0, 0.6)      # crossbeam: 4 m in x, 5 m deep (local y = global z)
     ops.geomTransf('Linear', 2, 1.0, 0.0, 0.0)              # vertical legs, local z = global x
     ops.geomTransf('Linear', 3, 1.0, 0.0, 0.0)              # crossbeam along y
-    y_leg = 16.5
-    z_lev = sorted(set([0.0, 20.0, 45.0, Z_DECK - 4.0] + list(np.linspace(95.0, H_PYL, 13))))
+    y_leg = 18.5
+    z_anch = [round(z, 3) for z in np.linspace(95.0, H_PYL - 3.0, 12)]   # stay anchor levels on the legs
+    z_lev = sorted(set([round(z, 3) for z in np.arange(0.0, 95.0, 5.0)] + [Z_DECK - 4.0, H_PYL] + z_anch))
     pyl = {}
+    nmass = {}                                               # lumped masses, summed per node and assigned once
+    def add_mass(nd, m3, rot=(0.0, 0.0, 0.0)):
+        cur = nmass.get(nd, [0.0] * 6)
+        nmass[nd] = [cur[0] + m3, cur[1] + m3, cur[2] + m3, cur[3] + rot[0], cur[4] + rot[1], cur[5] + rot[2]]
     for s in (-1, 1):
         for yl in (-y_leg, y_leg):
             prev = None
@@ -125,11 +133,13 @@ def build(p=None, dx=4.0):
                 if z == 0.0:
                     ops.fix(tag, 1, 1, 1, 1, 1, 1)
                 if prev is not None:
-                    ops.element('elasticBeamColumn', ele, prev, tag, A_l, E_C, E_C / 2.4, J_l, Iy_l, Iz_l, 2)
+                    base = z <= Z_DECK - 4.0 + 1e-6
+                    A_, Iy_, Iz_, J_ = (A_b, Iy_b, Iz_b, J_b) if base else (A_l, Iy_l, Iz_l, J_l)
+                    ops.element('elasticBeamColumn', ele, prev, tag, A_, E_C, E_C / 2.4, J_, Iy_ * p['k_pyl'], Iz_ * p['k_pyl'], 2)
                     ele += 1
                     hz = z - z_lev[z_lev.index(z) - 1]
                     for nd in (prev, tag):
-                        ops.mass(nd, *(3 * [A_l * RHO_C * hz / 2]), 1e-6, 1e-6, 1e-6)
+                        add_mass(nd, A_ * RHO_C * hz / 2)
                 prev = tag
                 tag += 1
         # crossbeam under the deck
@@ -149,7 +159,8 @@ def build(p=None, dx=4.0):
 
     # ---- stays: 12 per plane on each side of each tower, semi-fan ----
     w_plane = sec['m'] * G / 2                              # dead load carried per stay plane [kN/m]
-    z_anch = list(np.linspace(95.0, H_PYL - 3.0, 12))        # k = 0 is the stay nearest the pylon: lowest anchor; the outermost stay anchors at the top
+    # z_anch[0] belongs to the stay nearest the pylon (lowest anchor); the outermost stay anchors at the top
+    sigma = SIGMA_DL / p['k_stay']                           # dead-load stress of the scaled stays, used in the Ernst modulus
     stays = []
     ops.uniaxialMaterial('Elastic', 1, E_S)
     mat = 2
@@ -169,20 +180,23 @@ def build(p=None, dx=4.0):
                     ops.rigidLink('beam', deck[xd_key], a_deck)
                     # anchorage on the pylon leg, rigid offset to the stay plane
                     ops.node(tag, s * X_PYL, yp, za); a_pyl = tag; tag += 1
-                    zk = min([z for (ss, yy, z) in pyl if ss == s and yy == yl], key=lambda v: abs(v - za))
-                    ops.rigidLink('beam', pyl[(s, yl, zk)], a_pyl)
+                    ops.rigidLink('beam', pyl[(s, yl, za)], a_pyl)
                     Lh = abs(xd_key - s * X_PYL)
                     L = math.hypot(Lh, za - Z_DECK)
                     sin_t = (za - Z_DECK) / L
                     T = w_plane * spacing / sin_t
                     A = p['k_stay'] * T / SIGMA_DL
-                    E_eq = E_S / (1 + (GAMMA_STAY * Lh) ** 2 * E_S / (12 * SIGMA_DL**3))   # Ernst
+                    E_eq = E_S / (1 + (GAMMA_STAY * Lh) ** 2 * E_S / (12 * sigma**3))   # Ernst
                     ops.uniaxialMaterial('Elastic', mat, E_eq)
                     ops.element('Truss', ele, a_pyl, a_deck, A, mat)
-                    ops.mass(a_deck, *(3 * [A * 7.85 * L / 2]), 0, 0, 0)
+                    m_stay = A * GAMMA_STAY / G * L               # stay incl. sheath, half to each end
+                    add_mass(a_deck, m_stay / 2)
+                    add_mass(a_pyl, m_stay / 2)
                     stays.append(dict(ele=ele, A=A, L=L, T=T))
                     ele += 1
                     mat += 1
+    for nd, m in nmass.items():
+        ops.mass(nd, m[0], m[1], m[2], max(m[3], 1e-6), max(m[4], 1e-6), max(m[5], 1e-6))
     return dict(deck=deck, keyx=keyx, sec=sec, stays=stays, params=p)
 
 
@@ -224,7 +238,7 @@ def eigen(n=20, p=None):
     for i in range(n):
         kind, sym = classify(info, i + 1)
         share = deck_energy_share(info, i + 1)
-        if share < 0.5:                 # local pylon mode, little deck motion: not seen by the deck sensors
+        if share < 0.5:                 # pylon-dominated (local or coupled): less than half the kinetic energy in the deck
             kind = 'pylon'
         modes.append(dict(n=i + 1, f=f[i], kind=kind, sym=sym, deck_share=share))
     return info, modes

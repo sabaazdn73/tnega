@@ -19,10 +19,10 @@ MEASURED = [  # (mode, f_FDD [Hz], f_FVT [Hz] or None, type, FVT damping [%] or 
     (11, 0.9251, None, 'torsion', None), (12, 0.9865, 0.982, 'vertical', 0.74),
 ]
 CAL = [1, 2, 3, 4, 7]                    # used for calibration; 8 to 12 are held back as a check
-NAMES = ['k_stay', 'k_deck', 'k_rot', 'k_lat', 'kx_pylon']
-X0 = np.log([1.0, 1.0, 1.0, 1.0, 2.0e5])
-LB = np.log([0.5, 0.6, 0.5, 0.2, 1.0e3])
-UB = np.log([3.5, 2.0, 1.6, 1.5, 5.0e6])
+NAMES = ['k_stay', 'k_deck', 'k_rot', 'k_lat', 'k_pyl']
+X0 = np.log([1.0, 1.0, 1.0, 1.0, 1.0])
+LB = np.log([0.5, 0.4, 0.5, 0.2, 0.3])
+UB = np.log([3.5, 2.0, 1.6, 1.5, 4.0])
 N_MODES = 30
 
 
@@ -56,7 +56,7 @@ def resid(x):
 
 if __name__ == '__main__':
     p0, modes0, pr0 = run(X0)
-    sol = least_squares(resid, X0, bounds=(LB, UB), diff_step=0.02, xtol=1e-4, ftol=1e-6, max_nfev=60)
+    sol = least_squares(resid, X0, bounds=(LB, UB), diff_step=0.02, xtol=1e-4, ftol=1e-6, max_nfev=150)
     p, modes, pr = run(sol.x)
     rows = []
     for (n, f, ffvt, t, z) in MEASURED:
@@ -67,7 +67,10 @@ if __name__ == '__main__':
                          f_calibrated=round(b['f'], 4) if b else None,
                          model_mode=b['n'] if b else None,
                          error_pct=round(100 * (b['f'] - f) / f, 1) if b else None))
-    out = dict(parameters_initial={k: float(v) for k, v in p0.items() if k in NAMES},
+    out = dict(solver=dict(status=int(sol.status), message=str(sol.message), nfev=int(sol.nfev),
+                       residuals_pct=[round(100 * float(v), 2) for v in sol.fun],
+                       at_bound=[n for n, x, lo, hi in zip(NAMES, sol.x, LB, UB) if abs(x - lo) < 1e-3 or abs(x - hi) < 1e-3]),
+               parameters_initial={k: float(v) for k, v in p0.items() if k in NAMES},
                parameters_calibrated={k: float(v) for k, v in p.items() if k in NAMES},
                fixed={k: v for k, v in M.DEFAULT.items() if k not in NAMES},
                deck_section={k: round(float(v), 3) for k, v in M.deck_section().items()},
@@ -75,5 +78,6 @@ if __name__ == '__main__':
                model_modes=[dict(n=m['n'], f=round(m['f'], 4), type=m['kind'], symmetry=m['sym'], deck_energy_share=round(m['deck_share'], 2)) for m in modes])
     json.dump(out, open('results/calibration.json', 'w'), indent=2)
     print(json.dumps(out['parameters_calibrated'], indent=1))
+    print(out['solver'])
     for r in rows:
         print(r)

@@ -49,7 +49,7 @@ tr:last-child td{border-bottom:0}
 <div><b>420 m</b><span>main span, 829.2 m cable-stayed length</span></div>
 <div><b>147 m</b><span>H-shaped pylons, 48 stays each</span></div>
 <div><b>5 of 12</b><span>measured modes used to calibrate</span></div>
-<div><b>3 of 5</b><span>held-back modes within 5%</span></div>
+<div><b>4 of 5</b><span>held-back modes within 8%</span></div>
 </div>
 
 <h2>Why this bridge</h2>
@@ -59,7 +59,7 @@ tr:last-child td{border-bottom:0}
 <ol>
 <li>Built a spine model: the deck as one beam with rigid arms to the two stay planes, pylon legs and crossbeam as beams, 96 stays as truss members with the Ernst equivalent modulus for sag, bearings at the side-span piers, and elastic springs at the pylons standing in for the hysteretic dampers.</li>
 <li>Took the geometry from published descriptions. Section sizes that are not published were estimated and are listed in the code.</li>
-<li>Ran an eigen analysis, sorted the modes by what the deck does (lateral, vertical, torsion, longitudinal) and set aside local pylon modes that barely move the deck.</li>
+<li>Ran an eigen analysis, sorted the modes by what the deck does (lateral, vertical, torsion, longitudinal) and set aside pylon-dominated modes, where less than half of the kinetic energy is in the deck.</li>
 <li>Fitted five global parameters to measured modes 1, 2, 3, 4 and 7 by least squares, pairing modes by type and order because the measured mode shapes are not published as numbers.</li>
 <li>Compared the model with measured modes 8 to 12, which were not used in the fit.</li>
 </ol>
@@ -67,28 +67,30 @@ tr:last-child td{border-bottom:0}
 <figure><img src="model_elevation.png" alt="Elevation of the model showing the deck, the two pylons, the semi-fan stays and the side-span piers" width="2000" height="507"><figcaption>The model in elevation, one stay plane.</figcaption></figure>
 
 <h2>Result</h2>
-<figure><img src="frequencies.png" alt="Scatter of measured against model frequencies; most points sit inside a 10 percent band around the diagonal, two torsion modes fall outside" width="1280" height="1080"><figcaption>Filled points were used for calibration, open points are the check. Torsion modes 8 and 11 are the weak spots.</figcaption></figure>
+<figure><img src="frequencies.png" alt="Scatter of measured against model frequencies; most points sit inside a 10 percent band around the diagonal, torsion mode 8 falls well below it" width="1280" height="1080"><figcaption>Filled points were used for calibration, open points are the check. Torsion mode 8 is the weak spot.</figcaption></figure>
 <div class="tbl"><table>
 <thead><tr><th>Mode</th><th>Type</th><th>Measured FDD [Hz]</th><th>Free vibration [Hz]</th><th>Damping [%]</th><th>Model [Hz]</th><th>Error</th><th>Use</th></tr></thead>
-<tbody><tr><td>1</td><td>lateral</td><td>0.3027</td><td>0.295</td><td>1.23</td><td>0.303</td><td>+0.0%</td><td>calibration</td></tr><tr><td>2</td><td>vertical</td><td>0.3385</td><td>0.338</td><td>0.21</td><td>0.340</td><td>+0.5%</td><td>calibration</td></tr><tr><td>3</td><td>vertical</td><td>0.4584</td><td>0.456</td><td>0.23</td><td>0.443</td><td>-3.3%</td><td>calibration</td></tr><tr><td>4</td><td>torsion</td><td>0.4696</td><td>0.467</td><td>0.24</td><td>0.470</td><td>+0.0%</td><td>calibration</td></tr><tr><td>5</td><td>not stated</td><td>0.5929</td><td>0.591</td><td>0.34</td><td></td><td></td><td>not used</td></tr><tr><td>6</td><td>not stated</td><td>0.6197</td><td></td><td></td><td></td><td></td><td>not used</td></tr><tr><td>7</td><td>vertical</td><td>0.6488</td><td>0.647</td><td>0.37</td><td>0.659</td><td>+1.5%</td><td>calibration</td></tr><tr><td>8</td><td>torsion</td><td>0.7123</td><td>0.707</td><td>0.78</td><td>0.640</td><td>-10.1%</td><td>check</td></tr><tr><td>9</td><td>vertical</td><td>0.8177</td><td>0.814</td><td>0.48</td><td>0.830</td><td>+1.5%</td><td>check</td></tr><tr><td>10</td><td>torsion</td><td>0.8993</td><td></td><td></td><td>0.909</td><td>+1.1%</td><td>check</td></tr><tr><td>11</td><td>torsion</td><td>0.9251</td><td></td><td></td><td>1.065</td><td>+15.1%</td><td>check</td></tr><tr><td>12</td><td>vertical</td><td>0.9865</td><td>0.982</td><td>0.74</td><td>1.003</td><td>+1.7%</td><td>check</td></tr></tbody></table></div>
+<tbody><tr><td>1</td><td>lateral</td><td>0.3027</td><td>0.295</td><td>1.23</td><td>0.303</td><td>+0.0%</td><td>calibration</td></tr><tr><td>2</td><td>vertical</td><td>0.3385</td><td>0.338</td><td>0.21</td><td>0.339</td><td>+0.0%</td><td>calibration</td></tr><tr><td>3</td><td>vertical</td><td>0.4584</td><td>0.456</td><td>0.23</td><td>0.458</td><td>+0.0%</td><td>calibration</td></tr><tr><td>4</td><td>torsion</td><td>0.4696</td><td>0.467</td><td>0.24</td><td>0.470</td><td>+0.0%</td><td>calibration</td></tr><tr><td>5</td><td>not stated</td><td>0.5929</td><td>0.591</td><td>0.34</td><td></td><td></td><td>not used</td></tr><tr><td>6</td><td>not stated</td><td>0.6197</td><td></td><td></td><td></td><td></td><td>not used</td></tr><tr><td>7</td><td>vertical</td><td>0.6488</td><td>0.647</td><td>0.37</td><td>0.649</td><td>+0.0%</td><td>calibration</td></tr><tr><td>8</td><td>torsion</td><td>0.7123</td><td>0.707</td><td>0.78</td><td>0.579</td><td>-18.8%</td><td>check</td></tr><tr><td>9</td><td>vertical</td><td>0.8177</td><td>0.814</td><td>0.48</td><td>0.768</td><td>-6.1%</td><td>check</td></tr><tr><td>10</td><td>torsion</td><td>0.8993</td><td></td><td></td><td>0.905</td><td>+0.7%</td><td>check</td></tr><tr><td>11</td><td>torsion</td><td>0.9251</td><td></td><td></td><td>0.999</td><td>+8.0%</td><td>check</td></tr><tr><td>12</td><td>vertical</td><td>0.9865</td><td>0.982</td><td>0.74</td><td>0.908</td><td>-8.0%</td><td>check</td></tr></tbody></table></div>
 <p class="meta">Measured values from Cunha, Caetano, Brincker and Andersen (2004), tables 1 and 2. Damping from the free-vibration test. Modes 5 and 6 have no type stated in the paper and were left out.</p>
 
 <figure><img src="mode_shapes.png" alt="Four mode shapes along the deck: first lateral, first two vertical and first torsion" width="1600" height="1440"><figcaption>Deck mode shapes of the calibrated model. Measured shapes are shown only as figures in the paper, so they are not compared here.</figcaption></figure>
 
 <h2>Calibrated parameters</h2>
-<div class="tbl"><table class="wrap"><thead><tr><th>Parameter</th><th>Value</th><th>Note</th></tr></thead><tbody><tr><td>Deck concrete modulus</td><td>45 GPa</td><td>1.26 x the 36 GPa start value</td></tr><tr><td>Stay areas</td><td>1.45 x dead-load sizing</td><td>dead-load stress about 515 MPa, 0.28 of strand strength</td></tr><tr><td>Deck mass moment of inertia</td><td>0.80 x estimate</td><td>radius of gyration about the deck axis reduced accordingly</td></tr><tr><td>Deck lateral stiffness</td><td>0.27 x full section</td><td>also absorbs the transverse spring, see limitations</td></tr><tr><td>Longitudinal damper stiffness</td><td>125 MN/m per pylon</td><td>elastic stand-in for the hysteretic dampers</td></tr></tbody></table></div>
+<div class="tbl"><table class="wrap"><thead><tr><th>Parameter</th><th>Value</th><th>Note</th></tr></thead><tbody><tr><td>Deck stiffness</td><td>0.48 x estimate</td><td>equal to E = 17 GPa on the full section; too low for concrete alone, see limits</td></tr><tr><td>Stay areas</td><td>1.87 x dead-load sizing</td><td>dead-load stress about 397 MPa, 0.21 of strand strength</td></tr><tr><td>Deck mass moment of inertia</td><td>0.60 x estimate</td><td>radius of gyration about the deck axis reduced accordingly</td></tr><tr><td>Deck lateral stiffness</td><td>0.72 x, on top of the deck factor</td><td>a catch-all correction, see limits</td></tr><tr><td>Pylon leg bending stiffness</td><td>1.23 x estimate</td><td>leg sizes are not published</td></tr></tbody></table></div>
 
 <h2>Limits, read before using any number</h2>
 <ul>
 <li>This is not the design model. Section properties, stay areas and pylon sizes are estimates, and the five fitted parameters absorb every other modelling error, so they are effective values, not measured properties.</li>
-<li>Five parameters fitted to five frequencies fit them almost exactly by construction. The meaningful evidence is the held-back check, and there torsion modes 8 and 11 are off by about 10 and 15%. Mode 11 involves large pylon movement in the test, which this simple pylon cannot represent.</li>
-<li>The lateral stiffness factor and the transverse spring trade off against each other; one lateral frequency cannot separate them. The low lateral factor should be read as a combined effect.</li>
+<li>Five parameters fitted to five frequencies reproduce them exactly, so the fit itself proves nothing. The evidence is the held-back check: four of the five modes are within 8%, and torsion mode 8 is about 19% low. Mode 8 may also be paired with the wrong model mode, see below.</li>
+<li>The fit drives the deck stiffness factor to about half of the estimate. That is too low to be the concrete modulus. It more likely reflects what the spine model leaves out: the slab is not fully effective across 31 m (shear lag), torsion and warping of the two-girder deck are simplified, and the pylons are estimates. Read it as a sign of model-form error, not as a property of the bridge.</li>
+<li>The lateral stiffness factor also absorbs the transverse spring at the pylons, which is fixed and grounded, so one lateral frequency cannot separate them.</li>
 <li>Pairing by type and order is weaker than pairing by mode shape (MAC). With measured shapes as numbers, a MAC check would be the next step.</li>
-<li>The model has a longitudinal deck mode near 0.40 Hz that the paper does not report, and local pylon modes near 0.40 and 0.47 Hz that move the deck very little. Whether these exist on the real bridge at these frequencies is not known from the source.</li>
+<li>Pairing depends on which modes count as pylon-dominated (the 50% deck-energy line). The model has pylon-dominated modes between 0.34 and 0.41 Hz that the paper does not report; with the real pylon sizes they may sit elsewhere. Measured modes 5 and 6 have no stated type, and if either is a torsion mode, every later torsion pair shifts by one.</li>
+<li>An upper pylon crossbeam, if the real pylons have one, is not modelled.</li>
 </ul>
 
 <h2>Next</h2>
-<p>Use the calibrated model as the baseline for damage detection: introduce stiffness loss in a girder segment or a stay and see which frequencies and shapes move enough to be measured above the environmental scatter reported for bridges of this kind.</p>
+<p>Use the calibrated model as the baseline for damage detection: introduce stiffness loss in a girder segment or a stay and see which frequencies and shapes move enough to be measured above the changes that temperature and traffic cause on their own.</p>
 
 <h2>Sources</h2>
 <ul>

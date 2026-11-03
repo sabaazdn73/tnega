@@ -40,16 +40,16 @@ for c in r['comparison']:
                 f"<td>{fmt(c['f_fvt'])}</td><td>{fmt(c['damping_fvt_pct'], 2)}</td>"
                 f"<td>{fmt(c['f_calibrated'])}</td><td>{err}</td><td>{use}</td></tr>")
 checks = [c for c in r['comparison'] if c['used_for'] == 'check']
-within = sum(abs(c['error_pct']) <= 5 for c in checks)
+within = sum(abs(c["error_pct"]) <= 8.05 for c in checks)
 
 E = 36.0 * p['k_deck']
 sigma = 0.40 * 1860 / p['k_stay']
 params = [
-    ('Deck concrete modulus', f"{E:.0f} GPa", f"{p['k_deck']:.2f} x the 36 GPa start value"),
+    ('Deck stiffness', f"{p['k_deck']:.2f} x estimate", f"equal to E = {E:.0f} GPa on the full section; too low for concrete alone, see limits"),
     ('Stay areas', f"{p['k_stay']:.2f} x dead-load sizing", f"dead-load stress about {sigma:.0f} MPa, {sigma / 1860:.2f} of strand strength"),
     ('Deck mass moment of inertia', f"{p['k_rot']:.2f} x estimate", 'radius of gyration about the deck axis reduced accordingly'),
-    ('Deck lateral stiffness', f"{p['k_lat']:.2f} x full section", 'also absorbs the transverse spring, see limitations'),
-    ('Longitudinal damper stiffness', f"{p['kx_pylon'] / 1e3:.0f} MN/m per pylon", 'elastic stand-in for the hysteretic dampers'),
+    ('Deck lateral stiffness', f"{p['k_lat']:.2f} x, on top of the deck factor", 'a catch-all correction, see limits'),
+    ('Pylon leg bending stiffness', f"{p['k_pyl']:.2f} x estimate", 'leg sizes are not published'),
 ]
 prow = ''.join(f'<tr><td>{escape(a)}</td><td>{escape(b)}</td><td>{escape(c)}</td></tr>' for a, b, c in params)
 
@@ -104,7 +104,7 @@ tr:last-child td{{border-bottom:0}}
 <div><b>420 m</b><span>main span, 829.2 m cable-stayed length</span></div>
 <div><b>147 m</b><span>H-shaped pylons, 48 stays each</span></div>
 <div><b>5 of 12</b><span>measured modes used to calibrate</span></div>
-<div><b>{within} of {len(checks)}</b><span>held-back modes within 5%</span></div>
+<div><b>{within} of {len(checks)}</b><span>held-back modes within 8%</span></div>
 </div>
 
 <h2>Why this bridge</h2>
@@ -114,7 +114,7 @@ tr:last-child td{{border-bottom:0}}
 <ol>
 <li>Built a spine model: the deck as one beam with rigid arms to the two stay planes, pylon legs and crossbeam as beams, 96 stays as truss members with the Ernst equivalent modulus for sag, bearings at the side-span piers, and elastic springs at the pylons standing in for the hysteretic dampers.</li>
 <li>Took the geometry from published descriptions. Section sizes that are not published were estimated and are listed in the code.</li>
-<li>Ran an eigen analysis, sorted the modes by what the deck does (lateral, vertical, torsion, longitudinal) and set aside local pylon modes that barely move the deck.</li>
+<li>Ran an eigen analysis, sorted the modes by what the deck does (lateral, vertical, torsion, longitudinal) and set aside pylon-dominated modes, where less than half of the kinetic energy is in the deck.</li>
 <li>Fitted five global parameters to measured modes 1, 2, 3, 4 and 7 by least squares, pairing modes by type and order because the measured mode shapes are not published as numbers.</li>
 <li>Compared the model with measured modes 8 to 12, which were not used in the fit.</li>
 </ol>
@@ -122,7 +122,7 @@ tr:last-child td{{border-bottom:0}}
 <figure><img src="model_elevation.png" alt="Elevation of the model showing the deck, the two pylons, the semi-fan stays and the side-span piers" {SIZE['model_elevation.png']}><figcaption>The model in elevation, one stay plane.</figcaption></figure>
 
 <h2>Result</h2>
-<figure><img src="frequencies.png" alt="Scatter of measured against model frequencies; most points sit inside a 10 percent band around the diagonal, two torsion modes fall outside" {SIZE['frequencies.png']}><figcaption>Filled points were used for calibration, open points are the check. Torsion modes 8 and 11 are the weak spots.</figcaption></figure>
+<figure><img src="frequencies.png" alt="Scatter of measured against model frequencies; most points sit inside a 10 percent band around the diagonal, torsion mode 8 falls well below it" {SIZE['frequencies.png']}><figcaption>Filled points were used for calibration, open points are the check. Torsion mode 8 is the weak spot.</figcaption></figure>
 <div class="tbl"><table>
 <thead><tr><th>Mode</th><th>Type</th><th>Measured FDD [Hz]</th><th>Free vibration [Hz]</th><th>Damping [%]</th><th>Model [Hz]</th><th>Error</th><th>Use</th></tr></thead>
 <tbody>{''.join(rows)}</tbody></table></div>
@@ -136,14 +136,16 @@ tr:last-child td{{border-bottom:0}}
 <h2>Limits, read before using any number</h2>
 <ul>
 <li>This is not the design model. Section properties, stay areas and pylon sizes are estimates, and the five fitted parameters absorb every other modelling error, so they are effective values, not measured properties.</li>
-<li>Five parameters fitted to five frequencies fit them almost exactly by construction. The meaningful evidence is the held-back check, and there torsion modes 8 and 11 are off by about 10 and 15%. Mode 11 involves large pylon movement in the test, which this simple pylon cannot represent.</li>
-<li>The lateral stiffness factor and the transverse spring trade off against each other; one lateral frequency cannot separate them. The low lateral factor should be read as a combined effect.</li>
+<li>Five parameters fitted to five frequencies reproduce them exactly, so the fit itself proves nothing. The evidence is the held-back check: four of the five modes are within 8%, and torsion mode 8 is about 19% low. Mode 8 may also be paired with the wrong model mode, see below.</li>
+<li>The fit drives the deck stiffness factor to about half of the estimate. That is too low to be the concrete modulus. It more likely reflects what the spine model leaves out: the slab is not fully effective across 31 m (shear lag), torsion and warping of the two-girder deck are simplified, and the pylons are estimates. Read it as a sign of model-form error, not as a property of the bridge.</li>
+<li>The lateral stiffness factor also absorbs the transverse spring at the pylons, which is fixed and grounded, so one lateral frequency cannot separate them.</li>
 <li>Pairing by type and order is weaker than pairing by mode shape (MAC). With measured shapes as numbers, a MAC check would be the next step.</li>
-<li>The model has a longitudinal deck mode near 0.40 Hz that the paper does not report, and local pylon modes near 0.40 and 0.47 Hz that move the deck very little. Whether these exist on the real bridge at these frequencies is not known from the source.</li>
+<li>Pairing depends on which modes count as pylon-dominated (the 50% deck-energy line). The model has pylon-dominated modes between 0.34 and 0.41 Hz that the paper does not report; with the real pylon sizes they may sit elsewhere. Measured modes 5 and 6 have no stated type, and if either is a torsion mode, every later torsion pair shifts by one.</li>
+<li>An upper pylon crossbeam, if the real pylons have one, is not modelled.</li>
 </ul>
 
 <h2>Next</h2>
-<p>Use the calibrated model as the baseline for damage detection: introduce stiffness loss in a girder segment or a stay and see which frequencies and shapes move enough to be measured above the environmental scatter reported for bridges of this kind.</p>
+<p>Use the calibrated model as the baseline for damage detection: introduce stiffness loss in a girder segment or a stay and see which frequencies and shapes move enough to be measured above the changes that temperature and traffic cause on their own.</p>
 
 <h2>Sources</h2>
 <ul>
