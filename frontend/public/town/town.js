@@ -171,6 +171,7 @@ const STRUCTURES = {
     cam:[-130,30,470], target:[-17,-18,360]},
   bridge:{name:"Bridge condition assessment",status:"plan",phase:"Structure type 5 · planned",
     lede:"Existing concrete girder bridge: inspection findings, load rating and vibration-based damage detection, the area of the MSc research.",
+    study:{href:"/bridge/vasco-da-gama/",label:"First worked study: modal model of the Vasco da Gama Bridge, Lisbon, calibrated to measured frequencies"},
     codes:["AASHTO MBE","AASHTO LRFD BDS 9th ed.","ACI 228.1R-19","ACI 228.2R"],
     checks:[["MBE Sec. 6","Load rating (LRFR) with condition and system factors"],["MBE Sec. 4","Inspection findings into member capacity"],["ACI 228.1R","In-place strength from nondestructive tests"],["","Damage detection from modal data and environmental effects"],["LRFD Sec. 5","Capacity of deteriorated prestressed girders"]],
     cam:[330,70,620], target:[94,-14,420]},
@@ -278,7 +279,7 @@ function render(){
     <h3>Planned topics</h3><ol class="plan">${P.plan.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`;
   } else {
     h+=`<div class="eyebrow">${esc(S.phase)}</div><h2>${esc(S.name)}</h2>${pill(S.status)}
-    <p class="lede" style="margin-top:8px">${esc(S.lede)}</p>
+    <p class="lede" style="margin-top:8px">${esc(S.lede)}</p>${S.study?`<p class="study"><a href="${esc(S.study.href)}" target="_blank" rel="noopener">${esc(S.study.label)} →</a></p>`:''}
     <h3>Codes</h3><div class="codes">${S.codes.map(c=>`<span class="code">${esc(c)}</span>`).join('')}</div>
     <h3>Model geometry and sources</h3>${sourcesBox(current.s)}<h3>Site, scale and people</h3>${sourcesBox('site')}`;
     if(S.parts){

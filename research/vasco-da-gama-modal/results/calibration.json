@@ -1,0 +1,386 @@
+{
+  "parameters_initial": {
+    "k_stay": 1.0,
+    "k_deck": 1.0,
+    "k_rot": 1.0,
+    "k_lat": 1.0,
+    "kx_pylon": 200000.00000000006
+  },
+  "parameters_calibrated": {
+    "k_stay": 1.446061544372127,
+    "k_deck": 1.2635816233596435,
+    "k_rot": 0.7981975140997696,
+    "k_lat": 0.27014119457126967,
+    "kx_pylon": 125123.05490133956
+  },
+  "fixed": {
+    "k_mass": 1.0,
+    "ky_pylon": 200000.0
+  },
+  "deck_section": {
+    "A": 15.74,
+    "Iv": 10.366,
+    "Il": 2337.404,
+    "J": 5.449,
+    "m": 48.002,
+    "Im": 6745.421
+  },
+  "comparison": [
+    {
+      "mode": 1,
+      "type": "lateral",
+      "f_fdd": 0.3027,
+      "f_fvt": 0.295,
+      "damping_fvt_pct": 1.23,
+      "used_for": "calibration",
+      "f_initial": 0.4618,
+      "f_calibrated": 0.3027,
+      "model_mode": 1,
+      "error_pct": 0.0
+    },
+    {
+      "mode": 2,
+      "type": "vertical",
+      "f_fdd": 0.3385,
+      "f_fvt": 0.338,
+      "damping_fvt_pct": 0.21,
+      "used_for": "calibration",
+      "f_initial": 0.2898,
+      "f_calibrated": 0.3403,
+      "model_mode": 2,
+      "error_pct": 0.5
+    },
+    {
+      "mode": 3,
+      "type": "vertical",
+      "f_fdd": 0.4584,
+      "f_fvt": 0.456,
+      "damping_fvt_pct": 0.23,
+      "used_for": "calibration",
+      "f_initial": 0.3869,
+      "f_calibrated": 0.4431,
+      "model_mode": 6,
+      "error_pct": -3.3
+    },
+    {
+      "mode": 4,
+      "type": "torsion",
+      "f_fdd": 0.4696,
+      "f_fvt": 0.467,
+      "damping_fvt_pct": 0.24,
+      "used_for": "calibration",
+      "f_initial": 0.3593,
+      "f_calibrated": 0.4696,
+      "model_mode": 7,
+      "error_pct": 0.0
+    },
+    {
+      "mode": 5,
+      "type": null,
+      "f_fdd": 0.5929,
+      "f_fvt": 0.591,
+      "damping_fvt_pct": 0.34,
+      "used_for": "not used, type not stated",
+      "f_initial": null,
+      "f_calibrated": null,
+      "model_mode": null,
+      "error_pct": null
+    },
+    {
+      "mode": 6,
+      "type": null,
+      "f_fdd": 0.6197,
+      "f_fvt": null,
+      "damping_fvt_pct": null,
+      "used_for": "not used, type not stated",
+      "f_initial": null,
+      "f_calibrated": null,
+      "model_mode": null,
+      "error_pct": null
+    },
+    {
+      "mode": 7,
+      "type": "vertical",
+      "f_fdd": 0.6488,
+      "f_fvt": 0.647,
+      "damping_fvt_pct": 0.37,
+      "used_for": "calibration",
+      "f_initial": 0.5693,
+      "f_calibrated": 0.6586,
+      "model_mode": 11,
+      "error_pct": 1.5
+    },
+    {
+      "mode": 8,
+      "type": "torsion",
+      "f_fdd": 0.7123,
+      "f_fvt": 0.707,
+      "damping_fvt_pct": 0.78,
+      "used_for": "check",
+      "f_initial": 0.5049,
+      "f_calibrated": 0.6403,
+      "model_mode": 10,
+      "error_pct": -10.1
+    },
+    {
+      "mode": 9,
+      "type": "vertical",
+      "f_fdd": 0.8177,
+      "f_fvt": 0.814,
+      "damping_fvt_pct": 0.48,
+      "used_for": "check",
+      "f_initial": 0.7204,
+      "f_calibrated": 0.8299,
+      "model_mode": 13,
+      "error_pct": 1.5
+    },
+    {
+      "mode": 10,
+      "type": "torsion",
+      "f_fdd": 0.8993,
+      "f_fvt": null,
+      "damping_fvt_pct": null,
+      "used_for": "check",
+      "f_initial": 0.7148,
+      "f_calibrated": 0.909,
+      "model_mode": 14,
+      "error_pct": 1.1
+    },
+    {
+      "mode": 11,
+      "type": "torsion",
+      "f_fdd": 0.9251,
+      "f_fvt": null,
+      "damping_fvt_pct": null,
+      "used_for": "check",
+      "f_initial": 0.832,
+      "f_calibrated": 1.0646,
+      "model_mode": 17,
+      "error_pct": 15.1
+    },
+    {
+      "mode": 12,
+      "type": "vertical",
+      "f_fdd": 0.9865,
+      "f_fvt": 0.982,
+      "damping_fvt_pct": 0.74,
+      "used_for": "check",
+      "f_initial": 0.8513,
+      "f_calibrated": 1.0028,
+      "model_mode": 15,
+      "error_pct": 1.7
+    }
+  ],
+  "model_modes": [
+    {
+      "n": 1,
+      "f": 0.3027,
+      "type": "lateral",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.97
+    },
+    {
+      "n": 2,
+      "f": 0.3403,
+      "type": "vertical",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.93
+    },
+    {
+      "n": 3,
+      "f": 0.3958,
+      "type": "pylon",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.04
+    },
+    {
+      "n": 4,
+      "f": 0.3981,
+      "type": "pylon",
+      "symmetry": "antisymmetric",
+      "deck_energy_share": 0.0
+    },
+    {
+      "n": 5,
+      "f": 0.3987,
+      "type": "longitudinal",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.89
+    },
+    {
+      "n": 6,
+      "f": 0.4431,
+      "type": "vertical",
+      "symmetry": "antisymmetric",
+      "deck_energy_share": 0.61
+    },
+    {
+      "n": 7,
+      "f": 0.4696,
+      "type": "torsion",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.87
+    },
+    {
+      "n": 8,
+      "f": 0.4706,
+      "type": "pylon",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.03
+    },
+    {
+      "n": 9,
+      "f": 0.484,
+      "type": "pylon",
+      "symmetry": "antisymmetric",
+      "deck_energy_share": 0.34
+    },
+    {
+      "n": 10,
+      "f": 0.6403,
+      "type": "torsion",
+      "symmetry": "antisymmetric",
+      "deck_energy_share": 0.9
+    },
+    {
+      "n": 11,
+      "f": 0.6586,
+      "type": "vertical",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.96
+    },
+    {
+      "n": 12,
+      "f": 0.8032,
+      "type": "lateral",
+      "symmetry": "antisymmetric",
+      "deck_energy_share": 0.98
+    },
+    {
+      "n": 13,
+      "f": 0.8299,
+      "type": "vertical",
+      "symmetry": "antisymmetric",
+      "deck_energy_share": 0.96
+    },
+    {
+      "n": 14,
+      "f": 0.909,
+      "type": "torsion",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.93
+    },
+    {
+      "n": 15,
+      "f": 1.0028,
+      "type": "vertical",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.98
+    },
+    {
+      "n": 16,
+      "f": 1.0532,
+      "type": "vertical",
+      "symmetry": "antisymmetric",
+      "deck_energy_share": 0.99
+    },
+    {
+      "n": 17,
+      "f": 1.0646,
+      "type": "torsion",
+      "symmetry": "antisymmetric",
+      "deck_energy_share": 0.95
+    },
+    {
+      "n": 18,
+      "f": 1.1107,
+      "type": "vertical",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.98
+    },
+    {
+      "n": 19,
+      "f": 1.1685,
+      "type": "torsion",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.93
+    },
+    {
+      "n": 20,
+      "f": 1.1927,
+      "type": "torsion",
+      "symmetry": "antisymmetric",
+      "deck_energy_share": 0.94
+    },
+    {
+      "n": 21,
+      "f": 1.2174,
+      "type": "torsion",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.97
+    },
+    {
+      "n": 22,
+      "f": 1.2418,
+      "type": "torsion",
+      "symmetry": "antisymmetric",
+      "deck_energy_share": 0.98
+    },
+    {
+      "n": 23,
+      "f": 1.2433,
+      "type": "torsion",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.96
+    },
+    {
+      "n": 24,
+      "f": 1.2491,
+      "type": "torsion",
+      "symmetry": "antisymmetric",
+      "deck_energy_share": 0.97
+    },
+    {
+      "n": 25,
+      "f": 1.2767,
+      "type": "torsion",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.98
+    },
+    {
+      "n": 26,
+      "f": 1.2809,
+      "type": "vertical",
+      "symmetry": "antisymmetric",
+      "deck_energy_share": 0.97
+    },
+    {
+      "n": 27,
+      "f": 1.3405,
+      "type": "vertical",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.98
+    },
+    {
+      "n": 28,
+      "f": 1.3815,
+      "type": "torsion",
+      "symmetry": "antisymmetric",
+      "deck_energy_share": 0.96
+    },
+    {
+      "n": 29,
+      "f": 1.3914,
+      "type": "vertical",
+      "symmetry": "antisymmetric",
+      "deck_energy_share": 0.97
+    },
+    {
+      "n": 30,
+      "f": 1.4858,
+      "type": "torsion",
+      "symmetry": "symmetric",
+      "deck_energy_share": 0.96
+    }
+  ]
+}
