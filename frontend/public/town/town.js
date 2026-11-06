@@ -26,7 +26,13 @@ const SCENARIOS = {
   s16:{title:"Gravity columns and deformation compatibility",topic:"Gravity columns checked at the design displacement with the deflection amplification and importance factors, from a model with released gravity framing."},
   s17:{title:"Strapped footing at the property line",topic:"Reaction of an eccentric footing tied by a strap beam, vertical seismic load in allowable-stress bearing, and column hoops carried into the footing."},
   s18:{title:"Mechanical splices and bar substitution in special moment frame beams, a contractor's RFI",topic:"Joint depth for Grade 80 beam bars passing through a column, where Type 2 couplers may sit when the bars are Grade 80, and position couplers for prefabricated cages."},
-  s19:{title:"Tied-back shoring before the engineer of record signs, a deferred submittal",topic:"Apparent earth pressure for a tied-back wall, passive resistance over three hole diameters, and whether the soldier piles can carry the downward pull of a steep tieback."}
+  s19:{title:"Tied-back shoring before the engineer of record signs, a deferred submittal",topic:"Apparent earth pressure for a tied-back wall, passive resistance over three hole diameters, and whether the soldier piles can carry the downward pull of a steep tieback."},
+  s20:{title:"Precast screen panel connections, a submittal review",topic:"Seismic design of the connections of precast exterior wall panels on an open garage, checked against the supplier's calculations before the engineer of record signs."},
+  s21:{title:"Skybridge sliding bearing, a deferred submittal",topic:"Movement capacity of the sliding bearing that carries a pedestrian bridge from the garage to the neighbouring office building."},
+  s22:{title:"Concrete mixture submittals",topic:"Three ready-mix designs for decks, footings and walls, checked against the exposure classes on the drawings and the state amendments."},
+  s23:{title:"Deck-to-core-wall joint, a contractor's RFI",topic:"Dowels at the joint between a garage deck and a core wall, and the contractor's proposed alternative."},
+  s24:{title:"Egress stair sliding seat, a delegated design",topic:"The sliding seat of a precast egress stair flight, checked against the supplier's calculation and the building's seismic analysis."},
+  s25:{title:"Special shear walls under the Utah amendments, a permit resubmittal",topic:"Independent check and redesign of six special shear walls of a mixed-use tower in Salt Lake City, where the state amendments replace parts of the national provisions."},
 };
 
 /* Where an AI reviewer goes wrong, what it costs, and what an execution supervisor must open before accepting the result.
@@ -159,9 +165,10 @@ const STRUCTURES = {
     codes:["ACI 318-19","ASCE 7-16","IBC 2021"],
     parts:["rmat","column","rslab","rshear","rcant","seismic","construction"],
     cam:[470,330,-360], target:[211,110,-52]},
-  park:{name:"Public parking structure",status:"plan",phase:"Structure type 3 · planned",
-    lede:"Multi-level cast-in-place garage with ramps, open to weather and deicing salts. Durability, vehicle barriers and restraint cracking drive most failures.",
-    codes:["ACI 318-19 Ch. 19, 20, 24","ASCE 7-16 Ch. 4","ACI 362.1R","IBC 2021 406"],
+  park:{name:"Public parking structure",status:"prog",phase:"Structure type 3 · review tasks written",
+    lede:"Multi-level cast-in-place garage with ramps, open to weather and deicing salts. Durability, vehicle barriers and restraint cracking drive most failures. Five expert review tasks are set on this structure in Salt Lake City, under the 2024 IBC as adopted by Utah, ASCE 7-22 and ACI 318-19: submittals, a contractor's RFI and delegated designs that the engineer of record checks before signing. They were submitted to the micro1 Eval Hackathon in November 2026.",
+    codes:["ACI 318-19","ASCE 7-22","2024 IBC as adopted by Utah","Utah Code 15A-3","ACI 362.1R"],
+    scen:["s20","s21","s22","s23","s24"],
     checks:[["Table 19.3.1.1","Exposure classes F, S, C and the w/cm, air and strength limits they set"],["20.5.1.3","Cover for exposed decks"],["ASCE 7 4.5.3","Vehicle barrier loads"],["ASCE 7 4.10","Concentrated vehicle loads"],["24.4","Restraint from shrinkage and temperature on long decks"],["","Ramps, drainage slopes, expansion joints"]],
     cam:[430,150,330], target:[204,20,128]},
   wall:{name:"Foundations, basements and retaining walls",status:"plan",phase:"Structure type 4 · planned",
@@ -203,7 +210,7 @@ const PARTS = {
     plan:["Special moment frame joints (seismic phase)","Headed bars in joints"],scen:["s2","s12"]},
   wall:{name:"Structural walls and core",status:"done",codes:["ACI 318-19 Ch. 11","Ch. 12","Ch. 18"],
     checks:[["11.5.3","Simplified design method limits"],["11.6","Minimum wall reinforcement"],["18.10.3.1","Shear amplification Ve = Ωv ωv Vu in special walls"],["18.10.6.2","Boundary elements: need, height, thickness and drift capacity"],["18.10.2.3(c)","No lap splices in boundary regions at the critical section"],["ASCE 7 12.10.2.1","Collector force with Ω0, largest of three cases"],["25.4.10.2(e)","No As,req/As,prov reduction of laps in seismic systems"],["18.12.7.7","Collector splice-zone spacing, cover or ties"]],
-    plan:["Coupling beams","Diaphragm chords and shear transfer","Walls with openings and flanged sections"],scen:["s7","s8","s14"]},
+    plan:["Coupling beams","Diaphragm chords and shear transfer","Walls with openings and flanged sections"],scen:["s7","s8","s14","s25"]},
   seismic:{name:"Lateral system and seismic analysis",status:"done",codes:["ASCE 7-16 Ch. 11, 12","ACI 318-19 6.6.3, Ch. 18"],
     checks:[["ASCE 7 11.4","Site class and design spectral accelerations"],["ASCE 7 12.8.6","Story drift with Cd and Ie"],["ASCE 7 12.9.1.4","Scaling of modal results to ELF base shear"],["ACI 6.6.3.1.1","Cracked-section stiffness in the analysis model"],["ASCE 7 12.8.4","Accidental torsion and its amplification"],["ASCE 7 12.3.4","Redundancy factor ρ and the drift limit Δa/ρ"]],
     plan:["Drift and P-delta","Horizontal and vertical irregularities","Diaphragm forces"],scen:["s6"]},
@@ -285,7 +292,7 @@ function render(){
     if(S.parts){
       h+=`<h3>How the supervisor works</h3>${protocolBox()}<h3>Parts · click one here or in the model</h3><div class="parts">${S.parts.map(k=>{const P=PARTS[k];return `<button class="part" data-p="${k}"><i class="sw" style="background:var(--${P.status})"></i><span class="n">${esc(P.name)}</span><span class="s">${(TRAPS[k]||[]).length} failure cards</span></button>`}).join('')}</div>`;
     } else {
-      h+=`<h3>Critical checks to cover</h3>${checksList(S.checks)}<h3>Where AI goes wrong</h3>${trapCards(TRAPS[SKEY[current.s]])}<p class="note">Planned after the structure types before it.</p>`;
+      h+=`<h3>Critical checks to cover</h3>${checksList(S.checks)}${S.scen&&S.scen.length?`<h3>Review scenarios where a general AI model is likely to fail</h3>${scenarioCards(S.scen)}<p class="note">Results of these tasks: <a href="/eval/" target="_blank" rel="noopener">the task pipeline</a>. Prompts, answer keys and traps stay private.</p>`:''}<h3>Where AI goes wrong</h3>${trapCards(TRAPS[SKEY[current.s]])}${S.status==='plan'?'<p class="note">Planned after the structure types before it.</p>':''}`;
     }
   }
   h+=`<p class="note">Clause numbers refer to ACI 318-19 unless another standard is named. General engineering content from the public codes. These are the checks Tnega's review agent is being built to run; the agent is in development and not available yet. Model geometry: see the source table of each structure.</p>`;
