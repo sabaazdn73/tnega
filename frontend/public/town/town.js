@@ -170,7 +170,7 @@ const STRUCTURES = {
     codes:["ACI 318-19","ASCE 7-22","2024 IBC as adopted by Utah","Utah Code 15A-3","ACI 362.1R"],
     scen:["s20","s21","s22","s23","s24"],
     checks:[["Table 19.3.1.1","Exposure classes F, S, C and the w/cm, air and strength limits they set"],["20.5.1.3","Cover for exposed decks"],["ASCE 7 4.5.3","Vehicle barrier loads"],["ASCE 7 4.10","Concentrated vehicle loads"],["24.4","Restraint from shrinkage and temperature on long decks"],["","Ramps, drainage slopes, expansion joints"]],
-    cam:[430,150,330], target:[204,20,128]},
+    cam:[480,150,440], target:[202,12,155]},
   wall:{name:"Foundations, basements and retaining walls",status:"plan",phase:"Structure type 4 · planned",
     lede:"Site work under and around the buildings: basement walls, mats, retaining walls and excavation support. Site supervision of foundation work is part of this set.",
     codes:["ACI 318-19 Ch. 11, 13","ASCE 7-16 Ch. 3","IBC 2021 Ch. 18"],
@@ -328,17 +328,20 @@ const MODEL_SOURCES = {
       ["Gravity columns","18 columns; positions and sizes (1.6 to 2.3 ft) scaled from Fig. 4-4b; the text gives \"various sizes\"","Fig. 4-4b; p. 144"],
       ["Not given (not modeled)","foundation, basement, plans above floor 2, core openings, balconies, stairs","p. 148"],
       ["Construction stage","roof-edge guardrails per OSHA 1926.502(b)","29 CFR 1926.502"]]},
-  park:{ref:"Geometry from IBC 406 / 1015, ASCE 7-16 4.5.3, 2010 ADA Standards 502 and public owner parking design standards; members sized for this model to ACI 318-19 minimums (no federal garage design example exists).",
+  park:{ref:"The public parking structure of the five review tasks (fictional project, Salt Lake City): overall shape from the task drawings, layout after the CCDC Parking Structure Design Guidelines (Kimley-Horn, 2016). Member sizes, connection details and the numbers the reviews turn on are left out of the model while the tasks are under evaluation.",
     rows:[
-      ["Module","62 ft clear: 9.0 x 18.0 ft stalls each side of a 26 ft aisle","Boise CCDC Parking Structure Design Guidelines (2016) pp. 24-25; U-M SBA-E (2009) p. 2 (62 ft)"],
-      ["Clear height","8'-2\" at every level (U-M SBA-E p. 2: 8'-2\" at grade, 7'-6\" above); IBC 406.2.2 min. 7 ft","U-M SBA-E; IBC 406.2.2"],
-      ["Speed ramps","rise 12'-2\" over 162 ft = 7.5 % (no parking on ramps; U-M max 10 %; under the 8 % transition trigger of the Boise guideline)","U-M SBA-E p. 3; Boise p. 14"],
-      ["Guards","42 in. on elevated deck edges (also over the 2'-9\" vehicle barrier height); barrier load 6,000 lb at 1'-6\" to 2'-3\"","IBC 1015.3, 406.4.2; ASCE 7-16 4.5.3"],
-      ["Beams","24 x 48 in., 64 ft c/c columns, 27 ft o.c.: min. depth l/18.5 = 41.5 in. (one end continuous); Mu = 7.26 klf x 64 ft^2/10 = 2,974 k-ft, As = 16.5 in.^2 (rho 1.5 %)","ACI 318-19 Table 9.3.1.1; loads ASCE 7-16 Table 4.3-1 (40 psf)"],
-      ["Slab","12 in. one-way, 27 ft span: l/28 = 11.6 in. (both ends continuous)","ACI 318-19 Table 7.3.1.1"],
-      ["Columns","24 x 24 in., f'c 5,000 psi, 2 %: phiPn,max = 1,606 kips vs Pu = 1,394 kips (interior, 3 decks)","ACI 318-19 22.4.2"],
-      ["Cars","AASHTO P design vehicle 7 ft x 19 ft (1 ft longer than the stall); height 4.25 ft","Green Book (2004) as cited by Chester County PC; height Green Book Table 2-1a (to verify)"],
-      ["Not given (not modeled)","lateral system, stairs and elevators, drainage slopes, transitions"," - "]]},
+      ["Grid","seven column lines west to east, eleven south to north at 27 ft; deck about 124 ft x 270 ft","task drawings (general notes, foundation plan)"],
+      ["Levels","one level below grade and four decks at 10 ft steps; the top deck is parked","task drawings (general notes)"],
+      ["Decks","cast-in-place two-way flat slabs with drop panels at the interior columns","task drawings (general notes)"],
+      ["Ramp","two 62 ft modules; the west module slopes one level along most of its length, the east module is level","task outline; CCDC pp. 13, 16 (slope 5 % or less)"],
+      ["Cores","two stair and elevator cores at the south end with shear walls; core heights above the top deck assumed","task drawings; heights assumed"],
+      ["Upturned walls","perimeter vehicle barrier walls on the elevated decks, with an opening for the skybridge","task drawings"],
+      ["Skybridge","pedestrian bridge from the second deck to the neighbouring office building on a bearing at the east edge; deck width assumed","task drawings; office building by others"],
+      ["Screen panels","precast panels hung outside the east barrier wall at the top tier; extent along the face assumed","task drawings"],
+      ["Stair","open precast stair tower on the west edge near the north end; flight positions approximate","task drawings"],
+      ["Below grade","slab on grade and perimeter basement walls; footings and core foundations not modeled","task drawings"],
+      ["Stalls and cars","9'-0\" x 18'-0\" stalls each side of a 26'-0\" aisle (east module drawn); AASHTO P design vehicle 7 ft x 19 ft","CCDC pp. 24-25; Green Book (2004)"],
+      ["Not modeled","office building beyond the skybridge (outline only), ramp below the first deck, elevators, drainage slopes"," - "]]},
   wall:{ref:"FHWA LRFD Steel Girder Superstructure Bridge Design Example, Design Step 7: full-depth reinforced concrete cantilever abutment, used here as a cantilever retaining wall.",
     rows:[
       ["Retained height","22 ft (stem 15 ft + backwall 7 ft)","DS 7, Figs. 7-2, 7-8, 7-9"],
@@ -618,46 +621,86 @@ function buildResidential(){
   [[40,1],[44,1],[100,93],[104,93]].forEach(([x,y],i)=>person(X(x),0,Z(y),i%2?'m':'f'));
 }
 
-/* ===== Parking structure: geometry from IBC 406 / ADA 502 / owner design standards; members sized to ACI 318-19 minimums (see MODEL_SOURCES) ===== */
+/* ===== Parking structure: the 26-210 public parking structure of the review tasks (S-001, S-101, S-311, S-401, S-501, S-504), see MODEL_SOURCES ===== */
+/* task coordinates: x east from grid A, y north from line 1 (ft); town: X = GAR.x0 + x, Z = GAR.z0 + (270 - y); elevation EL 100'-0" (L1, grade) = town 0 */
 const GAR={x0:140,z0:20};
 function buildGarage(){
-  const Pk=T('park'), X=x=>GAR.x0+x, Z=z=>GAR.z0+z;
-  const XL=[0,64,128], ZL=[...Array(9)].map((_,i)=>27*i), H=8+2/12+4, LV=[0,H,2*H,3*H]; /* 8'-2" clear + 48 in. beam */
-  const C=2, BW=2, BD=4, SL=1, RAMP_END=162;
-  const cols=[],beams=[],slabsF=[],ramps=[],guards=[],lines=[];
-  XL.forEach(x=>ZL.forEach(z=>cols.push({x:X(x),yc:(3*H-BD)/2,z:Z(z),w:C,h:3*H-BD,d:C})));
-  const rampY=(k,z)=>k*H+H*(RAMP_END-z)/RAMP_END;
-  for(let k=1;k<=3;k++){
-    const y=LV[k];
-    /* west module: flat deck full length */
-    slabsF.push({x:X(32),yc:y-SL/2,z:Z(108),w:64+C,h:SL,d:216+C});
-    ZL.forEach(z=>beams.push({x:X(32),yc:y-BD/2,z:Z(z),w:64-C,h:BD,d:BW}));
-    /* east module: flat deck from the ramp end to the south end */
-    slabsF.push({x:X(96),yc:y-SL/2,z:Z((RAMP_END+216)/2),w:64+C,h:SL,d:216-RAMP_END+C/2});
-    ZL.filter(z=>z>=RAMP_END).forEach(z=>beams.push({x:X(96),yc:y-BD/2,z:Z(z),w:64-C,h:BD,d:BW}));
+  const Pk=T('park'), X=x=>GAR.x0+x, Z=y=>GAR.z0+(270-y), E=el=>el-100;
+  const GX=[0,18,44,62,80,106,124], GY=[...Array(11)].map((_,i)=>27*i);      /* grids A-G and 1-11 (S-001, S-101) */
+  const LV=[E(100),E(110),E(120),E(130)];                                      /* L1 to L4 (S-001) */
+  const P1=E(87), SL=8.5*IN, DP=5.5*IN, C=2, UW=1, UH=3.5;                     /* slab, drop panel, column, upturned wall */
+  const CORES=[[18,44],[80,106]];                                              /* C-1 B-C/1-2, C-2 E-F/1-2: deck openings 22 x 27 ft */
+  const RS=27, RN=243;                                                         /* west module: sloped bay between lines 2 and 10 */
+  const rampY=(k,y)=>LV[k]+(LV[k+1]-LV[k])*(y-RS)/(RN-RS);
+  const cols=[],slabs=[],ramps=[],drops=[],walls=[],cores=[],lines=[],panels=[],stair=[],below=[],sky=[];
+  /* top of structure at a point: east module flat L4; west module ramp L3-L4 or the flat bays */
+  const topAt=(x,y)=>x>=62||y<=RS||y>=RN?LV[3]:rampY(2,y);
+  GX.forEach(x=>GY.forEach(y=>{const t=topAt(x,y); cols.push({x:X(x),yc:(P1+t)/2,z:Z(y),w:C,h:t-P1,d:C})}));
+  const flat=(x0,x1,y0,y1,yT)=>slabs.push({x:X((x0+x1)/2),yc:yT-SL/2,z:Z((y0+y1)/2),w:x1-x0+C,h:SL,d:y1-y0});
+  for(let k=0;k<4;k++){const y=LV[k];
+    /* east module, flat full length, minus the C-2 opening */
+    flat(62,80,0,270,y); flat(106,124,0,270,y); flat(80,106,27,270,y);
+    /* west module south bay, minus the C-1 opening */
+    flat(0,18,0,RS,y); flat(44,62,0,RS,y);
+    /* west module north bay (lines 10-11): flat at every level */
+    flat(0,62,RN,270,y);
+    if(k<3){const L=Math.hypot(RN-RS,LV[k+1]-LV[k]), a=Math.atan2(LV[k+1]-LV[k],RN-RS);
+      ramps.push({x:X(31),yc:(LV[k]+LV[k+1])/2-SL/2,z:Z((RS+RN)/2),w:62,h:SL,d:L,rx:a});}
   }
-  /* east module speed ramps: rise H over 162 ft (7.5 %), level k to k+1 */
-  for(let k=0;k<3;k++){
-    const len=Math.hypot(RAMP_END,H), ang=Math.atan2(H,RAMP_END), yMid=k*H+H/2;
-    ramps.push({x:X(96),yc:yMid-SL/2,z:Z(RAMP_END/2),w:64+C,h:SL,d:len,rx:ang});
-    ZL.filter(z=>z<RAMP_END).forEach(z=>{ const yt=rampY(k,z); if(yt-BD<0.5) return; beams.push({x:X(96),yc:yt-BD/2,z:Z(z),w:64-C,h:BD,d:BW})});
+  /* drop panels 9'-0" x 9'-0" x 5 1/2" at interior columns (S-001) */
+  GX.slice(1,-1).forEach(x=>GY.slice(1,-1).forEach(y=>{
+    for(let k=0;k<4;k++){ let yt=LV[k], rx=0;
+      if(x<62 && y>RS && y<RN){ if(k===3) continue; yt=rampY(k,y); rx=Math.atan2(LV[k+1]-LV[k],RN-RS); }
+      if(CORES.some(([a,b])=>x>=a&&x<=b&&y<=27)) continue;
+      drops.push({x:X(x),yc:yt-SL-DP/2,z:Z(y),w:9,h:DP,d:9,rx}); }
+  }));
+  /* upturned perimeter walls 12 in., 3'-6" above the deck, L2 to L4 (S-001); 12 ft opening at the skybridge, east wall L2 (S-401) */
+  for(let k=1;k<4;k++){const y=LV[k], yc=y+UH/2;
+    walls.push({x:X(124+UW/2),yc,z:Z((0+250.5)/2),w:UW,h:UH,d:250.5});
+    walls.push({x:X(124+UW/2),yc,z:Z((262.5+270)/2),w:UW,h:UH,d:7.5});
+    if(k!==1) walls.push({x:X(124+UW/2),yc,z:Z(256.5),w:UW,h:UH,d:12});
+    walls.push({x:X(62),yc,z:Z(-UW/2),w:124+2*UW,h:UH,d:UW});
+    walls.push({x:X(62),yc,z:Z(270+UW/2),w:124+2*UW,h:UH,d:UW});
+    walls.push({x:X(-UW/2),yc,z:Z(RS/2),w:UW,h:UH,d:RS});
+    walls.push({x:X(-UW/2),yc,z:Z((RN+270)/2),w:UW,h:UH,d:270-RN});
+    const L=Math.hypot(RN-RS,LV[k]-LV[k-1]), a=Math.atan2(LV[k]-LV[k-1],RN-RS);
+    walls.push({x:X(-UW/2),yc:(LV[k-1]+LV[k])/2+UH/2,z:Z((RS+RN)/2),w:UW,h:UH,d:L,rx:a});
   }
-  /* perimeter guards 42 in. (IBC 1015.3; also exceed the 2'-9" vehicle barrier of 406.4.2) on the elevated decks */
-  for(let k=1;k<=3;k++){const y=LV[k], g=42*IN, t=6*IN;
-    guards.push({x:X(-C/2-t/2),yc:y+g/2,z:Z(108),w:t,h:g,d:216+C});
-    guards.push({x:X(128+C/2+t/2),yc:y+g/2,z:Z(108),w:t,h:g,d:216+C});
-    guards.push({x:X(32),yc:y+g/2,z:Z(-C/2-t/2),w:64+C,h:g,d:t});
-    guards.push({x:X(64),yc:y+g/2,z:Z(216+C/2+t/2),w:128+C,h:g,d:t});}
-  /* stalls 9.0 ft x 18.0 ft each side of a 26 ft aisle (62 ft module, Boise guideline pp. 24-25) */
-  const stallY=[0,H,2*H,3*H]; stallY.forEach((y,k)=>{
-    for(let z=0;z<=216;z+=9){ lines.push({x:X(1+9),yc:y+0.03,z:Z(z),w:18,h:0.01,d:4*IN}); lines.push({x:X(63-9),yc:y+0.03,z:Z(z),w:18,h:0.01,d:4*IN}); }
-  });
-  boxes(cols,'park',Pk); boxes(beams,'park',Pk); boxes(slabsF,'park',Pk); boxes(ramps,'park',Pk); boxes(guards,'park',Pk); boxes(lines,'lineW',null);
-  /* cars in stalls (P vehicle 19 ft is 1 ft longer than the 18 ft stall: it overhangs into the 26 ft aisle) */
-  stallY.forEach((y,k)=>{ for(let i=0;i<24;i++){ if((i*7+k*3)%5===0) continue; const zc=Z(4.5+9*i);
-      if(i%2===0) car(X(1+9.5),y,zc,false); if(i%3!==1) car(X(63-9.5),y,zc,false);} });
-  [[20,30],[44,100],[30,190]].forEach(([x,z],i)=>person(X(x),H,Z(z),i%2?'f':'m'));
-  [[-6,10],[-6,60]].forEach(([x,z],i)=>person(X(x),0,Z(z),'m'));
+  /* cores C-1 and C-2: 16 in. walls, 22 ft inside the column lines, from the mats (top EL 84'-0") to the penthouses (top assumed L4 + 12 ft) */
+  const cT=LV[3]+12, cB=E(84), tw=16*IN;
+  CORES.forEach(([a,b])=>{const x0=a+2,x1=b-2,h=cT-cB,yc=(cT+cB)/2;
+    cores.push({x:X(x0+tw/2),yc,z:Z(13.5),w:tw,h,d:27}); cores.push({x:X(x1-tw/2),yc,z:Z(13.5),w:tw,h,d:27});
+    cores.push({x:X((x0+x1)/2),yc,z:Z(tw/2),w:x1-x0,h,d:tw}); cores.push({x:X((x0+x1)/2),yc,z:Z(27-tw/2),w:x1-x0,h,d:tw});});
+  /* stair 2: open stair tower on the west edge, grids A-B and lines 8-9 (S-504); one precast flight per story, 5'-0" wide, run 15'-0", 16 risers */
+  for(let k=0;k<3;k++){const xs=k%2?12.5:6.5, y0=193.5, y1=208.5, L=Math.hypot(15,10), a=Math.atan2(10,15);
+    stair.push({x:X(xs),yc:(LV[k]+LV[k+1])/2-0.3,z:Z((y0+y1)/2),w:5,h:7*IN,d:L,rx:k%2?-a:a});}
+  for(let k=0;k<4;k++){ stair.push({x:X(9.5),yc:LV[k]-SL/2,z:Z(190.5),w:13,h:SL,d:6}); stair.push({x:X(9.5),yc:LV[k]-SL/2,z:Z(211.5),w:13,h:SL,d:6}); }
+  stair.push({x:X(0),yc:(P1+LV[3]+4)/2,z:Z(202.5),w:1,h:LV[3]+4-P1,d:27});
+  /* precast screen panels, top tier, 26'-0" x 10'-0" x 6", hung outside the east upturned walls from EL 123'-6" to 133'-6" (S-501) */
+  for(let b=0;b<10;b++) panels.push({x:X(124+UW+0.25+0.25),yc:(E(123.5)+E(133.5))/2,z:Z(13.5+27*b),w:0.5,h:10,d:26});
+  /* skybridge at L2: sliding bearing at x = 126'-0", y = 256'-6" on corbel C-1 (S-401); 66 ft to the office building (submittal SB-7); (2) W30x108 */
+  const yB=256.5, top=LV[1];
+  sky.push({x:X(125),yc:E(105.5),z:Z(yB),w:2,h:2,d:3});                         /* corbel C-1, 3'-0" wide */
+  sky.push({x:X(126+33),yc:top-0.25,z:Z(yB),w:66,h:0.5,d:10});                  /* concrete deck */
+  [-4.5,4.5].forEach(o=>sky.push({x:X(126+33),yc:top-0.5-1.25,z:Z(yB+o),w:66,h:2.5,d:0.9}));
+  /* below grade: P1 slab on grade 6 in. at EL 87'-0", perimeter basement walls W-B1 to the L1 deck (S-101) */
+  below.push({x:X(62),yc:P1-0.25,z:Z(135),w:124,h:0.5,d:270});
+  [[X(-0.5),Z(135),1,270],[X(124.5),Z(135),1,270],[X(62),Z(-0.5),126,1],[X(62),Z(270.5),126,1]].forEach(([x,z,w,d])=>below.push({x,yc:(P1+LV[0])/2,z,w,h:LV[0]-P1,d}));
+  boxes(cols,'park',Pk); boxes(slabs,'park',Pk); boxes(ramps,'park',Pk); boxes(drops,'park',Pk); boxes(walls,'park',Pk);
+  boxes(cores,'park',Pk); boxes(stair,'park',Pk); boxes(panels,'park',Pk); boxes(sky,'park',Pk); boxes(below,'park',Pk,true);
+  /* office building at the far end of the skybridge: by others, not modeled (outline only) */
+  const ob=new THREE.Mesh(new THREE.BoxGeometry(2,40,26),new THREE.MeshStandardMaterial({color:0x8a8f96,transparent:true,opacity:0.18,depthWrite:false}));
+  ob.position.set(X(193),20,Z(yB)); scene.add(ob);
+  /* stalls 9'-0" x 18'-0" each side of a 26'-0" aisle, 62'-0" modules (CCDC guideline pp. 24-25), on the flat deck areas */
+  const stallRows=[[62,80],[106,124]];
+  for(let k=0;k<4;k++){const y=LV[k];
+    stallRows.forEach(([a,b])=>{ for(let yy=27;yy<=270;yy+=9) lines.push({x:X((a+b)/2),yc:y+0.03,z:Z(yy),w:18,h:0.01,d:4*IN}); });
+    for(let i=0;i<27;i++){ if((i*7+k*3)%5===0) continue; const yy=31.5+9*i; if(yy>265) break;
+      if(i%2===0) car(X(71),y,Z(yy),false); if(i%3!==1) car(X(115),y,Z(yy),false);} }
+  boxes(lines,'lineW',null);
+  [[93,150],[90,60],[10,200]].forEach(([x,y],i)=>person(X(x),LV[1],Z(y),i%2?'f':'m'));
+  [[-6,40],[-6,120]].forEach(([x,y])=>person(X(x),0,Z(y),'m'));
+  person(X(150),LV[1],Z(256.5),'f');
 }
 
 /* ===== Bridge: FHWA NHI-04-043 PSC girder design example (two 110 ft spans, 20 deg skew) ===== */
