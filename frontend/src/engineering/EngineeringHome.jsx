@@ -55,6 +55,7 @@ export default function EngineeringHome() {
             <a href="#town" className="hidden sm:inline hover:underline">Code town</a>
             <a href="#pipeline" className="hidden sm:inline hover:underline">Task pipeline</a>
             <a href="#talk" className="hidden md:inline hover:underline">Talk</a>
+            <a href="/bim/" className="inline-flex items-center gap-1 hover:underline"><span className="sm:hidden">BIM</span><span className="hidden sm:inline">BIM practice</span> <ArrowRight size={13} aria-hidden="true" /></a>
             <a href="/finance" className="inline-flex items-center gap-1 hover:underline">Tnega Finance <ArrowRight size={13} aria-hidden="true" /></a>
             <ThemeToggle />
           </nav>
@@ -256,8 +257,9 @@ export default function EngineeringHome() {
       <footer className="border-t border-line">
         <div className="max-w-[1180px] mx-auto px-4 sm:px-6 py-8 flex flex-wrap items-center justify-between gap-4 text-[12px] text-muted">
           <p>
-            Also from Tnega: <a href="/finance" className="font-semibold text-fg hover:underline">Tnega Finance</a>, tokenized stocks
-            and what each one really costs to buy.
+            Also from Tnega: <a href="/bim/" className="font-semibold text-fg hover:underline">BIM practice</a>, a free structural BIM
+            course with an automatic checker, and <a href="/finance" className="font-semibold text-fg hover:underline">Tnega Finance</a>,
+            tokenized stocks and what each one really costs to buy.
           </p>
           <p>
             <a href="/finance/privacy" className="hover:underline">Privacy</a>
