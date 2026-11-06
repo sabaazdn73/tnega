@@ -11,7 +11,7 @@
 // Loaded on its own by main.jsx, without the finance product's wallet
 // providers, so the home page carries none of that code.
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowRight, Maximize2, FileSearch, ListChecks, Calculator, Users, ShieldAlert, Linkedin, PlayCircle } from 'lucide-react';
 import Brand from '../shell/Brand';
 import ThemeToggle from '../theme/ThemeToggle';
@@ -22,8 +22,10 @@ const LINKEDIN = 'https://www.linkedin.com/in/saba-azadegan-2974b622a/';
 // The owner's talk on YouTube (2026-10-26), embedded from youtube-nocookie.com (allowed in vercel.json frame-src).
 const VIDEO_ID = 'JYRgS2VCLQQ';
 const VIDEO_URL = `https://www.youtube.com/watch?v=${VIDEO_ID}`;
-// The micro1 Eval Hackathon walkthrough (2026-11-05). Linked, not embedded; its thumbnail is a still from the video.
-const HACKATHON_VIDEO_URL = 'https://www.youtube.com/watch?v=IWcEG7c-mQU';
+// The micro1 Eval Hackathon walkthrough (2026-11-05). Plays in the page: the still from the video
+// is shown first, and the youtube-nocookie player replaces it on click.
+const HACKATHON_VIDEO_ID = 'IWcEG7c-mQU';
+const HACKATHON_VIDEO_URL = `https://www.youtube.com/watch?v=${HACKATHON_VIDEO_ID}`;
 
 const STEPS = [
   { icon: FileSearch, title: 'Read the drawing set', text: 'Every sheet of the PDF, at full resolution: plans, sections, schedules and general notes, with the code edition of record taken from the notes, never assumed.' },
@@ -41,6 +43,7 @@ const WHY = [
 
 export default function EngineeringHome() {
   useEffect(() => { updatePageMeta({ ...ENGINEERING_COPY, path: '/' }); }, []);
+  const [playWalkthrough, setPlayWalkthrough] = useState(false);
 
   return (
     <div className="min-h-screen bg-page text-fg">
@@ -151,19 +154,32 @@ export default function EngineeringHome() {
               <a href="/eval/" target="_blank" rel="noreferrer" className="text-[13px] font-semibold inline-flex items-center gap-1.5 hover:underline">
                 <ListChecks size={14} aria-hidden="true" /> Open the task pipeline
               </a>
-              <a href={HACKATHON_VIDEO_URL} target="_blank" rel="noreferrer" className="text-[13px] font-semibold inline-flex items-center gap-1.5 hover:underline">
+              <a href="#walkthrough" onClick={() => setPlayWalkthrough(true)} className="text-[13px] font-semibold inline-flex items-center gap-1.5 hover:underline">
                 <PlayCircle size={14} aria-hidden="true" /> Watch the hackathon walkthrough
               </a>
             </div>
           </div>
           <div className="mt-6 grid gap-6 lg:grid-cols-2 items-start">
-            <div>
-              <a href={HACKATHON_VIDEO_URL} target="_blank" rel="noreferrer" className="group relative block rounded-lg border border-line overflow-hidden bg-black aspect-video">
-                <img src="/eval/hackathon-video.jpg" alt="Opening slide of the Structural Review Eval walkthrough, with Saba Azadegan presenting" className="block w-full h-full object-cover" loading="lazy" />
-                <span className="absolute inset-0 flex items-center justify-center">
-                  <span className="rounded-full bg-black/70 text-white p-3 group-hover:bg-black/85"><PlayCircle size={34} aria-hidden="true" /></span>
-                </span>
-              </a>
+            <div id="walkthrough" className="scroll-mt-4">
+              <div className="rounded-lg border border-line overflow-hidden bg-black aspect-video">
+                {playWalkthrough ? (
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${HACKATHON_VIDEO_ID}?rel=0&autoplay=1`}
+                    title="Structural Review Eval walkthrough by Saba Azadegan"
+                    className="block w-full h-full border-0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                ) : (
+                  <button type="button" onClick={() => setPlayWalkthrough(true)} aria-label="Play the Structural Review Eval walkthrough" className="group relative block w-full h-full cursor-pointer">
+                    <img src="/eval/hackathon-video.jpg" alt="Opening slide of the Structural Review Eval walkthrough, with Saba Azadegan presenting" className="block w-full h-full object-cover" loading="lazy" />
+                    <span className="absolute inset-0 flex items-center justify-center">
+                      <span className="rounded-full bg-black/70 text-white p-3 group-hover:bg-black/85"><PlayCircle size={34} aria-hidden="true" /></span>
+                    </span>
+                  </button>
+                )}
+              </div>
               <p className="mt-4 text-[12px] font-semibold uppercase tracking-[0.14em] text-muted">Walkthrough · under 5 minutes</p>
               <h3 className="mt-2 text-[18px] leading-[24px] font-semibold">Structural Review Eval: where frontier models sign off on unsafe engineering</h3>
               <p className="mt-2 text-[14px] leading-[22px] text-muted">
