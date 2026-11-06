@@ -22,6 +22,8 @@ const LINKEDIN = 'https://www.linkedin.com/in/saba-azadegan-2974b622a/';
 // The owner's talk on YouTube (2026-10-26), embedded from youtube-nocookie.com (allowed in vercel.json frame-src).
 const VIDEO_ID = 'JYRgS2VCLQQ';
 const VIDEO_URL = `https://www.youtube.com/watch?v=${VIDEO_ID}`;
+// The micro1 Eval Hackathon walkthrough (2026-11-05). Linked, not embedded; its thumbnail is a still from the video.
+const HACKATHON_VIDEO_URL = 'https://www.youtube.com/watch?v=IWcEG7c-mQU';
 
 const STEPS = [
   { icon: FileSearch, title: 'Read the drawing set', text: 'Every sheet of the PDF, at full resolution: plans, sections, schedules and general notes, with the code edition of record taken from the notes, never assumed.' },
@@ -149,12 +151,34 @@ export default function EngineeringHome() {
               <a href="/eval/" target="_blank" rel="noreferrer" className="text-[13px] font-semibold inline-flex items-center gap-1.5 hover:underline">
                 <ListChecks size={14} aria-hidden="true" /> Open the task pipeline
               </a>
-              <a href="https://www.youtube.com/watch?v=IWcEG7c-mQU" target="_blank" rel="noreferrer" className="text-[13px] font-semibold inline-flex items-center gap-1.5 hover:underline">
-                Watch the hackathon walkthrough
+              <a href={HACKATHON_VIDEO_URL} target="_blank" rel="noreferrer" className="text-[13px] font-semibold inline-flex items-center gap-1.5 hover:underline">
+                <PlayCircle size={14} aria-hidden="true" /> Watch the hackathon walkthrough
               </a>
             </div>
           </div>
-          <div className="mt-5 rounded-lg border border-line overflow-hidden bg-page">
+          <div className="mt-6 grid gap-6 lg:grid-cols-2 items-start">
+            <div>
+              <a href={HACKATHON_VIDEO_URL} target="_blank" rel="noreferrer" className="group relative block rounded-lg border border-line overflow-hidden bg-black aspect-video">
+                <img src="/eval/hackathon-video.jpg" alt="Opening slide of the Structural Review Eval walkthrough, with Saba Azadegan presenting" className="block w-full h-full object-cover" loading="lazy" />
+                <span className="absolute inset-0 flex items-center justify-center">
+                  <span className="rounded-full bg-black/70 text-white p-3 group-hover:bg-black/85"><PlayCircle size={34} aria-hidden="true" /></span>
+                </span>
+              </a>
+              <p className="mt-4 text-[12px] font-semibold uppercase tracking-[0.14em] text-muted">Walkthrough · under 5 minutes</p>
+              <h3 className="mt-2 text-[18px] leading-[24px] font-semibold">Structural Review Eval: where frontier models sign off on unsafe engineering</h3>
+              <p className="mt-2 text-[14px] leading-[22px] text-muted">
+                The six tasks, how each answer is graded against the expert key, the results, and why the models fail at
+                choosing the governing rule rather than at the arithmetic.
+              </p>
+              <a href={HACKATHON_VIDEO_URL} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold hover:underline">
+                <PlayCircle size={14} aria-hidden="true" /> Watch on YouTube
+              </a>
+            </div>
+            <a href="/eval/structural-review-eval.png" target="_blank" rel="noreferrer" className="block rounded-lg border border-line overflow-hidden bg-white">
+              <img src="/eval/structural-review-eval.png" alt="Structural Review Eval summary: the six tasks with a drawing from each, and for each model the mean score and the pass rate in the shared sandbox and with the code library" className="block w-full h-auto" loading="lazy" />
+            </a>
+          </div>
+          <div className="mt-6 rounded-lg border border-line overflow-hidden bg-page">
             <iframe
               src="/eval/"
               title="Task pipeline: where each expert evaluation task stands, where the engineer signs, and how the models score"
