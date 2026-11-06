@@ -50,13 +50,13 @@ export default function EngineeringHome() {
       <header className="border-b border-line">
         <div className="max-w-[1180px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
           <a href="/" aria-label="Tnega home"><Brand markClassName="w-[32px] h-[32px]" wordClassName="text-[20px]" /></a>
-          <nav className="flex items-center gap-4 sm:gap-6 text-[13px] font-semibold">
+          <nav className="flex items-center gap-3 sm:gap-6 text-[13px] font-semibold">
             <a href="#how" className="hidden sm:inline hover:underline">How it works</a>
             <a href="#town" className="hidden sm:inline hover:underline">Code town</a>
             <a href="#pipeline" className="hidden sm:inline hover:underline">Task pipeline</a>
             <a href="#talk" className="hidden md:inline hover:underline">Talk</a>
-            <a href="/bim/" className="inline-flex items-center gap-1 hover:underline"><span className="sm:hidden">BIM</span><span className="hidden sm:inline">BIM practice</span> <ArrowRight size={13} aria-hidden="true" /></a>
-            <a href="/finance" className="inline-flex items-center gap-1 hover:underline">Tnega Finance <ArrowRight size={13} aria-hidden="true" /></a>
+            <a href="/bim/" className="inline-flex items-center gap-1 whitespace-nowrap hover:underline"><span className="sm:hidden">BIM</span><span className="hidden sm:inline">BIM practice</span> <ArrowRight size={13} aria-hidden="true" /></a>
+            <a href="/finance" className="inline-flex items-center gap-1 whitespace-nowrap hover:underline">Tnega Finance <ArrowRight size={13} aria-hidden="true" /></a>
             <ThemeToggle />
           </nav>
         </div>
