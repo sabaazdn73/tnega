@@ -45,15 +45,29 @@
     return `<div class="legend"><span><i class="sw st-done"></i>Done</span><span><i class="sw st-in_progress"></i>In progress</span><span><i class="sw st-waiting_for_human"></i>Waiting for the human</span><span><i class="sw"></i>Not started</span></div>`;
   }
   function bestRun(p) {
-    const r = (p.runs || []).slice().sort((a, b) => String(a.date).localeCompare(String(b.date))).pop();
-    if (!r) return '';
-    return r.results.map((x) => `${esc(x.model)}: ${x.c}/${x.n} passed${x.mean_score != null ? `, mean ${x.mean_score}/${x.max_score}` : ''}`).join(' · ');
+    const rs = (p.runs || []).slice().sort((a, b) => String(a.date).localeCompare(String(b.date)));
+    if (!rs.length) return '';
+    return rs.map((r) => {
+      const c = r.results.reduce((t, x) => t + x.c, 0), n = r.results.reduce((t, x) => t + x.n, 0);
+      return `${r.model_library ? 'With the code library' : 'Shared sandbox'}: ${c} of ${n} trials passed`;
+    }).join(' · ');
+  }
+  function highlight() {
+    const h = S.highlight;
+    if (!h) return '';
+    return `<div class="card hl"><p class="ptitle">${esc(h.title)}</p><p>${esc(h.text)}</p>
+      <p class="small">${(h.links || []).map(([l, u]) => `<a href="${esc(u)}" target="_blank" rel="noreferrer">${esc(l)}</a>`).join(' · ')}</p></div>`;
+  }
+  function figure(p, cls) {
+    const im = p.image;
+    if (!im) return '';
+    return `<figure class="${cls}"><img src="${esc(im.src)}" alt="${esc(im.alt || '')}" loading="lazy">${cls === 'fig' && im.caption ? `<figcaption class="small muted">${esc(im.caption)}</figcaption>` : ''}</figure>`;
   }
 
   // ---------- views ----------
   function viewProjects() {
     const ps = S.projects || [];
-    let h = `<h2>Tasks</h2><p class="muted">Each strip is the nine stages of the pipeline. Red is a stage waiting for the human.</p>${legend()}`;
+    let h = `${highlight()}<h2>Tasks</h2><p class="muted">Each strip is the nine stages of the pipeline. Red is a stage waiting for the human.</p>${legend()}`;
     if (LOCAL) h += `<div class="card"><h3>New task</h3><div class="controls">
       <input type="text" id="np-id" placeholder="id, e.g. p8-ramp-slab" aria-label="Task id">
       <input type="text" id="np-title" placeholder="Title" aria-label="Title">
@@ -64,7 +78,7 @@
       const done = stagesOf(p).filter((s) => s.st.status === 'done').length;
       const waiting = stagesOf(p).filter((s) => s.st.status === 'waiting_for_human').map((s) => s.n);
       return `<button class="card pcard" data-open="${esc(p.id)}">
-        <p class="ptitle">${esc(p.title)}</p>
+        ${figure(p, 'thumb')}<p class="ptitle">${esc(p.title)}</p>
         <p class="muted small">${esc(p.structure || '')}${p.domain ? ' · ' + esc(p.domain) : ''}${LOCAL ? (p.public ? ' · public' : ' · private') : ''}</p>
         ${strip(p)}
         <p class="small">${done} of 9 stages done${waiting.length ? ` · <span class="no">human needed at stage ${waiting.join(', ')}</span>` : ''}</p>
@@ -115,7 +129,7 @@
     const b = p.basis || {};
     let h = `<button class="back" data-act="home">← All tasks</button>
       <h2 style="margin-top:4px">${esc(p.title)}</h2><p class="muted">${esc(p.structure || '')}${p.domain ? ' · ' + esc(p.domain) : ''}</p>
-      ${p.summary || p.public_summary ? `<p>${esc(p.summary || p.public_summary)}</p>` : ''}${strip(p)}${legend()}`;
+      ${p.summary || p.public_summary ? `<p>${esc(p.summary || p.public_summary)}</p>` : ''}${figure(p, 'fig')}${strip(p)}${legend()}`;
     if (LOCAL) h += `<div class="card"><div class="controls">
       <label class="small"><input type="checkbox" data-meta-public ${p.public ? 'checked' : ''}> Show this task on the public page (progress and results only)</label>
       <input type="text" data-meta-summary value="${esc(p.public_summary || '')}" placeholder="One public sentence about the task" size="60" aria-label="Public summary">
@@ -148,8 +162,8 @@
     h += `<h3>Model runs</h3><div class="card scroll">`;
     if ((p.runs || []).length) {
       h += `<table><tr><th>Run</th><th>Setup</th><th>Model</th><th class="num-c">Passed</th><th>Pass rate</th><th class="num-c">pass@k</th><th class="num-c">pass^k</th><th class="num-c">Mean score</th></tr>
-        ${p.runs.map((r) => r.results.map((x, i) => `<tr>${i === 0 ? `<td rowspan="${r.results.length}" class="mono small">${esc(r.run_id)}<br><span class="muted">${esc((r.date || '').slice(0, 10))}</span></td><td rowspan="${r.results.length}" class="small">k = ${r.k}${r.model_library ? ', model has the code library' : ''}${r.with_refs ? ', with references' : ''}</td>` : ''}
-        <td class="small">${esc(x.model)}</td><td class="num-c">${x.c}/${x.n}</td><td><div class="bar" title="${pct(x.pass_rate)}"><i style="width:${Math.round(x.pass_rate * 100)}%"></i></div></td>
+        ${p.runs.map((r) => r.results.map((x, i) => `<tr>${i === 0 ? `<td rowspan="${r.results.length}" class="mono small">${esc(r.run_id)}<br><span class="muted">${esc((r.date || '').slice(0, 10))}</span></td><td rowspan="${r.results.length}" class="small">k = ${r.k}${r.setup ? ', ' + esc(r.setup) : (r.model_library ? ', model has the code library' : '')}${r.with_refs ? ', with references' : ''}</td>` : ''}
+        <td class="small">${esc(x.model)}</td><td class="num-c">${x.c}/${x.n}${x.no_answer ? `<br><span class="small muted">${x.no_answer} no answer</span>` : ''}</td><td><div class="bar" title="${pct(x.pass_rate)}"><i style="width:${Math.round(x.pass_rate * 100)}%"></i></div></td>
         <td class="num-c">${pct(x.pass_at_k)}</td><td class="num-c">${pct(x.pass_hat_k)}</td><td class="num-c">${x.mean_score != null ? `${x.mean_score}/${x.max_score}` : '—'}</td></tr>`).join('')).join('')}</table>`;
     } else h += '<p class="muted">No runs yet.</p>';
     if (LOCAL) h += `<div class="controls" style="margin-top:10px">

@@ -1,6 +1,6 @@
 {
  "mode": "public",
- "generated": "2026-11-01T12:22:07",
+ "generated": "2026-11-06T10:00:00",
  "process": {
   "title": "Where the Human Belongs: the task pipeline",
   "source": "docs/where-the-human-belongs.md",
@@ -196,53 +196,51 @@
  },
  "projects": [
   {
-   "id": "halverston-special-walls",
+   "id": "a01r3-special-walls-utah",
    "title": "Special shear walls W-1 to W-6, Halverston Block",
    "domain": "structural",
-   "structure": "Mixed-use tower, special RC shear walls",
-   "summary": "Independent check and redesign of six special RC shear walls in Salt Lake City, from the critical section to the roof and down to the mat. Corrected on November 1, 2026 for the Utah amendments.",
+   "structure": "Mixed-use tower, special RC shear walls, Salt Lake City",
+   "summary": "Independent check and redesign of six special RC shear walls under the Utah amendments, from the critical section to the roof and down to the mat.",
    "basis": {
     "location": "Salt Lake City, Utah",
     "adopted_code": "2024 IBC, effective July 1, 2026 (Utah Code 15A-2-103)",
     "standards": "ASCE 7-22, ACI 318-19",
     "amendments": "Utah Code 15A-3-107 (IBC 1613.1.2: Cs by Method 1) and 15A-3-108 (IBC 1905.8: ACI 318 18.10.3 replaced; 1905.9), effective March 17, 2026"
    },
+   "image": {
+    "src": "/eval/img/a01r3-special-walls-utah.jpg",
+    "alt": "S-201, tower wall layout and gravity loads (one of the input sheets)",
+    "caption": "S-201, tower wall layout and gravity loads (one of the input sheets). Fictional project, drawn in the format of real construction documents."
+   },
    "stages": {
     "s1": {
-     "status": "done",
-     "date": "2026-10-28"
+     "status": "done"
     },
     "s2": {
-     "status": "waiting_for_human",
-     "date": "2026-11-01"
+     "status": "done"
     },
     "s3": {
-     "status": "done",
-     "date": "2026-10-29"
+     "status": "done"
     },
     "s4": {
-     "status": "done",
-     "date": "2026-10-29"
+     "status": "done"
     },
     "s5": {
-     "status": "done",
-     "date": "2026-10-30"
+     "status": "done"
     },
     "s6": {
      "status": "done",
-     "date": "2026-10-30"
+     "date": "2026-11-04"
     },
     "s7": {
-     "status": "done",
-     "date": "2026-11-01"
+     "status": "done"
     },
     "s8": {
-     "status": "done",
-     "date": "2026-11-01"
+     "status": "done"
     },
     "s9": {
-     "status": "waiting_for_human",
-     "date": "2026-11-01"
+     "status": "done",
+     "date": "2026-11-05"
     }
    },
    "package": [
@@ -269,7 +267,7 @@
     {
      "item": "Deterministic checks",
      "required": true,
-     "present": null
+     "present": true
     },
     {
      "item": "Answer key (key.md)",
@@ -294,197 +292,190 @@
     {
      "item": "Grader tests",
      "required": true,
-     "present": false
+     "present": true
     },
     {
      "item": "Code library (optional)",
      "required": false,
-     "present": false
+     "present": true
     }
    ],
-   "file_count": 16,
    "runs": [
     {
-     "run_id": "cs-haiku-lib",
-     "date": "2026-11-01T09:39:14",
-     "models": [
-      "claude-haiku-5-5"
-     ],
-     "k": 3,
-     "model_library": true,
+     "run_id": "same-sandbox",
+     "date": "2026-11-04T20:29:00",
+     "k": 2,
+     "model_library": false,
+     "setup": "one local sandbox shared by all models, 40-turn limit",
      "results": [
       {
        "model": "claude-haiku-5-5",
-       "n": 3,
+       "n": 2,
        "c": 0,
-       "k": 3,
+       "k": 2,
        "pass_rate": 0.0,
        "pass_at_k": 0.0,
        "pass_hat_k": 0.0,
-       "mean_score": 6.67,
-       "max_score": 13
-      }
-     ]
-    },
-    {
-     "run_id": "cs-haiku-lib-utah",
-     "date": "2026-11-01T10:19:42",
-     "models": [
-      "claude-haiku-5-5"
-     ],
-     "k": 3,
-     "model_library": true,
-     "results": [
+       "mean_score": 1.0,
+       "max_score": 14,
+       "no_answer": 0
+      },
       {
-       "model": "claude-haiku-5-5",
-       "n": 3,
+       "model": "claude-sonnet-5-5",
+       "n": 2,
        "c": 0,
-       "k": 3,
+       "k": 2,
        "pass_rate": 0.0,
        "pass_at_k": 0.0,
        "pass_hat_k": 0.0,
        "mean_score": 7.0,
-       "max_score": 14
-      }
-     ]
-    },
-    {
-     "run_id": "cs-haiku-nolib",
-     "date": "2026-10-31T23:53:20",
-     "models": [
-      "claude-haiku-5-5"
-     ],
-     "k": 3,
-     "model_library": false,
-     "results": [
+       "max_score": 14,
+       "no_answer": 0
+      },
       {
-       "model": "claude-haiku-5-5",
-       "n": 3,
+       "model": "gemini-3.8-flash",
+       "n": 2,
        "c": 0,
-       "k": 3,
-       "pass_rate": 0.0,
-       "pass_at_k": 0.0,
-       "pass_hat_k": 0.0,
-       "mean_score": 0.67,
-       "max_score": 13
-      }
-     ]
-    },
-    {
-     "run_id": "cs-haiku-nolib-utah",
-     "date": "2026-11-01T10:19:19",
-     "models": [
-      "claude-haiku-5-5"
-     ],
-     "k": 3,
-     "model_library": false,
-     "results": [
-      {
-       "model": "claude-haiku-5-5",
-       "n": 3,
-       "c": 0,
-       "k": 3,
-       "pass_rate": 0.0,
-       "pass_at_k": 0.0,
-       "pass_hat_k": 0.0,
-       "mean_score": 0.33,
-       "max_score": 14
-      }
-     ]
-    },
-    {
-     "run_id": "private-1",
-     "date": "2026-10-31T16:17:45",
-     "models": [
-      "claude-haiku-5-5",
-      "claude-sonnet-5-5"
-     ],
-     "k": 3,
-     "model_library": null,
-     "results": [
-      {
-       "model": "claude-haiku-5-5",
-       "n": 3,
-       "c": 0,
-       "k": 3,
+       "k": 2,
        "pass_rate": 0.0,
        "pass_at_k": 0.0,
        "pass_hat_k": 0.0,
        "mean_score": 0.0,
-       "max_score": 13
+       "max_score": 14,
+       "no_answer": 2
+      },
+      {
+       "model": "gemini-4-argon",
+       "n": 1,
+       "c": 0,
+       "k": 1,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 8.0,
+       "max_score": 14,
+       "no_answer": 0
+      }
+     ]
+    },
+    {
+     "run_id": "with-code-library",
+     "date": "2026-11-05T10:01:00",
+     "k": 2,
+     "model_library": true,
+     "setup": "same sandbox, plus a library of the cited standards as look-up tools (graders without it)",
+     "results": [
+      {
+       "model": "claude-haiku-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 7.0,
+       "max_score": 14,
+       "no_answer": 0
       },
       {
        "model": "claude-sonnet-5-5",
-       "n": 3,
+       "n": 2,
        "c": 0,
-       "k": 3,
+       "k": 2,
        "pass_rate": 0.0,
        "pass_at_k": 0.0,
        "pass_hat_k": 0.0,
        "mean_score": 0.0,
-       "max_score": 13
+       "max_score": 14,
+       "no_answer": 2
+      },
+      {
+       "model": "gemini-3.8-flash",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 0.0,
+       "max_score": 14,
+       "no_answer": 2
+      },
+      {
+       "model": "gemini-4-argon",
+       "n": 1,
+       "c": 0,
+       "k": 1,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 0.0,
+       "max_score": 14,
+       "no_answer": 1
       }
      ]
     }
    ],
-   "updated": "2026-11-01T12:30:00"
+   "updated": "2026-11-06T10:00:00"
   },
   {
-   "id": "p1-load-takedown",
-   "title": "Interior column and footing load takedown",
+   "id": "m1-t1-screen-panel-connections",
+   "title": "Precast screen panel connections, submittal review",
    "domain": "structural",
    "structure": "RC Code Town public parking structure, Salt Lake City",
-   "summary": "Column and footing load takedown for the parking structure.",
+   "summary": "Review of the precast supplier's connection calculations for screen panel P-4 before the engineer of record signs the submittal review.",
    "basis": {
     "location": "Salt Lake City, Utah",
     "adopted_code": "2024 IBC, effective July 1, 2026 (Utah Code 15A-2-103)",
     "standards": "ASCE 7-22, ACI 318-19",
     "amendments": "Utah Code 15A-3-107 (IBC 1613.1.2: Cs by Method 1) and 15A-3-108 (IBC 1905.8: ACI 318 18.10.3 replaced; 1905.9), effective March 17, 2026"
    },
+   "image": {
+    "src": "/eval/img/m1-t1-screen-panel-connections.jpg",
+    "alt": "S-501, screen panel support details (one of the input sheets)",
+    "caption": "S-501, screen panel support details (one of the input sheets). Fictional project, drawn in the format of real construction documents."
+   },
    "stages": {
     "s1": {
-     "status": "done",
-     "date": "2026-11-01"
+     "status": "done"
     },
     "s2": {
-     "status": "waiting_for_human",
-     "date": "2026-11-01"
+     "status": "done"
     },
     "s3": {
-     "status": "done",
-     "date": "2026-11-01"
+     "status": "done"
     },
     "s4": {
-     "status": "not_started"
+     "status": "done"
     },
     "s5": {
-     "status": "not_started"
+     "status": "done"
     },
     "s6": {
-     "status": "not_started"
+     "status": "done",
+     "date": "2026-11-04"
     },
     "s7": {
-     "status": "in_progress",
-     "date": "2026-11-01"
+     "status": "done"
     },
     "s8": {
-     "status": "done",
-     "date": "2026-11-01"
+     "status": "done"
     },
     "s9": {
-     "status": "not_started"
+     "status": "done",
+     "date": "2026-11-05"
     }
    },
    "package": [
     {
      "item": "prompt.md",
      "required": true,
-     "present": false
+     "present": true
     },
     {
      "item": "Input files",
      "required": true,
-     "present": false
+     "present": true
     },
     {
      "item": "Basis of design",
@@ -504,17 +495,17 @@
     {
      "item": "Answer key (key.md)",
      "required": false,
-     "present": false
+     "present": true
     },
     {
      "item": "Accepted alternatives",
      "required": true,
-     "present": false
+     "present": true
     },
     {
      "item": "Lures",
      "required": true,
-     "present": false
+     "present": true
     },
     {
      "item": "Golden solution",
@@ -529,381 +520,185 @@
     {
      "item": "Code library (optional)",
      "required": false,
-     "present": false
+     "present": true
     }
    ],
-   "file_count": 4,
-   "runs": [],
-   "updated": "2026-11-01T12:30:00"
+   "runs": [
+    {
+     "run_id": "same-sandbox",
+     "date": "2026-11-04T20:29:00",
+     "k": 2,
+     "model_library": false,
+     "setup": "one local sandbox shared by all models, 40-turn limit",
+     "results": [
+      {
+       "model": "claude-haiku-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 3.0,
+       "max_score": 13,
+       "no_answer": 0
+      },
+      {
+       "model": "claude-sonnet-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 3.5,
+       "max_score": 13,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-3.8-flash",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 4.0,
+       "max_score": 13,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-4-argon",
+       "n": 1,
+       "c": 0,
+       "k": 1,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 6.0,
+       "max_score": 13,
+       "no_answer": 0
+      }
+     ]
+    },
+    {
+     "run_id": "with-code-library",
+     "date": "2026-11-05T10:01:00",
+     "k": 2,
+     "model_library": true,
+     "setup": "same sandbox, plus a library of the cited standards as look-up tools (graders without it)",
+     "results": [
+      {
+       "model": "claude-haiku-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 5.5,
+       "max_score": 13,
+       "no_answer": 0
+      },
+      {
+       "model": "claude-sonnet-5-5",
+       "n": 2,
+       "c": 1,
+       "k": 2,
+       "pass_rate": 0.5,
+       "pass_at_k": 1.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 10.0,
+       "max_score": 13,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-3.8-flash",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 0.0,
+       "max_score": 13,
+       "no_answer": 2
+      },
+      {
+       "model": "gemini-4-argon",
+       "n": 1,
+       "c": 1,
+       "k": 1,
+       "pass_rate": 1.0,
+       "pass_at_k": 1.0,
+       "pass_hat_k": 1.0,
+       "mean_score": 10.0,
+       "max_score": 13,
+       "no_answer": 0
+      }
+     ]
+    }
+   ],
+   "updated": "2026-11-06T10:00:00"
   },
   {
-   "id": "p2-vehicle-barrier",
-   "title": "Vehicle barrier at the open perimeter",
+   "id": "m1-t2-skybridge-sliding-bearing",
+   "title": "Skybridge sliding bearing, deferred submittal SB-7",
    "domain": "structural",
    "structure": "RC Code Town public parking structure, Salt Lake City",
-   "summary": "Vehicle barrier and spandrel at the open perimeter.",
+   "summary": "Review of the fabricator's bearing movement calculation for the skybridge to the adjacent office building, and of the junior engineer's draft review.",
    "basis": {
     "location": "Salt Lake City, Utah",
     "adopted_code": "2024 IBC, effective July 1, 2026 (Utah Code 15A-2-103)",
     "standards": "ASCE 7-22, ACI 318-19",
     "amendments": "Utah Code 15A-3-107 (IBC 1613.1.2: Cs by Method 1) and 15A-3-108 (IBC 1905.8: ACI 318 18.10.3 replaced; 1905.9), effective March 17, 2026"
    },
+   "image": {
+    "src": "/eval/img/m1-t2-skybridge-sliding-bearing.jpg",
+    "alt": "S-401, skybridge bearing and corbel details (one of the input sheets)",
+    "caption": "S-401, skybridge bearing and corbel details (one of the input sheets). Fictional project, drawn in the format of real construction documents."
+   },
    "stages": {
     "s1": {
-     "status": "done",
-     "date": "2026-11-01"
+     "status": "done"
     },
     "s2": {
-     "status": "waiting_for_human",
-     "date": "2026-11-01"
+     "status": "done"
     },
     "s3": {
-     "status": "not_started"
+     "status": "done"
     },
     "s4": {
-     "status": "not_started"
+     "status": "done"
     },
     "s5": {
-     "status": "not_started"
+     "status": "done"
     },
     "s6": {
-     "status": "not_started"
+     "status": "done",
+     "date": "2026-11-04"
     },
     "s7": {
-     "status": "not_started"
+     "status": "done"
     },
     "s8": {
-     "status": "not_started"
+     "status": "done"
     },
     "s9": {
-     "status": "not_started"
+     "status": "done",
+     "date": "2026-11-05"
     }
    },
    "package": [
     {
      "item": "prompt.md",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Input files",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Basis of design",
      "required": true,
      "present": true
     },
     {
-     "item": "Answer format",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Deterministic checks",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Answer key (key.md)",
-     "required": false,
-     "present": false
-    },
-    {
-     "item": "Accepted alternatives",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Lures",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Golden solution",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Grader tests",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Code library (optional)",
-     "required": false,
-     "present": false
-    }
-   ],
-   "file_count": 0,
-   "runs": [],
-   "updated": "2026-11-01T12:30:00"
-  },
-  {
-   "id": "p3-concrete-mix",
-   "title": "Concrete mix submittal and durability",
-   "domain": "structural",
-   "structure": "RC Code Town public parking structure, Salt Lake City",
-   "summary": "Concrete mix review for the exposed parking slabs.",
-   "basis": {
-    "location": "Salt Lake City, Utah",
-    "adopted_code": "2024 IBC, effective July 1, 2026 (Utah Code 15A-2-103)",
-    "standards": "ASCE 7-22, ACI 318-19",
-    "amendments": "Utah Code 15A-3-107 (IBC 1613.1.2: Cs by Method 1) and 15A-3-108 (IBC 1905.8: ACI 318 18.10.3 replaced; 1905.9), effective March 17, 2026"
-   },
-   "stages": {
-    "s1": {
-     "status": "done",
-     "date": "2026-11-01"
-    },
-    "s2": {
-     "status": "waiting_for_human",
-     "date": "2026-11-01"
-    },
-    "s3": {
-     "status": "not_started"
-    },
-    "s4": {
-     "status": "not_started"
-    },
-    "s5": {
-     "status": "not_started"
-    },
-    "s6": {
-     "status": "not_started"
-    },
-    "s7": {
-     "status": "not_started"
-    },
-    "s8": {
-     "status": "not_started"
-    },
-    "s9": {
-     "status": "not_started"
-    }
-   },
-   "package": [
-    {
-     "item": "prompt.md",
-     "required": true,
-     "present": false
-    },
-    {
      "item": "Input files",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Basis of design",
      "required": true,
      "present": true
-    },
-    {
-     "item": "Answer format",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Deterministic checks",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Answer key (key.md)",
-     "required": false,
-     "present": false
-    },
-    {
-     "item": "Accepted alternatives",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Lures",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Golden solution",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Grader tests",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Code library (optional)",
-     "required": false,
-     "present": false
-    }
-   ],
-   "file_count": 0,
-   "runs": [],
-   "updated": "2026-11-01T12:30:00"
-  },
-  {
-   "id": "p4-laps-cracking",
-   "title": "Crack control and epoxy-coated laps",
-   "domain": "structural",
-   "structure": "RC Code Town public parking structure, Salt Lake City",
-   "summary": "Reinforcement spacing and lap lengths in the slabs.",
-   "basis": {
-    "location": "Salt Lake City, Utah",
-    "adopted_code": "2024 IBC, effective July 1, 2026 (Utah Code 15A-2-103)",
-    "standards": "ASCE 7-22, ACI 318-19",
-    "amendments": "Utah Code 15A-3-107 (IBC 1613.1.2: Cs by Method 1) and 15A-3-108 (IBC 1905.8: ACI 318 18.10.3 replaced; 1905.9), effective March 17, 2026"
-   },
-   "stages": {
-    "s1": {
-     "status": "done",
-     "date": "2026-11-01"
-    },
-    "s2": {
-     "status": "waiting_for_human",
-     "date": "2026-11-01"
-    },
-    "s3": {
-     "status": "not_started"
-    },
-    "s4": {
-     "status": "not_started"
-    },
-    "s5": {
-     "status": "not_started"
-    },
-    "s6": {
-     "status": "not_started"
-    },
-    "s7": {
-     "status": "not_started"
-    },
-    "s8": {
-     "status": "not_started"
-    },
-    "s9": {
-     "status": "not_started"
-    }
-   },
-   "package": [
-    {
-     "item": "prompt.md",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Input files",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Basis of design",
-     "required": true,
-     "present": true
-    },
-    {
-     "item": "Answer format",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Deterministic checks",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Answer key (key.md)",
-     "required": false,
-     "present": false
-    },
-    {
-     "item": "Accepted alternatives",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Lures",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Golden solution",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Grader tests",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Code library (optional)",
-     "required": false,
-     "present": false
-    }
-   ],
-   "file_count": 0,
-   "runs": [],
-   "updated": "2026-11-01T12:30:00"
-  },
-  {
-   "id": "p5-basement-wall",
-   "title": "Basement wall at P1",
-   "domain": "structural",
-   "structure": "RC Code Town public parking structure, Salt Lake City",
-   "summary": "Basement wall at the lowest parking level.",
-   "basis": {
-    "location": "Salt Lake City, Utah",
-    "adopted_code": "2024 IBC, effective July 1, 2026 (Utah Code 15A-2-103)",
-    "standards": "ASCE 7-22, ACI 318-19",
-    "amendments": "Utah Code 15A-3-107 (IBC 1613.1.2: Cs by Method 1) and 15A-3-108 (IBC 1905.8: ACI 318 18.10.3 replaced; 1905.9), effective March 17, 2026"
-   },
-   "stages": {
-    "s1": {
-     "status": "done",
-     "date": "2026-11-01"
-    },
-    "s2": {
-     "status": "waiting_for_human",
-     "date": "2026-11-01"
-    },
-    "s3": {
-     "status": "done",
-     "date": "2026-11-01"
-    },
-    "s4": {
-     "status": "not_started"
-    },
-    "s5": {
-     "status": "not_started"
-    },
-    "s6": {
-     "status": "not_started"
-    },
-    "s7": {
-     "status": "in_progress",
-     "date": "2026-11-01"
-    },
-    "s8": {
-     "status": "done",
-     "date": "2026-11-01"
-    },
-    "s9": {
-     "status": "not_started"
-    }
-   },
-   "package": [
-    {
-     "item": "prompt.md",
-     "required": true,
-     "present": false
-    },
-    {
-     "item": "Input files",
-     "required": true,
-     "present": false
     },
     {
      "item": "Basis of design",
@@ -923,17 +718,17 @@
     {
      "item": "Answer key (key.md)",
      "required": false,
-     "present": false
+     "present": true
     },
     {
      "item": "Accepted alternatives",
      "required": true,
-     "present": false
+     "present": true
     },
     {
      "item": "Lures",
      "required": true,
-     "present": false
+     "present": true
     },
     {
      "item": "Golden solution",
@@ -948,66 +743,185 @@
     {
      "item": "Code library (optional)",
      "required": false,
-     "present": false
+     "present": true
     }
    ],
-   "file_count": 4,
-   "runs": [],
-   "updated": "2026-11-01T12:30:00"
+   "runs": [
+    {
+     "run_id": "same-sandbox",
+     "date": "2026-11-04T20:29:00",
+     "k": 2,
+     "model_library": false,
+     "setup": "one local sandbox shared by all models, 40-turn limit",
+     "results": [
+      {
+       "model": "claude-haiku-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 4.5,
+       "max_score": 12,
+       "no_answer": 0
+      },
+      {
+       "model": "claude-sonnet-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 4.5,
+       "max_score": 12,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-3.8-flash",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 2.0,
+       "max_score": 12,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-4-argon",
+       "n": 1,
+       "c": 0,
+       "k": 1,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 3.0,
+       "max_score": 12,
+       "no_answer": 0
+      }
+     ]
+    },
+    {
+     "run_id": "with-code-library",
+     "date": "2026-11-05T10:01:00",
+     "k": 2,
+     "model_library": true,
+     "setup": "same sandbox, plus a library of the cited standards as look-up tools (graders without it)",
+     "results": [
+      {
+       "model": "claude-haiku-5-5",
+       "n": 2,
+       "c": 1,
+       "k": 2,
+       "pass_rate": 0.5,
+       "pass_at_k": 1.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 7.0,
+       "max_score": 12,
+       "no_answer": 0
+      },
+      {
+       "model": "claude-sonnet-5-5",
+       "n": 2,
+       "c": 2,
+       "k": 2,
+       "pass_rate": 1.0,
+       "pass_at_k": 1.0,
+       "pass_hat_k": 1.0,
+       "mean_score": 11.0,
+       "max_score": 12,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-3.8-flash",
+       "n": 2,
+       "c": 1,
+       "k": 2,
+       "pass_rate": 0.5,
+       "pass_at_k": 1.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 5.5,
+       "max_score": 12,
+       "no_answer": 1
+      },
+      {
+       "model": "gemini-4-argon",
+       "n": 1,
+       "c": 1,
+       "k": 1,
+       "pass_rate": 1.0,
+       "pass_at_k": 1.0,
+       "pass_hat_k": 1.0,
+       "mean_score": 12.0,
+       "max_score": 12,
+       "no_answer": 0
+      }
+     ]
+    }
+   ],
+   "updated": "2026-11-06T10:00:00"
   },
   {
-   "id": "p6-seismic-drift",
-   "title": "Seismic design and slab-column drift",
+   "id": "m1-t3-concrete-mix-submittals",
+   "title": "Concrete mixture submittals",
    "domain": "structural",
    "structure": "RC Code Town public parking structure, Salt Lake City",
-   "summary": "Seismic design of the shear walls and the slab-column connections.",
+   "summary": "Review of three concrete mixture submittals against the exposure classes on the drawings, the Utah amendments and the supplier's data.",
    "basis": {
     "location": "Salt Lake City, Utah",
     "adopted_code": "2024 IBC, effective July 1, 2026 (Utah Code 15A-2-103)",
     "standards": "ASCE 7-22, ACI 318-19",
     "amendments": "Utah Code 15A-3-107 (IBC 1613.1.2: Cs by Method 1) and 15A-3-108 (IBC 1905.8: ACI 318 18.10.3 replaced; 1905.9), effective March 17, 2026"
    },
+   "image": {
+    "src": "/eval/img/m1-t3-concrete-mix-submittals.jpg",
+    "alt": "S-101, foundation plan, schedules and sections (one of the input sheets)",
+    "caption": "S-101, foundation plan, schedules and sections (one of the input sheets). Fictional project, drawn in the format of real construction documents."
+   },
    "stages": {
     "s1": {
-     "status": "done",
-     "date": "2026-11-01"
+     "status": "done"
     },
     "s2": {
-     "status": "waiting_for_human",
-     "date": "2026-11-01"
+     "status": "done"
     },
     "s3": {
-     "status": "not_started"
+     "status": "done"
     },
     "s4": {
-     "status": "not_started"
+     "status": "done"
     },
     "s5": {
-     "status": "not_started"
+     "status": "done"
     },
     "s6": {
-     "status": "not_started"
+     "status": "done",
+     "date": "2026-11-04"
     },
     "s7": {
-     "status": "not_started"
+     "status": "done"
     },
     "s8": {
-     "status": "not_started"
+     "status": "done"
     },
     "s9": {
-     "status": "not_started"
+     "status": "done",
+     "date": "2026-11-05"
     }
    },
    "package": [
     {
      "item": "prompt.md",
      "required": true,
-     "present": false
+     "present": true
     },
     {
      "item": "Input files",
      "required": true,
-     "present": false
+     "present": true
     },
     {
      "item": "Basis of design",
@@ -1017,47 +931,621 @@
     {
      "item": "Answer format",
      "required": true,
-     "present": false
+     "present": true
     },
     {
      "item": "Deterministic checks",
      "required": true,
-     "present": false
+     "present": true
     },
     {
      "item": "Answer key (key.md)",
      "required": false,
-     "present": false
+     "present": true
     },
     {
      "item": "Accepted alternatives",
      "required": true,
-     "present": false
+     "present": true
     },
     {
      "item": "Lures",
      "required": true,
-     "present": false
+     "present": true
     },
     {
      "item": "Golden solution",
      "required": true,
-     "present": false
+     "present": true
     },
     {
      "item": "Grader tests",
      "required": true,
-     "present": false
+     "present": true
     },
     {
      "item": "Code library (optional)",
      "required": false,
-     "present": false
+     "present": true
     }
    ],
-   "file_count": 0,
-   "runs": [],
-   "updated": "2026-11-01T12:30:00"
+   "runs": [
+    {
+     "run_id": "same-sandbox",
+     "date": "2026-11-04T20:29:00",
+     "k": 2,
+     "model_library": false,
+     "setup": "one local sandbox shared by all models, 40-turn limit",
+     "results": [
+      {
+       "model": "claude-haiku-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 7.0,
+       "max_score": 14,
+       "no_answer": 0
+      },
+      {
+       "model": "claude-sonnet-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 7.5,
+       "max_score": 14,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-3.8-flash",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 6.0,
+       "max_score": 14,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-4-argon",
+       "n": 1,
+       "c": 0,
+       "k": 1,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 7.0,
+       "max_score": 14,
+       "no_answer": 0
+      }
+     ]
+    },
+    {
+     "run_id": "with-code-library",
+     "date": "2026-11-05T10:01:00",
+     "k": 2,
+     "model_library": true,
+     "setup": "same sandbox, plus a library of the cited standards as look-up tools (graders without it)",
+     "results": [
+      {
+       "model": "claude-haiku-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 7.5,
+       "max_score": 14,
+       "no_answer": 0
+      },
+      {
+       "model": "claude-sonnet-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 7.0,
+       "max_score": 14,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-3.8-flash",
+       "n": 2,
+       "c": 2,
+       "k": 2,
+       "pass_rate": 1.0,
+       "pass_at_k": 1.0,
+       "pass_hat_k": 1.0,
+       "mean_score": 12.5,
+       "max_score": 14,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-4-argon",
+       "n": 1,
+       "c": 1,
+       "k": 1,
+       "pass_rate": 1.0,
+       "pass_at_k": 1.0,
+       "pass_hat_k": 1.0,
+       "mean_score": 14.0,
+       "max_score": 14,
+       "no_answer": 0
+      }
+     ]
+    }
+   ],
+   "updated": "2026-11-06T10:00:00"
+  },
+  {
+   "id": "m1-t4-core-wall-joint-rfi",
+   "title": "Core-wall construction joint, contractor RFI-037",
+   "domain": "structural",
+   "structure": "RC Code Town public parking structure, Salt Lake City",
+   "summary": "Review of the draft response to a contractor's request for information on the dowels at the diaphragm-to-core-wall joint.",
+   "basis": {
+    "location": "Salt Lake City, Utah",
+    "adopted_code": "2024 IBC, effective July 1, 2026 (Utah Code 15A-2-103)",
+    "standards": "ASCE 7-22, ACI 318-19",
+    "amendments": "Utah Code 15A-3-107 (IBC 1613.1.2: Cs by Method 1) and 15A-3-108 (IBC 1905.8: ACI 318 18.10.3 replaced; 1905.9), effective March 17, 2026"
+   },
+   "image": {
+    "src": "/eval/img/m1-t4-core-wall-joint-rfi.jpg",
+    "alt": "S-311, core wall details (one of the input sheets)",
+    "caption": "S-311, core wall details (one of the input sheets). Fictional project, drawn in the format of real construction documents."
+   },
+   "stages": {
+    "s1": {
+     "status": "done"
+    },
+    "s2": {
+     "status": "done"
+    },
+    "s3": {
+     "status": "done"
+    },
+    "s4": {
+     "status": "done"
+    },
+    "s5": {
+     "status": "done"
+    },
+    "s6": {
+     "status": "done",
+     "date": "2026-11-04"
+    },
+    "s7": {
+     "status": "done"
+    },
+    "s8": {
+     "status": "done"
+    },
+    "s9": {
+     "status": "done",
+     "date": "2026-11-05"
+    }
+   },
+   "package": [
+    {
+     "item": "prompt.md",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Input files",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Basis of design",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Answer format",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Deterministic checks",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Answer key (key.md)",
+     "required": false,
+     "present": true
+    },
+    {
+     "item": "Accepted alternatives",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Lures",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Golden solution",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Grader tests",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Code library (optional)",
+     "required": false,
+     "present": true
+    }
+   ],
+   "runs": [
+    {
+     "run_id": "same-sandbox",
+     "date": "2026-11-04T20:29:00",
+     "k": 2,
+     "model_library": false,
+     "setup": "one local sandbox shared by all models, 40-turn limit",
+     "results": [
+      {
+       "model": "claude-haiku-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 4.5,
+       "max_score": 10,
+       "no_answer": 0
+      },
+      {
+       "model": "claude-sonnet-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 7.0,
+       "max_score": 10,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-3.8-flash",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 6.0,
+       "max_score": 10,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-4-argon",
+       "n": 1,
+       "c": 0,
+       "k": 1,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 5.0,
+       "max_score": 10,
+       "no_answer": 0
+      }
+     ]
+    },
+    {
+     "run_id": "with-code-library",
+     "date": "2026-11-05T10:01:00",
+     "k": 2,
+     "model_library": true,
+     "setup": "same sandbox, plus a library of the cited standards as look-up tools (graders without it)",
+     "results": [
+      {
+       "model": "claude-haiku-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 5.5,
+       "max_score": 10,
+       "no_answer": 0
+      },
+      {
+       "model": "claude-sonnet-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 6.0,
+       "max_score": 10,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-3.8-flash",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 6.0,
+       "max_score": 10,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-4-argon",
+       "n": 1,
+       "c": 0,
+       "k": 1,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 5.0,
+       "max_score": 10,
+       "no_answer": 0
+      }
+     ]
+    }
+   ],
+   "updated": "2026-11-06T10:00:00"
+  },
+  {
+   "id": "m1-t6-egress-stair-sliding-seat",
+   "title": "Egress stair sliding seat, delegated design PS-2",
+   "domain": "structural",
+   "structure": "RC Code Town public parking structure, Salt Lake City",
+   "summary": "Review of the precast stair supplier's calculation for the sliding seat at the lower landing of an egress stair.",
+   "basis": {
+    "location": "Salt Lake City, Utah",
+    "adopted_code": "2024 IBC, effective July 1, 2026 (Utah Code 15A-2-103)",
+    "standards": "ASCE 7-22, ACI 318-19",
+    "amendments": "Utah Code 15A-3-107 (IBC 1613.1.2: Cs by Method 1) and 15A-3-108 (IBC 1905.8: ACI 318 18.10.3 replaced; 1905.9), effective March 17, 2026"
+   },
+   "image": {
+    "src": "/eval/img/m1-t6-egress-stair-sliding-seat.jpg",
+    "alt": "S-504, stair sections and details (one of the input sheets)",
+    "caption": "S-504, stair sections and details (one of the input sheets). Fictional project, drawn in the format of real construction documents."
+   },
+   "stages": {
+    "s1": {
+     "status": "done"
+    },
+    "s2": {
+     "status": "done"
+    },
+    "s3": {
+     "status": "done"
+    },
+    "s4": {
+     "status": "done"
+    },
+    "s5": {
+     "status": "done"
+    },
+    "s6": {
+     "status": "done",
+     "date": "2026-11-04"
+    },
+    "s7": {
+     "status": "done"
+    },
+    "s8": {
+     "status": "done"
+    },
+    "s9": {
+     "status": "done",
+     "date": "2026-11-05"
+    }
+   },
+   "package": [
+    {
+     "item": "prompt.md",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Input files",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Basis of design",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Answer format",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Deterministic checks",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Answer key (key.md)",
+     "required": false,
+     "present": true
+    },
+    {
+     "item": "Accepted alternatives",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Lures",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Golden solution",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Grader tests",
+     "required": true,
+     "present": true
+    },
+    {
+     "item": "Code library (optional)",
+     "required": false,
+     "present": true
+    }
+   ],
+   "runs": [
+    {
+     "run_id": "same-sandbox",
+     "date": "2026-11-04T20:29:00",
+     "k": 2,
+     "model_library": false,
+     "setup": "one local sandbox shared by all models, 40-turn limit",
+     "results": [
+      {
+       "model": "claude-haiku-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 3.5,
+       "max_score": 12,
+       "no_answer": 0
+      },
+      {
+       "model": "claude-sonnet-5-5",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 2.0,
+       "max_score": 12,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-3.8-flash",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 1.0,
+       "max_score": 12,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-4-argon",
+       "n": 1,
+       "c": 0,
+       "k": 1,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 0.0,
+       "max_score": 12,
+       "no_answer": 1
+      }
+     ]
+    },
+    {
+     "run_id": "with-code-library",
+     "date": "2026-11-05T10:01:00",
+     "k": 2,
+     "model_library": true,
+     "setup": "same sandbox, plus a library of the cited standards as look-up tools (graders without it)",
+     "results": [
+      {
+       "model": "claude-haiku-5-5",
+       "n": 2,
+       "c": 1,
+       "k": 2,
+       "pass_rate": 0.5,
+       "pass_at_k": 1.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 8.5,
+       "max_score": 12,
+       "no_answer": 0
+      },
+      {
+       "model": "claude-sonnet-5-5",
+       "n": 2,
+       "c": 2,
+       "k": 2,
+       "pass_rate": 1.0,
+       "pass_at_k": 1.0,
+       "pass_hat_k": 1.0,
+       "mean_score": 12.0,
+       "max_score": 12,
+       "no_answer": 0
+      },
+      {
+       "model": "gemini-3.8-flash",
+       "n": 2,
+       "c": 0,
+       "k": 2,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 1.5,
+       "max_score": 12,
+       "no_answer": 1
+      },
+      {
+       "model": "gemini-4-argon",
+       "n": 1,
+       "c": 0,
+       "k": 1,
+       "pass_rate": 0.0,
+       "pass_at_k": 0.0,
+       "pass_hat_k": 0.0,
+       "mean_score": 0.0,
+       "max_score": 12,
+       "no_answer": 1
+      }
+     ]
+    }
+   ],
+   "updated": "2026-11-06T10:00:00"
   }
- ]
+ ],
+ "highlight": {
+  "title": "Submitted to the micro1 Eval Hackathon, 5 November 2026",
+  "text": "Six review tasks, four frontier models (Claude Haiku 5.5, Claude Sonnet 5.5, Gemini 3.8 Flash, Gemini 4 Argon), 42 trials in one sandbox shared by all models, each answer scored item by item against the expert key by two graders from different model families. None of the 42 trials passed. With a library of the cited standards as look-up tools, 13 of 42 passed.",
+  "links": [
+   [
+    "Watch the walkthrough",
+    "https://www.youtube.com/watch?v=IWcEG7c-mQU"
+   ],
+   [
+    "The harness on GitHub",
+    "https://github.com/sabaazdn73/expert-eval-harness"
+   ]
+  ]
+ }
 }

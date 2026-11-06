@@ -140,12 +140,19 @@ export default function EngineeringHome() {
               <p className="mt-1 max-w-[720px] text-[14px] leading-[22px] text-muted">
                 Before the agent is trusted, it is measured on expert-written tasks. Each task moves through nine stages;
                 the engineer signs the design basis and the final result, and checks one decisive point at every other stage.
-                The page shows where each task stands and how the models score. Prompts, answer keys and traps stay private.
+                Six tasks on the code town's parking structure and a mixed-use tower were submitted to the micro1 Eval
+                Hackathon on November 5, 2026: none of 42 trials by four frontier models passed, and 13 of 42 passed once
+                the models could look up the cited standards. Prompts, answer keys and traps stay private.
               </p>
             </div>
-            <a href="/eval/" target="_blank" rel="noreferrer" className="text-[13px] font-semibold inline-flex items-center gap-1.5 hover:underline">
-              <ListChecks size={14} aria-hidden="true" /> Open the task pipeline
-            </a>
+            <div className="flex flex-wrap gap-4">
+              <a href="/eval/" target="_blank" rel="noreferrer" className="text-[13px] font-semibold inline-flex items-center gap-1.5 hover:underline">
+                <ListChecks size={14} aria-hidden="true" /> Open the task pipeline
+              </a>
+              <a href="https://www.youtube.com/watch?v=IWcEG7c-mQU" target="_blank" rel="noreferrer" className="text-[13px] font-semibold inline-flex items-center gap-1.5 hover:underline">
+                Watch the hackathon walkthrough
+              </a>
+            </div>
           </div>
           <div className="mt-5 rounded-lg border border-line overflow-hidden bg-page">
             <iframe
