@@ -48,19 +48,33 @@ export default function EngineeringHome() {
   return (
     <div className="min-h-screen bg-page text-fg">
       <header className="border-b border-line">
-        <div className="max-w-[1180px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+        <div className="max-w-[1180px] mx-auto px-4 sm:px-6 h-14 lg:h-16 flex items-center justify-between gap-3">
           <a href="/" aria-label="Tnega home"><Brand markClassName="w-[32px] h-[32px]" wordClassName="text-[20px]" /></a>
-          <nav className="flex items-center gap-3 sm:gap-6 text-[13px] font-semibold">
-            <a href="#how" className="hidden sm:inline hover:underline">How it works</a>
-            <a href="#town" className="hidden sm:inline hover:underline">Code town</a>
-            <a href="#pipeline" className="hidden sm:inline hover:underline">Task pipeline</a>
-            <a href="#talk" className="hidden md:inline hover:underline">Talk</a>
-            <a href="/bim/" className="inline-flex items-center gap-1 whitespace-nowrap hover:underline"><span className="sm:hidden">BIM</span><span className="hidden sm:inline">BIM practice</span> <ArrowRight size={13} aria-hidden="true" /></a>
-            <a href="/photography/" className="hidden lg:inline-flex items-center gap-1 whitespace-nowrap hover:underline">Photography <ArrowRight size={13} aria-hidden="true" /></a>
-            <a href="/finance" className="inline-flex items-center gap-1 whitespace-nowrap hover:underline">Tnega Finance <ArrowRight size={13} aria-hidden="true" /></a>
+          <div className="flex items-center gap-6">
+            <nav aria-label="Site" className="hidden lg:flex items-center gap-6 text-[13px] font-semibold whitespace-nowrap">
+              <a href="#how" className="hover:underline">How it works</a>
+              <a href="#town" className="hover:underline">Code town</a>
+              <a href="#pipeline" className="hover:underline">Task pipeline</a>
+              <a href="#talk" className="hover:underline">Talk</a>
+              <a href="/bim/" className="inline-flex items-center gap-1 hover:underline">BIM practice <ArrowRight size={13} aria-hidden="true" /></a>
+              <a href="/photography/" className="inline-flex items-center gap-1 hover:underline">Photography <ArrowRight size={13} aria-hidden="true" /></a>
+              <a href="/finance" className="inline-flex items-center gap-1 hover:underline">Tnega Finance <ArrowRight size={13} aria-hidden="true" /></a>
+            </nav>
             <ThemeToggle />
-          </nav>
+          </div>
         </div>
+        {/* Phones and tablets: the links get their own row under the logo instead of squeezing beside it. */}
+        <nav aria-label="Site" className="lg:hidden border-t border-line">
+          <div className="max-w-[1180px] mx-auto px-4 sm:px-6 py-2.5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] font-semibold whitespace-nowrap">
+            <a href="#how" className="hidden md:inline hover:underline">How it works</a>
+            <a href="#town" className="hidden md:inline hover:underline">Code town</a>
+            <a href="#pipeline" className="hidden md:inline hover:underline">Task pipeline</a>
+            <a href="#talk" className="hidden md:inline hover:underline">Talk</a>
+            <a href="/bim/" className="hover:underline">BIM practice</a>
+            <a href="/photography/" className="hover:underline">Photography</a>
+            <a href="/finance" className="hover:underline">Tnega Finance</a>
+          </div>
+        </nav>
       </header>
 
       <main>
