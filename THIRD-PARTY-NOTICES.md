@@ -46,6 +46,10 @@ copyleft ones run server side and are never conveyed to a user, so neither
 MPL section 3.2 nor LGPL section 4 is triggered by serving an HTTP API from
 them.
 
+Fonts: Hanken Grotesk and Newsreader are under the SIL Open Font License 1.1;
+each licence text sits beside its font files (`frontend/public/fonts/` and
+`frontend/public/photography/fonts/`).
+
 Contracts: this project's own `AgentBudgetEscrow.sol` and
 `AgentAccessMarket.sol` carry MIT SPDX headers and import OpenZeppelin, which
 is MIT and vendored under `contracts/lib/`.

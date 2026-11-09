@@ -223,6 +223,9 @@ is the milestone timeline written for that entry.
 
 ## Licence and notices
 
-MIT, see [LICENSE](LICENSE). Third-party dependencies and their terms are in
+MIT, see [LICENSE](LICENSE), except the photographs in
+[`frontend/public/photography/photos/`](frontend/public/photography/photos/): those are
+© Saba Azadegan, all rights reserved, and the MIT licence does not cover them.
+Third-party dependencies and their terms are in
 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md). Data sources and their terms
 are described in [docs/data-sources.md](docs/data-sources.md).

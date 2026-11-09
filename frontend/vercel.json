@@ -1,7 +1,7 @@
 {
   "headers": [
     {
-      "source": "/((?!bim/).*)",
+      "source": "/((?!bim/|photography/).*)",
       "headers": [
         {
           "key": "Content-Security-Policy",
@@ -23,6 +23,23 @@
         {
           "key": "Content-Security-Policy",
           "value": "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://ifcopenshell.github.io https://pypi.org https://files.pythonhosted.org; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    },
+    {
+      "source": "/photography/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
         },
         {
           "key": "Referrer-Policy",
@@ -83,6 +100,11 @@
     {
       "source": "/bim",
       "destination": "/bim/",
+      "permanent": false
+    },
+    {
+      "source": "/photography",
+      "destination": "/photography/",
       "permanent": false
     }
   ],
