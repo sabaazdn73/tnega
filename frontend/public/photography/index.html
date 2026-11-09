@@ -16,6 +16,7 @@
 <link rel="icon" href="/favicon.ico">
 <link rel="preload" href="fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
+<script src="flag.js"></script>
 </head>
 <body id="top">
 
@@ -24,68 +25,89 @@
   <h1>Photography portfolio</h1>
   <p class="sub">Saba Azadegan, 2017 to 2025</p>
   <p class="intro">I studied photography for about two years, first in the photography course at the University of Tehran and then on my own. The Saadabad, Tehran and Still life and detail series and the 2017 cat photographs were taken on a Nikon D810 in Iran; the rest on a phone, in Lisbon and on the coast at Cascais.</p>
-  <nav class="series-nav" aria-label="Series">
-    <a href="#river">River</a>
-    <a href="#city">City</a>
-    <a href="#saadabad">Saadabad</a>
-    <a href="#tehran">Tehran</a>
-    <a href="#still">Still life and detail</a>
-    <a href="#cat">Cats</a>
-  </nav>
 </header>
 
 <main class="wrap">
 
+<section class="shelf" aria-labelledby="h-albums">
+<h2 class="sh" id="h-albums">Albums</h2>
+<ul class="albums">
+  <li><a class="album" href="#river" data-open="river"><span class="cover"><img src="photos/river-01-md.jpg" srcset="photos/river-01-sm.jpg 960w, photos/river-01-md.jpg 1400w, photos/river-01-lg.jpg 2000w" sizes="(max-width: 560px) calc(100vw - 40px), (max-width: 1000px) 45vw, 360px" width="2000" height="1500" alt="" decoding="async" fetchpriority="high"></span><span class="a-title">River</span><span class="a-meta">8 photographs, 2022 to 2024</span></a></li>
+  <li><a class="album" href="#city" data-open="city"><span class="cover"><img src="photos/city-01-md.jpg" srcset="photos/city-01-sm.jpg 497w, photos/city-01-md.jpg 724w, photos/city-01-lg.jpg 1035w" sizes="(max-width: 560px) calc(100vw - 40px), (max-width: 1000px) 45vw, 360px" width="1035" height="2000" alt="" decoding="async"></span><span class="a-title">City</span><span class="a-meta">7 photographs, 2022 to 2025</span></a></li>
+  <li><a class="album" href="#saadabad" data-open="saadabad"><span class="cover"><img src="photos/saadabad-12-md.jpg" srcset="photos/saadabad-12-sm.jpg 960w, photos/saadabad-12-md.jpg 1400w, photos/saadabad-12-lg.jpg 2000w" sizes="(max-width: 560px) calc(100vw - 40px), (max-width: 1000px) 45vw, 360px" width="2000" height="1335" alt="" decoding="async"></span><span class="a-title">Saadabad</span><span class="a-meta">14 photographs, 2017</span></a></li>
+  <li><a class="album" href="#tehran" data-open="tehran"><span class="cover"><img src="photos/tehran-03-md.jpg" srcset="photos/tehran-03-sm.jpg 960w, photos/tehran-03-md.jpg 1400w, photos/tehran-03-lg.jpg 2000w" sizes="(max-width: 560px) calc(100vw - 40px), (max-width: 1000px) 45vw, 360px" width="2000" height="1335" alt="" decoding="async" loading="lazy"></span><span class="a-title">Tehran</span><span class="a-meta">3 photographs</span></a></li>
+  <li><a class="album" href="#still" data-open="still"><span class="cover"><img src="photos/still-05-md.jpg" srcset="photos/still-05-sm.jpg 960w, photos/still-05-md.jpg 1400w, photos/still-05-lg.jpg 2000w" sizes="(max-width: 560px) calc(100vw - 40px), (max-width: 1000px) 45vw, 360px" width="2000" height="1335" alt="" decoding="async" loading="lazy"></span><span class="a-title">Still life and detail</span><span class="a-meta">15 photographs</span></a></li>
+  <li><a class="album" href="#cat" data-open="cat"><span class="cover"><img src="photos/cat-04-md.jpg" srcset="photos/cat-04-sm.jpg 960w, photos/cat-04-md.jpg 1400w, photos/cat-04-lg.jpg 2000w" sizes="(max-width: 560px) calc(100vw - 40px), (max-width: 1000px) 45vw, 360px" width="2000" height="1335" alt="" decoding="async" loading="lazy"></span><span class="a-title">Cats</span><span class="a-meta">7 photographs, 2017 to 2024</span></a></li>
+</ul>
+</section>
+
+<section class="types" aria-labelledby="h-types">
+<h2 class="sh" id="h-types">Browse by type</h2>
+<ul class="typelist">
+  <li><a href="#type-all" data-open="type-all" data-type="all" data-title="All photographs">All photographs <span class="n">54<span class="sr"> photographs</span></span></a></li>
+  <li><a href="#type-landscape" data-open="type-landscape" data-type="landscape" data-title="Landscape">Landscape <span class="n">12<span class="sr"> photographs</span></span></a></li>
+  <li><a href="#type-nature" data-open="type-nature" data-type="nature" data-title="Nature">Nature <span class="n">7<span class="sr"> photographs</span></span></a></li>
+  <li><a href="#type-animals" data-open="type-animals" data-type="animals" data-title="Animals">Animals <span class="n">9<span class="sr"> photographs</span></span></a></li>
+  <li><a href="#type-city" data-open="type-city" data-type="city" data-title="City and architecture">City and architecture <span class="n">10<span class="sr"> photographs</span></span></a></li>
+  <li><a href="#type-interiors" data-open="type-interiors" data-type="interiors" data-title="Interiors">Interiors <span class="n">4<span class="sr"> photographs</span></span></a></li>
+  <li><a href="#type-product" data-open="type-product" data-type="product" data-title="Product">Product <span class="n">6<span class="sr"> photographs</span></span></a></li>
+  <li><a href="#type-food" data-open="type-food" data-type="food" data-title="Food">Food <span class="n">4<span class="sr"> photographs</span></span></a></li>
+  <li><a href="#type-still" data-open="type-still" data-type="still" data-title="Still life">Still life <span class="n">11<span class="sr"> photographs</span></span></a></li>
+</ul>
+</section>
+
+<div class="archive">
+
 <section class="series" id="river" aria-labelledby="h-river">
 <div class="series-head"><h2 id="h-river">River</h2><p>8 photographs, 2022 to 2024</p></div>
 <div class="row plate wide">
-<figure class="ph" id="river-01">
-  <button class="open" type="button" aria-label="View larger: The Vasco da Gama Bridge in evening light, seen along a rocky shore at low tide."><img src="photos/river-01-sm.jpg" srcset="photos/river-01-sm.jpg 960w, photos/river-01-md.jpg 1400w, photos/river-01-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1500" alt="The Vasco da Gama Bridge in evening light, seen along a rocky shore at low tide." fetchpriority="high" decoding="async" data-large="photos/river-01-lg.jpg"></button>
+<figure class="ph" id="river-01" data-types="landscape">
+  <button class="open" type="button" aria-label="View larger: The Vasco da Gama Bridge in evening light, seen along a rocky shore at low tide."><img src="photos/river-01-sm.jpg" srcset="photos/river-01-sm.jpg 960w, photos/river-01-md.jpg 1400w, photos/river-01-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1500" alt="The Vasco da Gama Bridge in evening light, seen along a rocky shore at low tide." loading="lazy" decoding="async" data-large="photos/river-01-lg.jpg"></button>
   <figcaption><span class="place">Parque das Nações, Lisbon</span><span class="when">April 2024</span><span class="gear">iPhone 14 Pro Max, ultra wide camera</span><span class="gear">14 mm equiv., f/2.2, 1/100 s, ISO 50</span></figcaption>
 </figure>
 </div>
 
 <div class="row pair">
-<figure class="ph" id="river-02">
+<figure class="ph" id="river-02" data-types="landscape">
   <button class="open" type="button" aria-label="View larger: Black and white view along a wooden boardwalk and its railing under a streaked sky."><img src="photos/river-02-sm.jpg" srcset="photos/river-02-sm.jpg 720w, photos/river-02-md.jpg 1050w, photos/river-02-lg.jpg 1500w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1500" height="2000" alt="Black and white view along a wooden boardwalk and its railing under a streaked sky." loading="lazy" decoding="async" data-large="photos/river-02-lg.jpg"></button>
   <figcaption><span class="place">Parque das Nações, Lisbon</span><span class="when">April 2024</span><span class="gear">iPhone 14 Pro Max, ultra wide camera</span><span class="gear">14 mm equiv., f/2.2, 1/500 s, ISO 40</span></figcaption>
 </figure>
-<figure class="ph" id="river-03">
+<figure class="ph" id="river-03" data-types="landscape">
   <button class="open" type="button" aria-label="View larger: A long paved riverside walkway between tall pines and the water, the bridge at the far end."><img src="photos/river-03-sm.jpg" srcset="photos/river-03-sm.jpg 720w, photos/river-03-md.jpg 1050w, photos/river-03-lg.jpg 1500w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1500" height="2000" alt="A long paved riverside walkway between tall pines and the water, the bridge at the far end." loading="lazy" decoding="async" data-large="photos/river-03-lg.jpg"></button>
   <figcaption><span class="place">Parque das Nações, Lisbon</span><span class="when">July 2024</span><span class="gear">iPhone 14 Pro Max, main camera</span><span class="gear">24 mm equiv., f/1.78, 1/872 s, ISO 80</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide flip">
-<figure class="ph" id="river-04">
+<figure class="ph" id="river-04" data-types="landscape">
   <button class="open" type="button" aria-label="View larger: Black and white view of heavy clouds over the river, the bridge a thin line on the horizon."><img src="photos/river-04-sm.jpg" srcset="photos/river-04-sm.jpg 960w, photos/river-04-md.jpg 1400w, photos/river-04-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1500" alt="Black and white view of heavy clouds over the river, the bridge a thin line on the horizon." loading="lazy" decoding="async" data-large="photos/river-04-lg.jpg"></button>
   <figcaption><span class="place">Parque das Nações, Lisbon</span><span class="when">December 2022</span><span class="gear">iPhone 14 Pro Max, ultra wide camera</span><span class="gear">14 mm equiv., f/2.2, 1/2500 s, ISO 50</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate narrow">
-<figure class="ph" id="river-05">
+<figure class="ph" id="river-05" data-types="landscape">
   <button class="open" type="button" aria-label="View larger: Pebbles and shells on a small beach, clouds streaming over the river."><img src="photos/river-05-sm.jpg" srcset="photos/river-05-sm.jpg 641w, photos/river-05-md.jpg 935w, photos/river-05-lg.jpg 1224w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1224" height="1833" alt="Pebbles and shells on a small beach, clouds streaming over the river." loading="lazy" decoding="async" data-large="photos/river-05-lg.jpg"></button>
   <figcaption><span class="place">Marvila, Lisbon</span><span class="when">April 2024</span><span class="gear">iPhone 14 Pro Max, ultra wide camera</span><span class="gear">14 mm equiv., f/2.2, 1/640 s, ISO 40</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide flip">
-<figure class="ph" id="river-06">
+<figure class="ph" id="river-06" data-types="landscape">
   <button class="open" type="button" aria-label="View larger: Sunrise over the river, orange light under scattered clouds."><img src="photos/river-06-sm.jpg" srcset="photos/river-06-sm.jpg 960w, photos/river-06-md.jpg 1400w, photos/river-06-lg.jpg 1979w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="1979" height="1484" alt="Sunrise over the river, orange light under scattered clouds." loading="lazy" decoding="async" data-large="photos/river-06-lg.jpg"></button>
   <figcaption><span class="place">Parque das Nações, Lisbon</span><span class="when">September 2024</span><span class="gear">iPhone 14 Pro Max, main camera</span><span class="gear">25 mm equiv., f/1.78, 1/1009 s, ISO 80</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide">
-<figure class="ph" id="river-07">
+<figure class="ph" id="river-07" data-types="landscape">
   <button class="open" type="button" aria-label="View larger: Storm clouds over the sea at Cascais, seen from a promenade with a railing."><img src="photos/river-07-sm.jpg" srcset="photos/river-07-sm.jpg 960w, photos/river-07-md.jpg 1400w, photos/river-07-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1500" alt="Storm clouds over the sea at Cascais, seen from a promenade with a railing." loading="lazy" decoding="async" data-large="photos/river-07-lg.jpg"></button>
   <figcaption><span class="place">Cascais</span><span class="when">December 2022</span><span class="gear">iPhone 14 Pro Max, ultra wide camera</span><span class="gear">14 mm equiv., f/2.2, 1/7299 s, ISO 50</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide flip">
-<figure class="ph" id="river-08">
+<figure class="ph" id="river-08" data-types="landscape">
   <button class="open" type="button" aria-label="View larger: The Belém Tower in silhouette, with sun breaking through the clouds over the river."><img src="photos/river-08-sm.jpg" srcset="photos/river-08-sm.jpg 960w, photos/river-08-md.jpg 1400w, photos/river-08-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1391" alt="The Belém Tower in silhouette, with sun breaking through the clouds over the river." loading="lazy" decoding="async" data-large="photos/river-08-lg.jpg"></button>
   <figcaption><span class="place">Belém, Lisbon</span><span class="when">December 2022</span><span class="gear">iPhone 14 Pro Max, main camera</span><span class="gear">24 mm equiv., f/1.78, 1/67000 s, ISO 80</span></figcaption>
 </figure>
@@ -95,40 +117,40 @@
 <section class="series" id="city" aria-labelledby="h-city">
 <div class="series-head"><h2 id="h-city">City</h2><p>7 photographs, 2022 to 2025</p></div>
 <div class="row pair alt">
-<figure class="ph" id="city-01">
+<figure class="ph" id="city-01" data-types="city">
   <button class="open" type="button" aria-label="View larger: A long stone stairway climbing between old buildings."><img src="photos/city-01-sm.jpg" srcset="photos/city-01-sm.jpg 497w, photos/city-01-md.jpg 724w, photos/city-01-lg.jpg 1035w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1035" height="2000" alt="A long stone stairway climbing between old buildings." loading="lazy" decoding="async" data-large="photos/city-01-lg.jpg"></button>
   <figcaption><span class="place">Santo António, Lisbon</span><span class="when">December 2022</span><span class="gear">iPhone 14 Pro Max, ultra wide camera</span><span class="gear">14 mm equiv., f/2.2, 1/401 s, ISO 40</span></figcaption>
 </figure>
-<figure class="ph" id="city-02">
+<figure class="ph" id="city-02" data-types="city">
   <button class="open" type="button" aria-label="View larger: Stone pavement patterned with sea creatures beside the Oceanário, at sunset."><img src="photos/city-02-sm.jpg" srcset="photos/city-02-sm.jpg 562w, photos/city-02-md.jpg 819w, photos/city-02-lg.jpg 1170w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1170" height="2000" alt="Stone pavement patterned with sea creatures beside the Oceanário, at sunset." loading="lazy" decoding="async" data-large="photos/city-02-lg.jpg"></button>
   <figcaption><span class="place">Parque das Nações, Lisbon</span><span class="when">July 2024</span><span class="gear">iPhone 14 Pro Max, ultra wide camera</span><span class="gear">14 mm equiv., f/2.2, 1/99 s, ISO 64</span></figcaption>
 </figure>
 </div>
 
 <div class="row pair">
-<figure class="ph" id="city-03">
+<figure class="ph" id="city-03" data-types="landscape">
   <button class="open" type="button" aria-label="View larger: Clipped hedges running down a long lawn in a city park, seen from low down."><img src="photos/city-03-sm.jpg" srcset="photos/city-03-sm.jpg 720w, photos/city-03-md.jpg 1050w, photos/city-03-lg.jpg 1500w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1500" height="2000" alt="Clipped hedges running down a long lawn in a city park, seen from low down." loading="lazy" decoding="async" data-large="photos/city-03-lg.jpg"></button>
   <figcaption><span class="place">Avenidas Novas, Lisbon</span><span class="when">November 2022</span><span class="gear">iPhone 14 Pro Max, ultra wide camera</span><span class="gear">14 mm equiv., f/2.2, 1/2398 s, ISO 50</span></figcaption>
 </figure>
-<figure class="ph" id="city-04">
+<figure class="ph" id="city-04" data-types="city">
   <button class="open" type="button" aria-label="View larger: An avenue of jacaranda trees in purple bloom under a cloudy sky."><img src="photos/city-04-sm.jpg" srcset="photos/city-04-sm.jpg 923w, photos/city-04-md.jpg 1346w, photos/city-04-lg.jpg 1500w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1500" height="1560" alt="An avenue of jacaranda trees in purple bloom under a cloudy sky." loading="lazy" decoding="async" data-large="photos/city-04-lg.jpg"></button>
   <figcaption><span class="place">Belém, Lisbon</span><span class="when">June 2023</span><span class="gear">iPhone 14 Pro Max, main camera, digital zoom</span><span class="gear">32 mm equiv., f/1.78, 1/8000 s, ISO 80</span></figcaption>
 </figure>
 </div>
 
 <div class="row pair alt">
-<figure class="ph" id="city-05">
+<figure class="ph" id="city-05" data-types="city">
   <button class="open" type="button" aria-label="View larger: Looking up inside the metal frame of the Christmas tree in Praça do Comércio."><img src="photos/city-05-sm.jpg" srcset="photos/city-05-sm.jpg 720w, photos/city-05-md.jpg 1050w, photos/city-05-lg.jpg 1500w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1500" height="2000" alt="Looking up inside the metal frame of the Christmas tree in Praça do Comércio." loading="lazy" decoding="async" data-large="photos/city-05-lg.jpg"></button>
   <figcaption><span class="place">Santa Maria Maior, Lisbon</span><span class="when">December 2024</span><span class="gear">iPhone 14 Pro Max, front camera</span><span class="gear">23 mm equiv., f/1.9, 1/336 s, ISO 25</span></figcaption>
 </figure>
-<figure class="ph" id="city-06">
+<figure class="ph" id="city-06" data-types="nature">
   <button class="open" type="button" aria-label="View larger: Orange autumn leaves on bare branches, seen from below."><img src="photos/city-06-sm.jpg" srcset="photos/city-06-sm.jpg 720w, photos/city-06-md.jpg 1050w, photos/city-06-lg.jpg 1500w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1500" height="2000" alt="Orange autumn leaves on bare branches, seen from below." loading="lazy" decoding="async" data-large="photos/city-06-lg.jpg"></button>
   <figcaption><span class="place">Parque das Nações, Lisbon</span><span class="when">December 2025</span><span class="gear">iPhone 14 Pro Max, main camera</span><span class="gear">24 mm equiv., f/1.78, 1/850 s, ISO 80</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate narrow">
-<figure class="ph" id="city-07">
+<figure class="ph" id="city-07" data-types="nature animals">
   <button class="open" type="button" aria-label="View larger: Ducks on a shallow stream among bamboo and trees in a garden."><img src="photos/city-07-sm.jpg" srcset="photos/city-07-sm.jpg 720w, photos/city-07-md.jpg 1050w, photos/city-07-lg.jpg 1500w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1500" height="2000" alt="Ducks on a shallow stream among bamboo and trees in a garden." loading="lazy" decoding="async" data-large="photos/city-07-lg.jpg"></button>
   <figcaption><span class="place">Avenidas Novas, Lisbon</span><span class="when">December 2022</span><span class="gear">iPhone 14 Pro Max, main camera</span><span class="gear">24 mm equiv., f/1.78, 1/121 s, ISO 100</span></figcaption>
 </figure>
@@ -138,95 +160,95 @@
 <section class="series" id="saadabad" aria-labelledby="h-saadabad">
 <div class="series-head"><h2 id="h-saadabad">Saadabad</h2><p>14 photographs, 2017</p></div>
 <div class="row plate wide">
-<figure class="ph" id="saadabad-01">
+<figure class="ph" id="saadabad-01" data-types="landscape">
   <button class="open" type="button" aria-label="View larger: An empty avenue under an arch of tall trees, its kerbs painted green and white."><img src="photos/saadabad-01-sm.jpg" srcset="photos/saadabad-01-sm.jpg 960w, photos/saadabad-01-md.jpg 1400w, photos/saadabad-01-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="An empty avenue under an arch of tall trees, its kerbs painted green and white." loading="lazy" decoding="async" data-large="photos/saadabad-01-lg.jpg"></button>
   <figcaption><span class="place">Saadabad, Tehran</span><span class="when">July 2017</span><span class="gear">Nikon D810</span><span class="gear">24 mm, f/4, 1/160 s, ISO 250</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide flip">
-<figure class="ph" id="saadabad-02">
+<figure class="ph" id="saadabad-02" data-types="nature">
   <button class="open" type="button" aria-label="View larger: The sun breaking through the leaves of tall trees, seen from below."><img src="photos/saadabad-02-sm.jpg" srcset="photos/saadabad-02-sm.jpg 960w, photos/saadabad-02-md.jpg 1400w, photos/saadabad-02-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="The sun breaking through the leaves of tall trees, seen from below." loading="lazy" decoding="async" data-large="photos/saadabad-02-lg.jpg"></button>
   <figcaption><span class="place">Saadabad, Tehran</span><span class="when">July 2017</span><span class="gear">Nikon D810</span><span class="gear">62 mm, f/22, 1/30 s, ISO 320</span></figcaption>
 </figure>
 </div>
 
 <div class="row pair">
-<figure class="ph" id="saadabad-03">
+<figure class="ph" id="saadabad-03" data-types="nature">
   <button class="open" type="button" aria-label="View larger: A stream tumbling over rocks beside a tree trunk, the falling water softly blurred."><img src="photos/saadabad-03-sm.jpg" srcset="photos/saadabad-03-sm.jpg 641w, photos/saadabad-03-md.jpg 934w, photos/saadabad-03-lg.jpg 1335w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1335" height="2000" alt="A stream tumbling over rocks beside a tree trunk, the falling water softly blurred." loading="lazy" decoding="async" data-large="photos/saadabad-03-lg.jpg"></button>
   <figcaption><span class="place">Saadabad, Tehran</span><span class="when">July 2017</span><span class="gear">Nikon D810</span><span class="gear">120 mm, f/5, 1/15 s, ISO 320</span></figcaption>
 </figure>
-<figure class="ph" id="saadabad-04">
+<figure class="ph" id="saadabad-04" data-types="city">
   <button class="open" type="button" aria-label="View larger: The statue of Arash the Archer drawing his bow on a rock, trees and a pale sky behind."><img src="photos/saadabad-04-sm.jpg" srcset="photos/saadabad-04-sm.jpg 641w, photos/saadabad-04-md.jpg 934w, photos/saadabad-04-lg.jpg 1335w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1335" height="2000" alt="The statue of Arash the Archer drawing his bow on a rock, trees and a pale sky behind." loading="lazy" decoding="async" data-large="photos/saadabad-04-lg.jpg"></button>
   <figcaption><span class="place">Saadabad, Tehran</span><span class="when">July 2017</span><span class="gear">Nikon D810</span><span class="gear">62 mm, f/4, 1/500 s, ISO 250</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide">
-<figure class="ph" id="saadabad-05">
+<figure class="ph" id="saadabad-05" data-types="nature">
   <button class="open" type="button" aria-label="View larger: A dense spider web caught among green leaves, lit by the sun."><img src="photos/saadabad-05-sm.jpg" srcset="photos/saadabad-05-sm.jpg 960w, photos/saadabad-05-md.jpg 1400w, photos/saadabad-05-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="A dense spider web caught among green leaves, lit by the sun." loading="lazy" decoding="async" data-large="photos/saadabad-05-lg.jpg"></button>
   <figcaption><span class="place">Saadabad, Tehran</span><span class="when">July 2017</span><span class="gear">Nikon D810</span><span class="gear">120 mm, f/4, 1/50 s, ISO 320</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide flip">
-<figure class="ph" id="saadabad-06">
+<figure class="ph" id="saadabad-06" data-types="nature">
   <button class="open" type="button" aria-label="View larger: Clusters of blue berries among spiky green leaves."><img src="photos/saadabad-06-sm.jpg" srcset="photos/saadabad-06-sm.jpg 960w, photos/saadabad-06-md.jpg 1400w, photos/saadabad-06-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="Clusters of blue berries among spiky green leaves." loading="lazy" decoding="async" data-large="photos/saadabad-06-lg.jpg"></button>
   <figcaption><span class="place">Saadabad, Tehran</span><span class="when">July 2017</span><span class="gear">Nikon D810</span><span class="gear">120 mm, f/5, 1/20 s, ISO 320</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide">
-<figure class="ph" id="saadabad-07">
+<figure class="ph" id="saadabad-07" data-types="nature animals">
   <button class="open" type="button" aria-label="View larger: A hooded crow pecking at the ground among dry grass and fallen leaves."><img src="photos/saadabad-07-sm.jpg" srcset="photos/saadabad-07-sm.jpg 960w, photos/saadabad-07-md.jpg 1400w, photos/saadabad-07-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1290" alt="A hooded crow pecking at the ground among dry grass and fallen leaves." loading="lazy" decoding="async" data-large="photos/saadabad-07-lg.jpg"></button>
   <figcaption><span class="place">Saadabad, Tehran</span><span class="when">July 2017</span><span class="gear">Nikon D810</span><span class="gear">120 mm, f/5, 1/60 s, ISO 320</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide flip">
-<figure class="ph" id="saadabad-08">
+<figure class="ph" id="saadabad-08" data-types="city">
   <button class="open" type="button" aria-label="View larger: The carved stone columns of a palace veranda, a tree and a pale sky beside it."><img src="photos/saadabad-08-sm.jpg" srcset="photos/saadabad-08-sm.jpg 960w, photos/saadabad-08-md.jpg 1400w, photos/saadabad-08-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="The carved stone columns of a palace veranda, a tree and a pale sky beside it." loading="lazy" decoding="async" data-large="photos/saadabad-08-lg.jpg"></button>
   <figcaption><span class="place">Saadabad, Tehran</span><span class="when">July 2017</span><span class="gear">Nikon D810</span><span class="gear">32 mm, f/4, 1/1250 s, ISO 320</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide">
-<figure class="ph" id="saadabad-09">
+<figure class="ph" id="saadabad-09" data-types="interiors">
   <button class="open" type="button" aria-label="View larger: A wooden ceiling of octagonal and square panels, a brick arch along one side."><img src="photos/saadabad-09-sm.jpg" srcset="photos/saadabad-09-sm.jpg 960w, photos/saadabad-09-md.jpg 1400w, photos/saadabad-09-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="A wooden ceiling of octagonal and square panels, a brick arch along one side." loading="lazy" decoding="async" data-large="photos/saadabad-09-lg.jpg"></button>
   <figcaption><span class="place">Saadabad, Tehran</span><span class="when">July 2017</span><span class="gear">Nikon D810</span><span class="gear">35 mm, f/4, 1/10 s, ISO 320</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide flip">
-<figure class="ph" id="saadabad-10">
+<figure class="ph" id="saadabad-10" data-types="interiors">
   <button class="open" type="button" aria-label="View larger: A gilded desk and chair between green silk curtains and tall windows in a palace room."><img src="photos/saadabad-10-sm.jpg" srcset="photos/saadabad-10-sm.jpg 960w, photos/saadabad-10-md.jpg 1400w, photos/saadabad-10-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="A gilded desk and chair between green silk curtains and tall windows in a palace room." loading="lazy" decoding="async" data-large="photos/saadabad-10-lg.jpg"></button>
   <figcaption><span class="place">Saadabad, Tehran</span><span class="when">July 2017</span><span class="gear">Nikon D810</span><span class="gear">75 mm, f/4, 1/13 s, ISO 1000</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide">
-<figure class="ph" id="saadabad-11">
+<figure class="ph" id="saadabad-11" data-types="interiors">
   <button class="open" type="button" aria-label="View larger: A palace dining room laid with china, under a large crystal chandelier."><img src="photos/saadabad-11-sm.jpg" srcset="photos/saadabad-11-sm.jpg 960w, photos/saadabad-11-md.jpg 1400w, photos/saadabad-11-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1215" alt="A palace dining room laid with china, under a large crystal chandelier." loading="lazy" decoding="async" data-large="photos/saadabad-11-lg.jpg"></button>
   <figcaption><span class="place">Saadabad, Tehran</span><span class="when">July 2017</span><span class="gear">Nikon D810</span><span class="gear">24 mm, f/4, 1/30 s, ISO 1000</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide flip">
-<figure class="ph" id="saadabad-12">
+<figure class="ph" id="saadabad-12" data-types="interiors">
   <button class="open" type="button" aria-label="View larger: Looking up at a painted ceiling: murals of riders, an archer and a hunt on the walls, white plasterwork around a central rose."><img src="photos/saadabad-12-sm.jpg" srcset="photos/saadabad-12-sm.jpg 960w, photos/saadabad-12-md.jpg 1400w, photos/saadabad-12-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="Looking up at a painted ceiling: murals of riders, an archer and a hunt on the walls, white plasterwork around a central rose." loading="lazy" decoding="async" data-large="photos/saadabad-12-lg.jpg"></button>
   <figcaption><span class="place">Saadabad, Tehran</span><span class="when">July 2017</span><span class="gear">Nikon D810</span><span class="gear">24 mm, f/4, 1/50 s, ISO 1000</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide">
-<figure class="ph" id="saadabad-13">
+<figure class="ph" id="saadabad-13" data-types="product">
   <button class="open" type="button" aria-label="View larger: A dark blue vintage Rolls-Royce with its chrome grille, on display in a museum."><img src="photos/saadabad-13-sm.jpg" srcset="photos/saadabad-13-sm.jpg 960w, photos/saadabad-13-md.jpg 1400w, photos/saadabad-13-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1228" alt="A dark blue vintage Rolls-Royce with its chrome grille, on display in a museum." loading="lazy" decoding="async" data-large="photos/saadabad-13-lg.jpg"></button>
   <figcaption><span class="place">Saadabad, Tehran</span><span class="when">July 2017</span><span class="gear">Nikon D810</span><span class="gear">35 mm, f/4, 1/50 s, ISO 1000</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate narrow flip">
-<figure class="ph" id="saadabad-14">
+<figure class="ph" id="saadabad-14" data-types="city">
   <button class="open" type="button" aria-label="View larger: An arched brick gateway with its iron gates open, trees beyond."><img src="photos/saadabad-14-sm.jpg" srcset="photos/saadabad-14-sm.jpg 627w, photos/saadabad-14-md.jpg 914w, photos/saadabad-14-lg.jpg 1306w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1306" height="2000" alt="An arched brick gateway with its iron gates open, trees beyond." loading="lazy" decoding="async" data-large="photos/saadabad-14-lg.jpg"></button>
   <figcaption><span class="place">Saadabad, Tehran</span><span class="when">July 2017</span><span class="gear">Nikon D810</span><span class="gear">32 mm, f/4, 1/125 s, ISO 250</span></figcaption>
 </figure>
@@ -236,21 +258,21 @@
 <section class="series" id="tehran" aria-labelledby="h-tehran">
 <div class="series-head"><h2 id="h-tehran">Tehran</h2><p>3 photographs</p></div>
 <div class="row plate wide">
-<figure class="ph" id="tehran-01">
+<figure class="ph" id="tehran-01" data-types="landscape">
   <button class="open" type="button" aria-label="View larger: A wide view over a tree-lined highway towards the towers of Tehran, a giant Iranian flag on the hill."><img src="photos/tehran-01-sm.jpg" srcset="photos/tehran-01-sm.jpg 960w, photos/tehran-01-md.jpg 1400w, photos/tehran-01-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1364" alt="A wide view over a tree-lined highway towards the towers of Tehran, a giant Iranian flag on the hill." loading="lazy" decoding="async" data-large="photos/tehran-01-lg.jpg"></button>
   <figcaption><span class="place">Tehran</span><span class="gear">Nikon D810</span><span class="gear">24 mm, f/4, 1/1250 s, ISO 200</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide flip">
-<figure class="ph" id="tehran-02">
+<figure class="ph" id="tehran-02" data-types="landscape">
   <button class="open" type="button" aria-label="View larger: A wooden walkway with a rail winding through tall trees in a park."><img src="photos/tehran-02-sm.jpg" srcset="photos/tehran-02-sm.jpg 960w, photos/tehran-02-md.jpg 1400w, photos/tehran-02-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1390" alt="A wooden walkway with a rail winding through tall trees in a park." loading="lazy" decoding="async" data-large="photos/tehran-02-lg.jpg"></button>
   <figcaption><span class="gear">Nikon D810</span><span class="gear">24 mm, f/22, 1/8 s, ISO 200</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide">
-<figure class="ph" id="tehran-03">
+<figure class="ph" id="tehran-03" data-types="city">
   <button class="open" type="button" aria-label="View larger: The concrete gateway of the University of Tehran under a blue sky."><img src="photos/tehran-03-sm.jpg" srcset="photos/tehran-03-sm.jpg 960w, photos/tehran-03-md.jpg 1400w, photos/tehran-03-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="The concrete gateway of the University of Tehran under a blue sky." loading="lazy" decoding="async" data-large="photos/tehran-03-lg.jpg"></button>
   <figcaption><span class="place">Tehran</span><span class="gear">Nikon D810</span><span class="gear">30 mm, f/22, 1/160 s, ISO 250</span></figcaption>
 </figure>
@@ -260,105 +282,105 @@
 <section class="series" id="still" aria-labelledby="h-still">
 <div class="series-head"><h2 id="h-still">Still life and detail</h2><p>15 photographs</p></div>
 <div class="row plate wide flip">
-<figure class="ph" id="still-01">
+<figure class="ph" id="still-01" data-types="food still">
   <button class="open" type="button" aria-label="View larger: A Persian still life: a glass of tea, fresh herbs, fried aubergine and a bowl of kashk-e bademjan topped with walnuts, flatbread behind, before a copper pot on a stand of metal Persepolis guard figures."><img src="photos/still-01-sm.jpg" srcset="photos/still-01-sm.jpg 960w, photos/still-01-md.jpg 1400w, photos/still-01-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="A Persian still life: a glass of tea, fresh herbs, fried aubergine and a bowl of kashk-e bademjan topped with walnuts, flatbread behind, before a copper pot on a stand of metal Persepolis guard figures." loading="lazy" decoding="async" data-large="photos/still-01-lg.jpg"></button>
   <figcaption><span class="when">June 2017</span><span class="gear">Nikon D810</span><span class="gear">82 mm, f/4, 30 s, ISO 250</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide">
-<figure class="ph" id="still-02">
+<figure class="ph" id="still-02" data-types="still">
   <button class="open" type="button" aria-label="View larger: A heap of pink damask rose blossoms in a metal tray beside old copper stills."><img src="photos/still-02-sm.jpg" srcset="photos/still-02-sm.jpg 960w, photos/still-02-md.jpg 1400w, photos/still-02-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="A heap of pink damask rose blossoms in a metal tray beside old copper stills." loading="lazy" decoding="async" data-large="photos/still-02-lg.jpg"></button>
   <figcaption><span class="gear">Nikon D810</span><span class="gear">98 mm, f/5.6, 1/80 s, ISO 250</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate narrow flip">
-<figure class="ph" id="still-03">
+<figure class="ph" id="still-03" data-types="still">
   <button class="open" type="button" aria-label="View larger: A tray of pink rose blossoms on a crate in front of a steaming copper still."><img src="photos/still-03-sm.jpg" srcset="photos/still-03-sm.jpg 678w, photos/still-03-md.jpg 989w, photos/still-03-lg.jpg 1413w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1413" height="2000" alt="A tray of pink rose blossoms on a crate in front of a steaming copper still." loading="lazy" decoding="async" data-large="photos/still-03-lg.jpg"></button>
   <figcaption><span class="gear">Nikon D810</span><span class="gear">110 mm, f/5.6, 1/30 s, ISO 250</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide">
-<figure class="ph" id="still-04">
+<figure class="ph" id="still-04" data-types="still">
   <button class="open" type="button" aria-label="View larger: A stream of water arcing from a pipe in a dim distillery, rose petals heaped behind."><img src="photos/still-04-sm.jpg" srcset="photos/still-04-sm.jpg 960w, photos/still-04-md.jpg 1400w, photos/still-04-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="A stream of water arcing from a pipe in a dim distillery, rose petals heaped behind." loading="lazy" decoding="async" data-large="photos/still-04-lg.jpg"></button>
   <figcaption><span class="gear">Nikon D810</span><span class="gear">98 mm, f/5.6, 1/500 s, ISO 250</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide flip">
-<figure class="ph" id="still-05">
+<figure class="ph" id="still-05" data-types="product food still">
   <button class="open" type="button" aria-label="View larger: A cast-iron coffee grinder with ground coffee in its drawer, beans spilling from a paper bag, a pack of espresso coffee behind."><img src="photos/still-05-sm.jpg" srcset="photos/still-05-sm.jpg 960w, photos/still-05-md.jpg 1400w, photos/still-05-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="A cast-iron coffee grinder with ground coffee in its drawer, beans spilling from a paper bag, a pack of espresso coffee behind." loading="lazy" decoding="async" data-large="photos/still-05-lg.jpg"></button>
   <figcaption><span class="when">June 2017</span><span class="gear">Nikon D810</span><span class="gear">86 mm, f/4, 1/8 s, ISO 125</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide">
-<figure class="ph" id="still-06">
+<figure class="ph" id="still-06" data-types="product food">
   <button class="open" type="button" aria-label="View larger: A wrapped Nestlé 1927 chocolate bar half buried in roasted coffee beans, squares of dark chocolate among them."><img src="photos/still-06-sm.jpg" srcset="photos/still-06-sm.jpg 960w, photos/still-06-md.jpg 1400w, photos/still-06-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="A wrapped Nestlé 1927 chocolate bar half buried in roasted coffee beans, squares of dark chocolate among them." loading="lazy" decoding="async" data-large="photos/still-06-lg.jpg"></button>
   <figcaption><span class="when">June 2017</span><span class="gear">Nikon D810</span><span class="gear">120 mm, f/5.6, 1/6 s, ISO 125</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate narrow flip">
-<figure class="ph" id="still-07">
+<figure class="ph" id="still-07" data-types="product still">
   <button class="open" type="button" aria-label="View larger: Persian handicrafts on a red embroidered termeh cloth: enamelled vases and a dish, a turquoise-inlaid copper vase and a khatam inlaid box."><img src="photos/still-07-sm.jpg" srcset="photos/still-07-sm.jpg 641w, photos/still-07-md.jpg 934w, photos/still-07-lg.jpg 1335w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1335" height="2000" alt="Persian handicrafts on a red embroidered termeh cloth: enamelled vases and a dish, a turquoise-inlaid copper vase and a khatam inlaid box." loading="lazy" decoding="async" data-large="photos/still-07-lg.jpg"></button>
   <figcaption><span class="when">June 2017</span><span class="gear">Nikon D810</span><span class="gear">100 mm, f/4, 1/10 s, ISO 125</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide">
-<figure class="ph" id="still-08">
+<figure class="ph" id="still-08" data-types="product still">
   <button class="open" type="button" aria-label="View larger: An enamelled blue vase lying on its side, a turquoise-inlaid vase blurred behind."><img src="photos/still-08-sm.jpg" srcset="photos/still-08-sm.jpg 960w, photos/still-08-md.jpg 1400w, photos/still-08-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="An enamelled blue vase lying on its side, a turquoise-inlaid vase blurred behind." loading="lazy" decoding="async" data-large="photos/still-08-lg.jpg"></button>
   <figcaption><span class="when">June 2017</span><span class="gear">Nikon D810</span><span class="gear">120 mm, f/4, 1/10 s, ISO 125</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide flip">
-<figure class="ph" id="still-09">
+<figure class="ph" id="still-09" data-types="product">
   <button class="open" type="button" aria-label="View larger: A wristwatch on a glass-topped case, reflected in the glass, a pen in front and its box behind, in warm orange light."><img src="photos/still-09-sm.jpg" srcset="photos/still-09-sm.jpg 960w, photos/still-09-md.jpg 1400w, photos/still-09-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="A wristwatch on a glass-topped case, reflected in the glass, a pen in front and its box behind, in warm orange light." loading="lazy" decoding="async" data-large="photos/still-09-lg.jpg"></button>
   <figcaption><span class="when">June 2017</span><span class="gear">Nikon D810</span><span class="gear">82 mm, f/4, 20 s, ISO 125</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide">
-<figure class="ph" id="still-10">
+<figure class="ph" id="still-10" data-types="still">
   <button class="open" type="button" aria-label="View larger: Three stemmed glasses, one filled with a dark red drink, casting long shadows on a pale wall."><img src="photos/still-10-sm.jpg" srcset="photos/still-10-sm.jpg 960w, photos/still-10-md.jpg 1400w, photos/still-10-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="Three stemmed glasses, one filled with a dark red drink, casting long shadows on a pale wall." loading="lazy" decoding="async" data-large="photos/still-10-lg.jpg"></button>
   <figcaption><span class="when">June 2017</span><span class="gear">Nikon D810</span><span class="gear">100 mm, f/4, 1/8 s, ISO 125</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide flip">
-<figure class="ph" id="still-11">
+<figure class="ph" id="still-11" data-types="still">
   <button class="open" type="button" aria-label="View larger: Playing cards flying from a hand and scattering across a dark table."><img src="photos/still-11-sm.jpg" srcset="photos/still-11-sm.jpg 960w, photos/still-11-md.jpg 1400w, photos/still-11-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1427" alt="Playing cards flying from a hand and scattering across a dark table." loading="lazy" decoding="async" data-large="photos/still-11-lg.jpg"></button>
   <figcaption><span class="when">June 2017</span><span class="gear">Nikon D810</span><span class="gear">92 mm, f/8, 3 s, ISO 125</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide">
-<figure class="ph" id="still-12">
+<figure class="ph" id="still-12" data-types="food">
   <button class="open" type="button" aria-label="View larger: Layered desserts topped with pistachios in small glasses, jelly cups behind."><img src="photos/still-12-sm.jpg" srcset="photos/still-12-sm.jpg 960w, photos/still-12-md.jpg 1400w, photos/still-12-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1376" alt="Layered desserts topped with pistachios in small glasses, jelly cups behind." loading="lazy" decoding="async" data-large="photos/still-12-lg.jpg"></button>
   <figcaption><span class="when">June 2017</span><span class="gear">Nikon D810</span><span class="gear">65 mm, f/4, 1/15 s, ISO 3200</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide flip">
-<figure class="ph" id="still-13">
+<figure class="ph" id="still-13" data-types="still">
   <button class="open" type="button" aria-label="View larger: Hands playing an upright piano, sheet music on the stand above the keys."><img src="photos/still-13-sm.jpg" srcset="photos/still-13-sm.jpg 960w, photos/still-13-md.jpg 1400w, photos/still-13-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="Hands playing an upright piano, sheet music on the stand above the keys." loading="lazy" decoding="async" data-large="photos/still-13-lg.jpg"></button>
   <figcaption><span class="gear">Nikon D810</span><span class="gear">98 mm, f/7.1, 1/50 s, ISO 640</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate wide">
-<figure class="ph" id="still-14">
+<figure class="ph" id="still-14" data-types="city still">
   <button class="open" type="button" aria-label="View larger: A stone wall hung with about twenty round wall clocks, the largest painted with a line of Persian verse."><img src="photos/still-14-sm.jpg" srcset="photos/still-14-sm.jpg 960w, photos/still-14-md.jpg 1400w, photos/still-14-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="A stone wall hung with about twenty round wall clocks, the largest painted with a line of Persian verse." loading="lazy" decoding="async" data-large="photos/still-14-lg.jpg"></button>
   <figcaption><span class="gear">Nikon D810</span><span class="gear">112 mm, f/5.6, 1/3200 s, ISO 250</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate narrow flip">
-<figure class="ph" id="still-15">
+<figure class="ph" id="still-15" data-types="city">
   <button class="open" type="button" aria-label="View larger: An open wooden door with coloured glass panes in a pale brick wall."><img src="photos/still-15-sm.jpg" srcset="photos/still-15-sm.jpg 641w, photos/still-15-md.jpg 934w, photos/still-15-lg.jpg 1335w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1335" height="2000" alt="An open wooden door with coloured glass panes in a pale brick wall." loading="lazy" decoding="async" data-large="photos/still-15-lg.jpg"></button>
   <figcaption><span class="gear">Nikon D810</span><span class="gear">78 mm, f/5.6, 1/80 s, ISO 250</span></figcaption>
 </figure>
@@ -368,18 +390,18 @@
 <section class="series" id="cat" aria-labelledby="h-cat">
 <div class="series-head"><h2 id="h-cat">Cats</h2><p>7 photographs, 2017 to 2024</p></div>
 <div class="row plate wide flip">
-<figure class="ph" id="cat-01">
+<figure class="ph" id="cat-01" data-types="animals">
   <button class="open" type="button" aria-label="View larger: A long-haired cream cat dozing along the top of a leather sofa."><img src="photos/cat-01-sm.jpg" srcset="photos/cat-01-sm.jpg 960w, photos/cat-01-md.jpg 1400w, photos/cat-01-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1500" alt="A long-haired cream cat dozing along the top of a leather sofa." loading="lazy" decoding="async" data-large="photos/cat-01-lg.jpg"></button>
   <figcaption><span class="when">April 2023</span><span class="gear">iPhone 14 Pro Max, 3x telephoto camera, digital zoom</span><span class="gear">136 mm equiv., f/2.8, 1/50 s, ISO 125</span></figcaption>
 </figure>
 </div>
 
 <div class="row pair">
-<figure class="ph" id="cat-02">
+<figure class="ph" id="cat-02" data-types="animals">
   <button class="open" type="button" aria-label="View larger: A long-haired cream cat sitting on the back of a sofa, its tail hanging down."><img src="photos/cat-02-sm.jpg" srcset="photos/cat-02-sm.jpg 720w, photos/cat-02-md.jpg 1050w, photos/cat-02-lg.jpg 1500w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1500" height="2000" alt="A long-haired cream cat sitting on the back of a sofa, its tail hanging down." loading="lazy" decoding="async" data-large="photos/cat-02-lg.jpg"></button>
   <figcaption><span class="when">August 2023</span><span class="gear">iPhone 14 Pro Max, 3x telephoto camera, digital zoom</span><span class="gear">114 mm equiv., f/2.8, 1/100 s, ISO 320</span></figcaption>
 </figure>
-<figure class="ph" id="cat-03">
+<figure class="ph" id="cat-03" data-types="animals">
   <button class="open" type="button" aria-label="View larger: A cream cat dozing with its chin and one paw over the edge of a leather sofa."><img src="photos/cat-03-sm.jpg" srcset="photos/cat-03-sm.jpg 720w, photos/cat-03-md.jpg 1050w, photos/cat-03-lg.jpg 1500w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1500" height="2000" alt="A cream cat dozing with its chin and one paw over the edge of a leather sofa." loading="lazy" decoding="async" data-large="photos/cat-03-lg.jpg"></button>
   <figcaption><span class="when">June 2024</span><span class="gear">iPhone 14 Pro Max, front camera, digital zoom</span><span class="gear">30 mm equiv., f/1.9, 1/60 s, ISO 125</span></figcaption>
 </figure>
@@ -387,30 +409,32 @@
 
 <!-- camera -->
 <div class="row plate wide">
-<figure class="ph" id="cat-04">
+<figure class="ph" id="cat-04" data-types="animals">
   <button class="open" type="button" aria-label="View larger: A close view of a long-haired cream cat with a flat face, eyes half closed."><img src="photos/cat-04-sm.jpg" srcset="photos/cat-04-sm.jpg 960w, photos/cat-04-md.jpg 1400w, photos/cat-04-lg.jpg 2000w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 944px, (min-width: 1240px) 731px, 59vw" width="2000" height="1335" alt="A close view of a long-haired cream cat with a flat face, eyes half closed." loading="lazy" decoding="async" data-large="photos/cat-04-lg.jpg"></button>
   <figcaption><span class="when">June 2017</span><span class="gear">Nikon D810</span><span class="gear">120 mm, f/4, 1/10 s, ISO 125</span></figcaption>
 </figure>
 </div>
 
 <div class="row pair">
-<figure class="ph" id="cat-05">
+<figure class="ph" id="cat-05" data-types="animals">
   <button class="open" type="button" aria-label="View larger: A long-haired cream cat lying on a white sill by a window."><img src="photos/cat-05-sm.jpg" srcset="photos/cat-05-sm.jpg 641w, photos/cat-05-md.jpg 934w, photos/cat-05-lg.jpg 1335w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1335" height="2000" alt="A long-haired cream cat lying on a white sill by a window." loading="lazy" decoding="async" data-large="photos/cat-05-lg.jpg"></button>
   <figcaption><span class="when">June 2017</span><span class="gear">Nikon D810</span><span class="gear">78 mm, f/4, 1/10 s, ISO 125</span></figcaption>
 </figure>
-<figure class="ph" id="cat-06">
+<figure class="ph" id="cat-06" data-types="animals">
   <button class="open" type="button" aria-label="View larger: A cream cat looking out from behind a coffee grinder and scattered beans."><img src="photos/cat-06-sm.jpg" srcset="photos/cat-06-sm.jpg 641w, photos/cat-06-md.jpg 934w, photos/cat-06-lg.jpg 1335w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1335" height="2000" alt="A cream cat looking out from behind a coffee grinder and scattered beans." loading="lazy" decoding="async" data-large="photos/cat-06-lg.jpg"></button>
   <figcaption><span class="when">June 2017</span><span class="gear">Nikon D810</span><span class="gear">70 mm, f/4, 1/8 s, ISO 125</span></figcaption>
 </figure>
 </div>
 
 <div class="row plate narrow flip">
-<figure class="ph" id="cat-07">
+<figure class="ph" id="cat-07" data-types="animals">
   <button class="open" type="button" aria-label="View larger: A cream cat eating from a bowl beside bags of cat food, on a dark cloth."><img src="photos/cat-07-sm.jpg" srcset="photos/cat-07-sm.jpg 754w, photos/cat-07-md.jpg 1099w, photos/cat-07-lg.jpg 1570w" sizes="(max-width: 760px) calc(100vw - 40px), (min-width: 1600px) 578px, (min-width: 1240px) 445px, 36vw" width="1570" height="2000" alt="A cream cat eating from a bowl beside bags of cat food, on a dark cloth." loading="lazy" decoding="async" data-large="photos/cat-07-lg.jpg"></button>
   <figcaption><span class="when">June 2017</span><span class="gear">Nikon D810</span><span class="gear">46 mm, f/4, 1/40 s, ISO 250</span></figcaption>
 </figure>
 </div>
 </section>
+
+</div>
 
 </main>
 
@@ -419,19 +443,30 @@
   <p><a href="#top">Back to top</a></p>
 </footer>
 
-<dialog id="viewer" aria-label="Photograph viewer">
-  <div class="v-stage"><img id="v-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt=""></div>
-  <div class="v-bar">
-    <div class="v-cap" id="v-cap" aria-live="polite"></div>
-    <p class="v-count" id="v-count"></p>
-    <div class="v-nav">
-      <button type="button" id="v-prev">Previous</button>
-      <button type="button" id="v-next" autofocus>Next</button>
-      <button type="button" id="v-close">Close</button>
+<dialog id="book" aria-labelledby="b-title">
+  <div class="b-top"><p class="b-title" id="b-title"></p><button type="button" class="btn" id="b-close">Close</button></div>
+  <div class="b-stage" id="b-stage">
+    <div class="book" id="b-book">
+      <div class="pg pg-l" id="b-left"></div>
+      <div class="pg pg-r" id="b-right"></div>
+      <div class="leaf" id="b-leaf" hidden><div class="face front" id="b-front"></div><div class="face back" id="b-back"></div></div>
     </div>
+  </div>
+  <div class="b-bar">
+    <button type="button" class="btn" id="b-prev">Previous</button>
+    <p class="b-count" id="b-count" aria-live="polite"></p>
+    <button type="button" class="btn" id="b-next">Next</button>
   </div>
 </dialog>
 
-<script src="viewer.js"></script>
+<dialog id="viewer" aria-label="Photograph">
+  <div class="v-stage"><img id="v-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt=""></div>
+  <div class="v-bar">
+    <div class="v-cap" id="v-cap"></div>
+    <div class="v-nav"><button type="button" class="btn" id="v-close">Close</button></div>
+  </div>
+</dialog>
+
+<script src="book.js"></script>
 </body>
 </html>
