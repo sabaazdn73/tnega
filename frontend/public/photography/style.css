@@ -159,7 +159,25 @@ figcaption .gear { font-size: .875rem; }
   margin: 0; padding: clamp(10px, 2.4vw, 28px); border: 0; background: var(--bg); color: var(--ink);
 }
 #book::backdrop { background: var(--bg); }
-#book[open] { display: flex; flex-direction: column; gap: clamp(8px, 1.6vh, 16px); }
+#book[open] { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas: "top top top" "prev stage next" ". bar ."; column-gap: clamp(8px, 2vw, 28px); row-gap: clamp(6px, 1.4vh, 14px); }
+.b-top { grid-area: top; }
+.b-stage { grid-area: stage; }
+.b-bar { grid-area: bar; }
+.arrow-prev { grid-area: prev; align-self: center; }
+.arrow-next { grid-area: next; align-self: center; }
+.arrow { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0; border: 0; background: none; color: var(--ink); cursor: pointer; font: inherit; }
+.arrow svg { width: 26px; height: 26px; box-sizing: content-box; padding: 15px; border: 1px solid rgba(30, 43, 51, .3); border-radius: 50%;
+  fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; background: var(--paper); transition: border-color .2s, transform .2s; }
+.arrow:hover:not(:disabled) svg { border-color: var(--ink); }
+.arrow-prev:hover:not(:disabled) svg { transform: translateX(-3px); }
+.arrow-next:hover:not(:disabled) svg { transform: translateX(3px); }
+.arrow-label { font-size: .875rem; color: var(--muted); }
+.arrow:disabled { opacity: .25; cursor: default; }
+.b-hint { margin: 2px 0 0; text-align: center; font-size: .875rem; color: var(--muted); min-height: 1.3em; }
+#book.single[open] { grid-template-areas: "top top top" "stage stage stage" "prev bar next"; }
+#book.single .arrow { align-self: end; }
+#book.single .arrow svg { padding: 12px; width: 22px; height: 22px; }
 .b-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
 .b-title { margin: 0; font-size: 1.25rem; font-weight: 500; }
 .b-stage { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; container-type: size; padding: 4px 10px 44px; }
@@ -168,7 +186,10 @@ figcaption .gear { font-size: .875rem; }
 .book::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 5%; transform: translateX(-50%); z-index: 2; pointer-events: none;
   background: linear-gradient(to right, transparent, rgba(30, 43, 51, .08) 40%, rgba(30, 43, 51, .16) 50%, rgba(30, 43, 51, .08) 60%, transparent); }
 .pg, .face { position: absolute; top: 0; bottom: 0; width: 50%; background: var(--paper); container-type: inline-size; }
-.pg { z-index: 1; cursor: pointer; }
+.pg { z-index: 1; }
+.pg-l { cursor: w-resize; }
+.pg-r { cursor: e-resize; }
+#book.single .pg-r { cursor: e-resize; }
 .pg-l { left: 0; }
 .pg-r { right: 0; }
 .leaf { position: absolute; top: 0; bottom: 0; width: 50%; z-index: 4; transform-style: preserve-3d; }
@@ -201,8 +222,8 @@ figcaption .gear { font-size: .875rem; }
 .linkbtn { align-self: flex-start; font: inherit; font-size: clamp(14px, 3.4cqi, 18px); color: var(--ink); background: none; border: 0; padding: 0;
   border-bottom: 1px solid rgba(30, 43, 51, .3); cursor: pointer; text-align: left; }
 .linkbtn:hover { border-bottom-color: var(--ink); }
-.b-bar { display: flex; justify-content: center; align-items: center; gap: clamp(10px, 2vw, 20px); }
-.b-count { margin: 0; min-width: 8.5em; text-align: center; font-size: .9375rem; color: var(--muted); }
+.b-bar { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.b-count { margin: 0; text-align: center; font-size: .9375rem; color: var(--ink); }
 html.book-open { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
@@ -218,8 +239,10 @@ html.book-open { overflow: hidden; }
 @media (max-height: 560px) {
   #book { padding: 8px 12px; }
   #book[open] { gap: 4px; }
-  .b-stage { padding-bottom: 24px; }
+  .b-stage { padding-bottom: 18px; }
   .b-title { font-size: 1rem; }
   .btn { font-size: .875rem; padding: .15em .8em; }
+  .arrow svg { padding: 9px; width: 20px; height: 20px; }
+  .arrow-label, .b-hint { display: none; }
   .b-count { font-size: .8125rem; }
 }

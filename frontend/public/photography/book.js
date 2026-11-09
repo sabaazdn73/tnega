@@ -120,6 +120,9 @@
     const N = cur.figs.length;
     const vis = single ? [pos] : [2 * spread(pos) - 1, 2 * spread(pos)];
     const n = vis.filter(i => i >= 1 && i <= N);
+    const touch = matchMedia('(hover: none)').matches;
+    $('b-hint').textContent = (single ? pos === 0 : spread(pos) === 0)
+      ? (touch ? 'Swipe or tap the arrows to turn the pages' : 'Turn the pages with the arrows, your arrow keys or a click on the page') : '';
     countEl.textContent = n.length === 2 ? `${n[0]} and ${n[1]} of ${N}` : n.length ? `${n[0]} of ${N}`
       : vis.includes(0) ? `Title page, ${N} photographs` : 'End';
     const atStart = single ? pos <= 0 : spread(pos) <= 0;
