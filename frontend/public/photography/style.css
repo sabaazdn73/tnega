@@ -54,6 +54,8 @@ figcaption span { display: block; }
 figcaption .place { color: var(--ink); font-size: 1.0625rem; }
 figcaption .when { margin-bottom: .55em; }
 figcaption .gear { font-size: .875rem; }
+figcaption .links, .v-cap .links, .pc .cap .links { margin-top: .55em; }
+.series .note { max-width: 40em; margin: .4em 0 2em; color: var(--muted); }
 
 .row { margin: clamp(72px, 12vh, 150px) 0; }
 .series-head + .row { margin-top: clamp(32px, 5vh, 56px); }

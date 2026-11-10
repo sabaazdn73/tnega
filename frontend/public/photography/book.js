@@ -14,12 +14,12 @@
 
   // books: one per series, one per type
   const albums = [...document.querySelectorAll('.archive .series')].map(s => ({
-    key: s.id, kind: 'album',
+    key: s.id, kind: 'album', digital: s.dataset.kind === 'digital',
     title: s.querySelector('h2').textContent,
     meta: s.querySelector('.series-head p').textContent,
     figs: [...s.querySelectorAll('.ph')]
   }));
-  const all = albums.flatMap(a => a.figs);
+  const all = albums.filter(a => !a.digital).flatMap(a => a.figs);   // the Digital art album is not photography
   const types = [...document.querySelectorAll('.typelist a[data-type]')].map(a => {
     const t = a.dataset.type;
     const figs = t === 'all' ? all : all.filter(f => (f.dataset.types || '').split(' ').includes(t));
@@ -69,6 +69,12 @@
     const where = [...texts('.place'), ...texts('.when')].join(', ');
     if (where) p.append(el('span', 'first', where));
     p.append(el('span', where ? null : 'first', texts('.gear').join(', ')));
+    const links = cap.querySelector('.links');
+    if (links) {
+      const l = links.cloneNode(true);
+      l.querySelectorAll('a').forEach(a => a.addEventListener('click', e => e.stopPropagation()));
+      p.append(l);
+    }
     pc.append(btn, p);
     return pc;
   }
@@ -124,7 +130,7 @@
     $('b-hint').textContent = (single ? pos === 0 : spread(pos) === 0)
       ? (touch ? 'Swipe or tap the arrows to turn the pages' : 'Turn the pages with the arrows, your arrow keys or a click on the page') : '';
     countEl.textContent = n.length === 2 ? `${n[0]} and ${n[1]} of ${N}` : n.length ? `${n[0]} of ${N}`
-      : vis.includes(0) ? `Title page, ${N} photographs` : 'End';
+      : vis.includes(0) ? `Title page, ${N} ${cur.digital ? 'works' : 'photographs'}` : 'End';
     const atStart = single ? pos <= 0 : spread(pos) <= 0;
     const atEnd = single ? pos >= pages.length - 1 : spread(pos) >= lastSpread();
     // never disable the button that has focus without moving focus first
@@ -275,6 +281,7 @@
     zoomImg.src = s.dataset.large;
     const sr = el('span', 'sr', s.alt);
     zoomCap.replaceChildren(sr, ...[...f.querySelector('figcaption').children].map(c => c.cloneNode(true)));
+    zoomDlg.setAttribute('aria-label', f.closest('[data-kind="digital"]') ? 'Image' : 'Photograph');
     zoomDlg.showModal();
   }
   $('v-close').addEventListener('click', () => zoomDlg.close());
