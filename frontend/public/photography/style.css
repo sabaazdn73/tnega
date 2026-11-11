@@ -249,3 +249,14 @@ html.book-open { overflow: hidden; }
   .arrow-label, .b-hint { display: none; }
   .b-count { font-size: .8125rem; }
 }
+
+/* sources under a ComfyUI image: a panel that opens below the caption */
+.src summary { cursor: pointer; width: fit-content; text-decoration: underline; text-decoration-color: rgba(30, 43, 51, .35); text-underline-offset: .2em; }
+.src summary:hover { text-decoration-color: currentColor; }
+.src-panel { display: flex; align-items: flex-start; gap: .7em; margin-top: .6em; max-width: 30em; }
+.src-photo { display: block; flex: 1 1 0; min-width: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: zoom-in; }
+.src-photo img, .pc.photo .src-photo img { position: static; display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+.src-label { display: block; margin-top: .3em; font-size: .9em; }
+.pc .cap .src-panel { display: flex; align-items: flex-start; max-width: 70%; }
+.pc .cap .src-label { display: block; }
+.v-cap .src-panel { max-width: 22em; }

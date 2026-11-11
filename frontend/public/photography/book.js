@@ -73,6 +73,11 @@
     if (links) {
       const l = links.cloneNode(true);
       l.querySelectorAll('a').forEach(a => a.addEventListener('click', e => e.stopPropagation()));
+      l.addEventListener('click', e => {   // opening the source panel must not turn the page
+        e.stopPropagation();
+        const b = e.target.closest('.src-photo'), sf = b && document.getElementById(b.dataset.fig);
+        if (sf) { e.preventDefault(); zoom(sf); }
+      });
       p.append(l);
     }
     pc.append(btn, p);
@@ -285,6 +290,17 @@
     zoomDlg.showModal();
   }
   $('v-close').addEventListener('click', () => zoomDlg.close());
+
+  // source photographs under a ComfyUI image: open the source photograph in the larger view, staying where you are
+  document.addEventListener('click', e => {
+    const b = e.target.closest('.src-photo');
+    if (!b) return;
+    const f = document.getElementById(b.dataset.fig);
+    if (!f) return;
+    e.preventDefault(); e.stopPropagation();
+    if (zoomDlg.open) zoomDlg.close();
+    zoom(f);
+  });
   zoomDlg.addEventListener('click', e => { if (e.target.classList.contains('v-stage')) zoomDlg.close(); });
 
   // shelf and type list
