@@ -56,6 +56,7 @@ export default function EngineeringHome() {
               <a href="#town" className="hover:underline">Code town</a>
               <a href="#pipeline" className="hover:underline">Task pipeline</a>
               <a href="#talk" className="hover:underline">Talk</a>
+              <a href="/notebook/" className="inline-flex items-center gap-1 hover:underline">Review notebook <ArrowRight size={13} aria-hidden="true" /></a>
               <a href="/bim/" className="inline-flex items-center gap-1 hover:underline">BIM practice <ArrowRight size={13} aria-hidden="true" /></a>
               <a href="/photography/" className="inline-flex items-center gap-1 hover:underline">Photography <ArrowRight size={13} aria-hidden="true" /></a>
               <a href="/finance" className="inline-flex items-center gap-1 hover:underline">Tnega Finance <ArrowRight size={13} aria-hidden="true" /></a>
@@ -70,6 +71,7 @@ export default function EngineeringHome() {
             <a href="#town" className="hidden md:inline hover:underline">Code town</a>
             <a href="#pipeline" className="hidden md:inline hover:underline">Task pipeline</a>
             <a href="#talk" className="hidden md:inline hover:underline">Talk</a>
+            <a href="/notebook/" className="hover:underline">Review notebook</a>
             <a href="/bim/" className="hover:underline">BIM practice</a>
             <a href="/photography/" className="hover:underline">Photography</a>
             <a href="/finance" className="hover:underline">Tnega Finance</a>
@@ -272,7 +274,8 @@ export default function EngineeringHome() {
       <footer className="border-t border-line">
         <div className="max-w-[1180px] mx-auto px-4 sm:px-6 py-8 flex flex-wrap items-center justify-between gap-4 text-[12px] text-muted">
           <p>
-            Also from Tnega: <a href="/bim/" className="font-semibold text-fg hover:underline">BIM practice</a>, a free structural BIM
+            Also from Tnega: the <a href="/notebook/" className="font-semibold text-fg hover:underline">review notebook</a> for civil
+            engineers evaluating frontier models; <a href="/bim/" className="font-semibold text-fg hover:underline">BIM practice</a>, a free structural BIM
             course with an automatic checker; <a href="/finance" className="font-semibold text-fg hover:underline">Tnega Finance</a>,
             tokenized stocks and what each one really costs to buy; and Saba's{' '}
             <a href="/photography/" className="font-semibold text-fg hover:underline">photography portfolio</a>.
