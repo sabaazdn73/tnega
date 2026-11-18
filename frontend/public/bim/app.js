@@ -50,6 +50,8 @@
 
   if (/(^|\.)tnega\.app$/.test(location.hostname)) {
     $('#host').append(el('a', { href: '/', text: 'Tnega' }), ' · ');
+    // On tnega.app, link the related review notebook beside the course's own links.
+    $('#repo').before(el('a', { href: '/notebook/', text: 'Review notebook' }));
   }
   $('#menu').addEventListener('click', () => {
     const open = $('#toc').classList.toggle('open');

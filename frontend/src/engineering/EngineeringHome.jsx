@@ -12,7 +12,7 @@
 // providers, so the home page carries none of that code.
 
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, Maximize2, FileSearch, ListChecks, Calculator, Users, ShieldAlert, Linkedin, PlayCircle } from 'lucide-react';
+import { ArrowRight, Maximize2, FileSearch, ListChecks, Calculator, Users, ShieldAlert, Linkedin, PlayCircle, BookOpen } from 'lucide-react';
 import Brand from '../shell/Brand';
 import ThemeToggle from '../theme/ThemeToggle';
 import { updatePageMeta } from '../seoMeta';
@@ -174,6 +174,9 @@ export default function EngineeringHome() {
               </a>
               <a href="#walkthrough" onClick={() => setPlayWalkthrough(true)} className="text-[13px] font-semibold inline-flex items-center gap-1.5 hover:underline">
                 <PlayCircle size={14} aria-hidden="true" /> Watch the hackathon walkthrough
+              </a>
+              <a href="/notebook/" className="text-[13px] font-semibold inline-flex items-center gap-1.5 hover:underline">
+                <BookOpen size={14} aria-hidden="true" /> Read the review notebook
               </a>
             </div>
           </div>

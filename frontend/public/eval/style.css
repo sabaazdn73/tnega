@@ -35,6 +35,7 @@ main{padding-top:8px;padding-bottom:40px}
 .btn{font:600 13px var(--f);border:1px solid var(--line2);background:var(--panel);color:var(--ink);border-radius:5px;padding:6px 11px;cursor:pointer}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
 .btn.ghost{background:transparent}
+a.btn{text-decoration:none;display:inline-block}
 .btn:focus-visible,.tabs button:focus-visible,.pcard:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .pcard{display:block;text-align:left;width:100%;font:inherit;color:inherit;cursor:pointer}
 .pcard:hover{border-color:var(--line2)}
