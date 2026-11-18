@@ -1,12 +1,24 @@
 @font-face{font-family:'Hanken Grotesk';font-style:normal;font-display:swap;font-weight:100 900;src:url('/fonts/hanken-grotesk-latin-wght-normal.woff2') format('woff2-variations')}
-:root{--bg:#efede7;--panel:#fbfaf7;--ink:#22251f;--muted:#5d6157;--line:#d6d3c9;--accent:#2f5d8a;--trap:#9b3b26;--trap-bg:#f7e6e1;--check:#2f6b4f;--check-bg:#e3f0e8;--f:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:ui-monospace,Menlo,Consolas,monospace}
-@media (prefers-color-scheme:dark){:root{--bg:#15181b;--panel:#1c2024;--ink:#e7e5de;--muted:#a3a89f;--line:#30363b;--accent:#7fb0de;--trap:#e8917b;--trap-bg:#3a2420;--check:#7cc79f;--check-bg:#1d3329;color-scheme:dark}}
+:root{--bg:#efede7;--panel:#fbfaf7;--ink:#22251f;--muted:#5d6157;--line:#d6d3c9;--accent:#2f5d8a;--trap:#9b3b26;--trap-bg:#f7e6e1;--check:#2f6b4f;--check-bg:#e3f0e8;--f:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:ui-monospace,Menlo,Consolas,monospace;--glass:255 255 255;--glass-a:.55;--glass-edge:0 0 0;--glass-edge-a:.08;--glass-hi-a:.9;--glass-on-a:.92;--glass-ring:118 118 120;--glass-shadow-a:.08;color-scheme:light}
+/* Theme: theme.js puts .dark and data-theme-mode on <html> before the first paint, from the same
+   localStorage["tnega_theme"] the home page uses (system, light or dark). Without scripts the page follows the system. */
+:root.dark{--bg:#15181b;--panel:#1c2024;--ink:#e7e5de;--muted:#a3a89f;--line:#30363b;--accent:#7fb0de;--trap:#e8917b;--trap-bg:#3a2420;--check:#7cc79f;--check-bg:#1d3329;--glass:255 255 255;--glass-a:.06;--glass-edge:255 255 255;--glass-edge-a:.12;--glass-hi-a:.12;--glass-on-a:.2;--glass-ring:150 150 152;--glass-shadow-a:.5;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not(.js){--bg:#15181b;--panel:#1c2024;--ink:#e7e5de;--muted:#a3a89f;--line:#30363b;--accent:#7fb0de;--trap:#e8917b;--trap-bg:#3a2420;--check:#7cc79f;--check-bg:#1d3329;--glass:255 255 255;--glass-a:.06;--glass-edge:255 255 255;--glass-edge-a:.12;--glass-hi-a:.12;--glass-on-a:.2;--glass-ring:150 150 152;--glass-shadow-a:.5;color-scheme:dark}}
 *{box-sizing:border-box}html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--f)}
 a{color:var(--accent)}a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .top{border-bottom:1px solid var(--line);background:var(--panel)}
 .top-in{max-width:1080px;margin:0 auto;padding:18px 16px 16px}
 .crumbs{font-size:13px;color:var(--muted);margin:0 0 6px}.crumbs a{color:inherit}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 6px}.bar .crumbs{margin:0}
+/* Theme control: the same segmented glass control as the home page (src/theme/ThemeToggle.jsx, .glass-bar and .glass-tab in src/index.css). */
+.theme{display:inline-flex;align-items:center;gap:2px;padding:3px;border-radius:8px;flex-shrink:0;background-color:rgb(var(--glass)/var(--glass-a));border:1px solid rgb(var(--glass-edge)/var(--glass-edge-a));box-shadow:inset 0 1px 0 rgb(255 255 255/var(--glass-hi-a));-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%)}
+html:not(.js) .theme{display:none}
+.theme button{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin:0;padding:0;border:0;border-radius:6px;background:transparent;color:var(--muted);font:inherit;cursor:pointer;transition:background-color 120ms,color 120ms,box-shadow 120ms}
+.theme button:hover{color:var(--ink)}.theme button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+.theme svg{width:14px;height:14px;display:block}
+html[data-theme-mode=system] .theme [data-mode=system],html[data-theme-mode=light] .theme [data-mode=light],html[data-theme-mode=dark] .theme [data-mode=dark]{color:var(--ink);background-color:rgb(var(--glass)/var(--glass-on-a));box-shadow:inset 0 1px 0 rgb(255 255 255/var(--glass-hi-a)),0 0 0 1px rgb(var(--glass-ring)),0 1px 3px rgb(0 0 0/var(--glass-shadow-a))}
+@media (prefers-reduced-motion:reduce){.theme button{transition:none}}
 h1{font-size:30px;line-height:1.15;letter-spacing:-.015em;margin:0;text-wrap:balance;max-width:24ch}
 .sub{color:var(--muted);margin:8px 0 0;max-width:68ch}
 .layout{max-width:1080px;margin:0 auto;padding:0 16px 64px;display:grid;grid-template-columns:minmax(0,1fr);gap:32px}
