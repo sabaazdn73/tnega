@@ -1,7 +1,7 @@
 {
   "headers": [
     {
-      "source": "/((?!bim/|photography/).*)",
+      "source": "/((?!bim/|photography/|hava/).*)",
       "headers": [
         {
           "key": "Content-Security-Policy",
@@ -40,6 +40,27 @@
         {
           "key": "Content-Security-Policy",
           "value": "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    },
+    {
+      "source": "/hava/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval'; style-src 'self'; font-src 'self'; img-src 'self' data: blob:; media-src 'self' blob: mediastream:; connect-src 'self' https://cdn.jsdelivr.net https://storage.googleapis.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(self), microphone=()"
         },
         {
           "key": "Referrer-Policy",
@@ -110,6 +131,11 @@
     {
       "source": "/notebook",
       "destination": "/notebook/",
+      "permanent": false
+    },
+    {
+      "source": "/hava",
+      "destination": "/hava/",
       "permanent": false
     }
   ],

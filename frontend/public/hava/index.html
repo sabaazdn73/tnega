@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Hava: explain an idea by drawing it in the air with your hands. Runs in the browser; the camera picture never leaves your computer.">
+<title>Hava Air Canvas</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="stage"></canvas>
+<video id="cam" playsinline muted></video>
+
+<nav class="dock" id="dock" aria-label="Tools">
+  <button class="btn" data-color="#ffb547" aria-label="Saffron"><span class="swatch sw-saffron"></span><span class="tip">Saffron</span></button>
+  <button class="btn" data-color="#ff5c8a" aria-label="Rose"><span class="swatch sw-rose"></span><span class="tip">Rose</span></button>
+  <button class="btn" data-color="#4de1ff" aria-label="Sky"><span class="swatch sw-sky"></span><span class="tip">Sky</span></button>
+  <button class="btn" data-color="#a98bff" aria-label="Lilac"><span class="swatch sw-lilac"></span><span class="tip">Lilac</span></button>
+  <button class="btn" data-color="#5cf2b3" aria-label="Mint"><span class="swatch sw-mint"></span><span class="tip">Mint</span></button>
+  <button class="btn" data-color="rainbow" aria-label="Rainbow"><span class="swatch sw-rainbow"></span><span class="tip">Rainbow</span></button>
+  <span class="sep"></span>
+  <button class="btn" data-brush="neon" aria-label="Neon brush"><svg viewBox="0 0 24 24"><path d="M4 18c4-9 8 3 16-12"/></svg><span class="tip">Neon</span></button>
+  <button class="btn" data-brush="ribbon" aria-label="Ribbon brush"><svg viewBox="0 0 24 24"><path d="M4 17c3-1 4-8 8-8s5 6 8 5"/><path d="M4 14c3-1 4-8 8-8"/></svg><span class="tip">Ribbon</span></button>
+  <button class="btn" data-brush="spark" aria-label="Spark brush"><svg viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/></svg><span class="tip">Sparks</span></button>
+  <span class="sep"></span>
+  <button class="btn" data-toggle="snap" aria-label="Snap shapes"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="4"/><path d="M13 20l4-7 4 7z"/><rect x="3" y="14" width="6" height="6"/></svg><span class="tip">Snap shapes</span></button>
+  <button class="btn" data-toggle="arrows" aria-label="Straight lines become arrows"><svg viewBox="0 0 24 24"><path d="M4 20L19 5"/><path d="M11 5h8v8"/></svg><span class="tip">Arrows</span></button>
+  <button class="btn" data-toggle="mirror" aria-label="Mirror drawing"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M8 7l-4 5 4 5"/><path d="M16 7l4 5-4 5"/></svg><span class="tip">Mirror</span></button>
+  <button class="btn" data-toggle="sound" aria-label="Sound"><svg viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6L8 10z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M18.5 6.5a8 8 0 0 1 0 11"/></svg><span class="tip">Sound</span></button>
+  <button class="btn" data-toggle="hands" aria-label="Show hand skeleton"><svg viewBox="0 0 24 24"><path d="M8 13V5a1.5 1.5 0 0 1 3 0v6M11 11V4a1.5 1.5 0 0 1 3 0v7M14 11V6a1.5 1.5 0 0 1 3 0v8a6 6 0 0 1-6 6h-1a5 5 0 0 1-4-2l-3-4a1.5 1.5 0 0 1 2.3-2l1.7 2"/></svg><span class="tip">Hand lines</span></button>
+  <button class="btn" data-action="camera" aria-label="Camera brightness"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="13" height="10" rx="2"/><path d="M16 11l5-3v8l-5-3z"/></svg><span class="tip" id="camTip">Camera: bright</span></button>
+  <span class="sep"></span>
+  <button class="btn" data-action="undo" aria-label="Undo"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span class="tip">Undo</span></button>
+  <button class="btn" data-action="clear" aria-label="Clear all"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg><span class="tip">Clear</span></button>
+  <button class="btn" data-action="capture" aria-label="Take a picture"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span class="tip">Take picture</span></button>
+</nav>
+
+<div class="card status" id="status"><span class="dot" id="dot"></span><span id="statusText"><b>Mouse</b> · drag to draw</span></div>
+
+<aside class="card guide" id="guide">
+  <h2>Gestures <button id="guideToggle" aria-expanded="true">hide</button></h2>
+  <ul>
+    <li><span>Pinch and move</span><span>Draw with light (thumb on index finger)</span></li>
+    <li><span>Close a loop</span><span>Snaps to a circle, triangle, box or star</span></li>
+    <li><span>Draw a straight line</span><span>Becomes an arrow, pointing where you ended</span></li>
+    <li><span>Hold a peace sign</span><span>Take a picture of the sketch</span></li>
+    <li><span>Wave an open hand</span><span>Wipe light away</span></li>
+    <li><span>Hold a fist</span><span>Clear everything</span></li>
+    <li><span>Pinch both hands</span><span>Stretch a string, then flick it to play</span></li>
+    <li><span>Hold a fingertip</span><span>Press a button in the bar above</span></li>
+  </ul>
+</aside>
+
+<section class="intro" id="intro" aria-label="Start">
+  <div class="panel">
+    <h1 class="mark"><span class="en">Hava</span><span class="fa" lang="fa">هوا</span></h1>
+    <p>Explain an idea by drawing it in the air. Sketch boxes, circles and arrows with your fingers while you talk, then hold up a peace sign to keep a picture of it.</p>
+    <div class="row">
+      <button class="cta primary" id="startCam">Start with camera</button>
+      <button class="cta" id="startMouse">Use the mouse</button>
+    </div>
+    <div class="msg" id="introMsg" role="status"></div>
+    <small>On a video call, share this browser tab and the others see your sketch over your face. Hand tracking runs in this browser with Google's MediaPipe; the camera picture stays on this computer and is never uploaded. Works best in Chrome, with your hands about an arm's length from the camera.</small>
+  </div>
+</section>
+
+<div class="toast" id="toast" role="status"></div>
+<div class="tray" id="tray" aria-label="Pictures"></div>
+<div class="flash" id="flash"></div>
+<section class="lightbox" id="lightbox" hidden aria-label="Picture">
+  <figure>
+    <img id="lbImg" alt="Sketch picture">
+    <div class="row">
+      <a class="cta primary" id="lbSave" download="hava.png">Download</a>
+      <button class="cta" id="lbDelete">Delete</button>
+      <button class="cta" id="lbClose">Close</button>
+    </div>
+  </figure>
+</section>
+
+<script src="app.js" defer></script>
+</body>
+</html>
