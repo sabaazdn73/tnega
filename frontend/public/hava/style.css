@@ -86,7 +86,7 @@ video { display: none; }
 .intro small { display: block; margin-top: 16px; color: var(--muted); font-size: 12px; line-height: 1.5; max-width: 48ch; }
 .intro .msg { min-height: 20px; margin-top: 14px; font-size: 13px; color: var(--saffron); }
 
-.toast { position: fixed; left: 50%; top: calc(76px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); background: var(--glass); border: 1px solid var(--rim); padding: 7px 14px; border-radius: 999px; font-size: 12px; opacity: 0; transition: opacity .25s; pointer-events: none; z-index: 6; }
+.toast { position: fixed; left: 50%; bottom: calc(110px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--glass); border: 1px solid var(--rim); padding: 7px 14px; border-radius: 999px; font-size: 12px; opacity: 0; transition: opacity .25s; pointer-events: none; z-index: 6; }
 .toast.show { opacity: 1; }
 
 /* Pictures taken during the session */
@@ -105,3 +105,48 @@ video { display: none; }
 
 @media (max-width: 860px) { .tray { max-width: calc(100vw - 32px); bottom: calc(64px + env(safe-area-inset-bottom, 0px)); } }
 @media (max-width: 560px) { .guide { display: none; } }
+
+/* Finger chooser on the start screen */
+.choose { border: 0; padding: 0; margin: 0 0 18px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.choose legend { float: left; margin-right: 6px; font-size: 13px; color: var(--muted); padding: 0; }
+.choose label { cursor: pointer; }
+.choose input { position: absolute; opacity: 0; pointer-events: none; }
+.choose span { display: inline-block; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--rim); font-size: 13px; color: var(--text); }
+.choose input:checked + span { border-color: var(--saffron); background: rgba(255,181,71,0.14); color: var(--saffron); }
+.choose input:focus-visible + span { outline: 2px solid var(--text); outline-offset: 2px; }
+.cta.ghost { background: transparent; border-color: transparent; color: var(--muted); }
+
+/* What the AI thinks you are drawing */
+.guess { position: fixed; left: 50%; transform: translateX(-50%); top: calc(76px + env(safe-area-inset-top, 0px)); z-index: 4;
+  background: var(--glass); border: 1px solid var(--rim); border-radius: 999px; padding: 8px 16px; font-size: 15px; white-space: nowrap;
+  max-width: calc(100vw - 32px); overflow: hidden; text-overflow: ellipsis; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.guess b { color: var(--saffron); font-weight: 600; }
+.guess .pc { color: var(--muted); font-variant-numeric: tabular-nums; }
+.guess .alt { color: var(--muted); }
+
+/* Guessing game */
+.game { position: fixed; left: 50%; transform: translateX(-50%); top: calc(74px + env(safe-area-inset-top, 0px)); z-index: 5;
+  width: min(460px, calc(100vw - 32px)); background: var(--glass); border: 1px solid var(--rim); border-radius: 16px; padding: 12px 16px 12px;
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.game-top { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.game-ask { margin: 4px 0 8px; font-size: 26px; font-weight: 300; letter-spacing: -0.01em; }
+.game-ask b { font-weight: 600; color: var(--saffron); }
+.game-bar { --left: 1; height: 4px; border-radius: 4px; background: rgba(255,255,255,0.08); overflow: hidden; }
+.game-bar i { display: block; height: 100%; width: calc(var(--left) * 100%); background: var(--saffron); transition: width .2s linear; }
+.game-guess { margin: 8px 0 6px; font-size: 15px; min-height: 22px; }
+.game.won { border-color: #5cf2b3; }
+.game.won .game-guess { color: #5cf2b3; font-weight: 600; }
+.game.lost .game-guess { color: #ff5c8a; }
+.game-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.mini { background: transparent; border: 1px solid var(--rim); color: var(--muted); font: 600 12px var(--font-ui); padding: 5px 11px; border-radius: 999px; cursor: pointer; }
+.mini:hover { color: var(--text); }
+.mini:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; }
+.game-end { position: fixed; inset: 0; z-index: 11; display: grid; place-items: center; background: rgba(5,7,13,0.72);
+  padding: 24px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px)); }
+.game-end .panel { width: min(420px, 100%); background: var(--glass); border: 1px solid var(--rim); border-radius: 18px; padding: 20px 22px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.game-end h2 { margin: 0 0 12px; font-size: 28px; font-weight: 300; }
+.game-end ul { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 6px; font-size: 14px; }
+.game-end li { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--rim); padding-bottom: 6px; }
+.game-end .ok { color: #5cf2b3; } .game-end .no { color: #ff5c8a; }
+.game-end .note { color: var(--muted); font-size: 12px; margin: 0 0 14px; }
+.game-end .row { display: flex; gap: 10px; flex-wrap: wrap; }

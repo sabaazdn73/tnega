@@ -14,7 +14,8 @@ const MAX_PARTICLES = REDUCED ? 250 : 1600;
 
 // ---------- state ----------
 const S = {
-  color: '#ffb547', brush: 'neon', snap: true, arrows: true, mirror: false, sound: true, hands: true,
+  color: '#ffb547', brush: 'neon', snap: true, arrows: true, mirror: false, sound: true, hands: true, guess: true,
+  drawMode: 'pinch',      // pinch | index | two | middle
   camLevel: 2,            // 0 off, 1 dim, 2 bright
   shots: [],              // pictures taken this session
   mode: 'idle',           // idle | camera | mouse | sim
@@ -435,21 +436,29 @@ function processHands(list, now, dt) {
   for (const h of list) {
     seen.add(h.key);
     let st = S.handStates.get(h.key);
-    if (!st) { st = {key: h.key, pts: h.pts.map(q => ({...q})), pinch: false, pinchT: 0, stroke: null, block: false, fistT: 0, tip: null, prevTip: null, palmC: null, prevPalmC: null, dwell: null}; S.handStates.set(h.key, st); }
+    if (!st) { st = {key: h.key, pts: h.pts.map(q => ({...q})), pinch: false, pinchM: false, down: false, flip: 0, downT: 0, stroke: null, block: false, fistT: 0, tip: null, prevTip: null, palmC: null, prevPalmC: null, dwell: null}; S.handStates.set(h.key, st); }
     for (let i = 0; i < 21; i++) { st.pts[i].x = lerp(st.pts[i].x, h.pts[i].x, 0.6); st.pts[i].y = lerp(st.pts[i].y, h.pts[i].y, 0.6); }
     const p = st.pts, palm = Math.max(20, dist(p[0], p[9]));
     st.palm = palm;
-    const pd = dist(p[4], p[8]) / palm;
-    // a fist also brings thumb and index together, so a pinch needs the index finger reaching out
-    const reach = dist(p[0], p[8]) / palm;
-    if (!st.pinch && pd < 0.33 && reach > 0.95) { st.pinch = true; st.pinchT = now; }
-    else if (st.pinch && pd > 0.5) st.pinch = false;
     const ix = extended(p, 8, 6), md = extended(p, 12, 10), rg = extended(p, 16, 14), pk = extended(p, 20, 18);
-    st.open = ix && md && rg && pk && !st.pinch && pd > 0.6;
-    st.fist = !ix && !md && !rg && !pk && !st.pinch;
-    st.peace = ix && md && !rg && !pk && !st.pinch && dist(p[8], p[12]) / palm > 0.35;
-    const pen = {x: (p[4].x + p[8].x) / 2, y: (p[4].y + p[8].y) / 2};
-    st.pen = st.pen ? {x: lerp(st.pen.x, pen.x, 0.55), y: lerp(st.pen.y, pen.y, 0.55)} : pen;
+    const pd = dist(p[4], p[8]) / palm, pdm = dist(p[4], p[12]) / palm, im = dist(p[8], p[12]) / palm;
+    // a fist also brings the thumb to the fingers, so a pinch needs the finger reaching out
+    const reach = dist(p[0], p[8]) / palm, reachM = dist(p[0], p[12]) / palm;
+    if (!st.pinch && pd < 0.33 && reach > 0.95) st.pinch = true; else if (st.pinch && pd > 0.5) st.pinch = false;
+    if (!st.pinchM && pdm < 0.33 && reachM > 0.95) st.pinchM = true; else if (st.pinchM && pdm > 0.5) st.pinchM = false;
+    // pen down for the fingers chosen in "Draw with"; a change must hold for two frames
+    let want, pen;
+    if (S.drawMode === 'index') { want = ix && !md && !rg && !pk; pen = p[8]; }
+    else if (S.drawMode === 'two') { want = ix && md && !rg && !pk && im < 0.3; pen = {x: (p[8].x + p[12].x) / 2, y: (p[8].y + p[12].y) / 2}; }
+    else if (S.drawMode === 'middle') { want = st.pinchM && !st.pinch; pen = {x: (p[4].x + p[12].x) / 2, y: (p[4].y + p[12].y) / 2}; }
+    else { want = st.pinch; pen = {x: (p[4].x + p[8].x) / 2, y: (p[4].y + p[8].y) / 2}; }
+    if (want === !!st.down) st.flip = 0;
+    else if ((st.flip = (st.flip || 0) + 1) >= 2) { st.down = want; st.flip = 0; if (want) st.downT = now; }
+    const busy = st.down || st.pinch || st.pinchM;
+    st.open = ix && md && rg && pk && !busy && pd > 0.6;
+    st.fist = !ix && !md && !rg && !pk && !busy;
+    st.peace = ix && md && !rg && !pk && !busy && im > 0.35;
+    st.pen = st.pen ? {x: lerp(st.pen.x, pen.x, 0.55), y: lerp(st.pen.y, pen.y, 0.55)} : {x: pen.x, y: pen.y};
     st.prevTip = st.tip; st.tip = {x: p[8].x, y: p[8].y};
     st.prevPalmC = st.palmC;
     st.palmC = centroid([p[0], p[5], p[9], p[13], p[17]]);
@@ -459,9 +468,9 @@ function processHands(list, now, dt) {
   const hands = [...S.handStates.values()].filter(h => seen.has(h.key));
   S.lastHands = hands;
 
-  const pinching = hands.filter(h => h.pinch && !inDock(h.pen));
-  if (pinching.length >= 2) {
-    const [h1, h2] = pinching;
+  const drawing = hands.filter(h => h.down && !inDock(h.pen));
+  if (drawing.length >= 2) {
+    const [h1, h2] = drawing;
     if (!S.liveString) {
       for (const h of [h1, h2]) { if (h.stroke) { finishStroke(h.stroke); h.stroke = null; } }
       S.liveString = {type: 'string', a: {...h1.pen}, b: {...h2.pen}, color: pickColor(), amp: 0, t0: 0, freq: 0};
@@ -475,18 +484,18 @@ function processHands(list, now, dt) {
       for (const h of hands) h.block = true;
     }
     for (const h of hands) {
-      if (h.pinch && !h.block && !inDock(h.pen)) {
-        if (!h.stroke) { if (now - h.pinchT > 90) h.stroke = newStroke(pickColor(), h.pen.x, h.pen.y); }
+      if (h.down && !h.block && !inDock(h.pen)) {
+        if (!h.stroke) { if (now - h.downT > 90) h.stroke = newStroke(pickColor(), h.pen.x, h.pen.y); }
         else addPoint(h.stroke, h.pen.x, h.pen.y);
       } else {
         if (h.stroke) { finishStroke(h.stroke); h.stroke = null; }
-        if (!h.pinch) h.block = false;
+        if (!h.down) h.block = false;
       }
     }
   }
   for (const h of hands) {
-    // strum strings with the index fingertip
-    if (!h.pinch) checkPluck(h.prevTip, h.tip);
+    // strum strings with the index fingertip (in thumb + middle mode the index is always free)
+    if (!h.down || S.drawMode === 'middle') checkPluck(h.prevTip, h.tip);
     // open hand swipe wipes
     h.wiping = false;
     if (h.open && h.prevPalmC) {
@@ -512,7 +521,7 @@ function drawHands(now) {
       for (let i = 0; i < 21; i++) { ctx.fillStyle = i === 4 || i === 8 ? '#ffffff' : 'rgba(255,92,138,0.85)'; ctx.beginPath(); ctx.arc(p[i].x, p[i].y, i % 4 === 0 && i ? 4.2 : 3.2, 0, Math.PI * 2); ctx.fill(); }
     }
     const col = S.color === 'rainbow' ? RAINBOW[(S.rainbowIx + 1) % RAINBOW.length] : S.color;
-    if (h.pinch) {
+    if (h.down) {
       ctx.globalCompositeOperation = 'lighter';
       ctx.fillStyle = rgba(col, 0.35); ctx.beginPath(); ctx.arc(h.pen.x, h.pen.y, 12, 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = whiten(col, 0.7); ctx.beginPath(); ctx.arc(h.pen.x, h.pen.y, 4, 0, Math.PI * 2); ctx.fill();
@@ -544,6 +553,183 @@ function drawHands(now) {
   }
 }
 
+// ---------- which fingers draw ----------
+const DRAW_MODES = {
+  pinch: {label: 'Pinch', row: ['Pinch and move', 'Draw (thumb on index finger)']},
+  index: {label: 'Index finger', row: ['Point and move', 'Draw with your index finger; open the hand to lift the pen']},
+  two: {label: 'Two fingers', row: ['Two fingers together', 'Draw with index and middle side by side']},
+  middle: {label: 'Thumb + middle', row: ['Thumb on middle finger', 'Draw; your index stays free to strum strings']},
+};
+const MODE_ORDER = ['pinch', 'index', 'two', 'middle'];
+function setDrawMode(m) {
+  if (!DRAW_MODES[m]) return;
+  S.drawMode = m;
+  for (const h of S.handStates.values()) { if (h.stroke) { finishStroke(h.stroke); h.stroke = null; } h.down = false; h.flip = 0; }
+  const row = document.getElementById('modeRow');
+  if (row) { row.children[0].textContent = DRAW_MODES[m].row[0]; row.children[1].textContent = DRAW_MODES[m].row[1]; }
+  const tip = document.getElementById('modeTip'); if (tip) tip.textContent = 'Draw with: ' + DRAW_MODES[m].label;
+  document.querySelectorAll('input[name="drawWith"]').forEach(r => { r.checked = r.value === m; });
+  try { localStorage.setItem('hava.drawMode', m); } catch (e) {}
+}
+
+// ---------- sketch guessing: DoodleNet, trained on Quick, Draw! (345 things) ----------
+const TFJS = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js';
+const G = {model: null, labels: [], loading: null, failed: false, lastRun: 0, sig: '', top: [], align: 'center', line: 14};
+function loadScript(src) { return new Promise((res, rej) => { const el = document.createElement('script'); el.src = src; el.onload = res; el.onerror = () => rej(new Error('Could not load ' + src)); document.head.appendChild(el); }); }
+function loadGuesser() {
+  if (!G.loading) G.loading = (async () => {
+    if (!window.tf) await loadScript(TFJS);
+    const [model, txt] = await Promise.all([tf.loadLayersModel('model/model.json'), fetch('model/class_names.txt').then(r => r.text())]);
+    G.labels = txt.split('\n').map(x => x.trim()).filter(Boolean);
+    tf.tidy(() => model.predict(tf.zeros([1, 28, 28, 1])));
+    G.model = model; G.sig = '';
+  })().catch(e => { G.failed = true; G.loading = null; throw e; });
+  return G.loading;
+}
+const pretty = w => w.replace(/_/g, ' ');
+const article = w => (/^[aeiou]/.test(w) ? 'an ' : 'a ') + pretty(w);
+function guessStrokes() { return S.objects.filter(o => o.type === 'stroke' && !o.arrow && !o.isTwin && o.pts.length > 1); }
+const g256 = document.createElement('canvas'); g256.width = g256.height = 256;
+const g28 = document.createElement('canvas'); g28.width = g28.height = 28;
+function sketchPixels(strokes) {
+  // like the Quick, Draw! bitmaps: white lines on black, the longer side filling the square, 28 x 28
+  const bb = bbox(strokes.flatMap(o => o.pts)), span = Math.max(bb.w, bb.h, 1), k = 230 / span;
+  const ox = G.align === 'center' ? 13 + (230 - bb.w * k) / 2 : 13, oy = G.align === 'center' ? 13 + (230 - bb.h * k) / 2 : 13;
+  const g = g256.getContext('2d');
+  g.fillStyle = '#000'; g.fillRect(0, 0, 256, 256);
+  g.strokeStyle = '#fff'; g.lineWidth = G.line; g.lineCap = 'round'; g.lineJoin = 'round';
+  for (const o of strokes) {
+    g.beginPath();
+    o.pts.forEach((q, i) => { const x = ox + (q.x - bb.x0) * k, y = oy + (q.y - bb.y0) * k; i ? g.lineTo(x, y) : g.moveTo(x, y); });
+    if (o.closed) g.closePath();
+    g.stroke();
+  }
+  const c = g28.getContext('2d'); c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
+  c.fillStyle = '#000'; c.fillRect(0, 0, 28, 28); c.drawImage(g256, 0, 0, 28, 28);
+  const d = c.getImageData(0, 0, 28, 28).data, out = new Float32Array(784);
+  for (let i = 0; i < 784; i++) out[i] = d[i * 4] / 255;
+  return out;
+}
+function classify(strokes) {
+  const px = sketchPixels(strokes);
+  const probs = tf.tidy(() => G.model.predict(tf.tensor4d(px, [1, 28, 28, 1])).dataSync());
+  return [...probs.keys()].sort((a, b) => probs[b] - probs[a]).slice(0, 3).map(i => ({word: G.labels[i], p: probs[i]}));
+}
+function runGuess(now) {
+  if (!G.model || now - G.lastRun < 300 || !(S.guess || GAME.on)) return;
+  const strokes = guessStrokes();
+  const sig = strokes.length + ':' + strokes.reduce((a, o) => a + o.pts.length, 0);
+  if (sig === G.sig) return;
+  G.sig = sig; G.lastRun = now;
+  const pts = strokes.reduce((a, o) => a + o.pts.length, 0);
+  G.top = pts > 12 ? classify(strokes) : [];
+  renderGuess();
+  if (GAME.on) onGameGuess(G.top);
+}
+const guessEl = document.getElementById('guess');
+function renderGuess() {
+  const show = !GAME.on && S.guess && G.top.length > 0;
+  guessEl.hidden = !show;
+  if (!show) return;
+  const [a, b, c] = G.top;
+  guessEl.replaceChildren();
+  const lead = document.createElement('span'); lead.textContent = a.p > 0.5 ? 'This looks like ' : a.p > 0.2 ? 'Maybe ' : 'Hmm, ';
+  const main = document.createElement('b'); main.textContent = article(a.word);
+  const pc = document.createElement('span'); pc.className = 'pc'; pc.textContent = ` ${Math.round(a.p * 100)}%`;
+  const rest = document.createElement('span'); rest.className = 'alt'; rest.textContent = `  or ${pretty(b.word)}, ${pretty(c.word)}`;
+  guessEl.append(lead, main, pc, rest);
+}
+let lastSaid = 0;
+function say(text, force) {
+  if (!S.sound || !('speechSynthesis' in window)) return;
+  const now = performance.now();
+  if (!force && now - lastSaid < 1600) return;
+  lastSaid = now;
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; u.rate = 1.05; u.pitch = 1.1; speechSynthesis.speak(u); } catch (e) {}
+}
+
+// ---------- the guessing game ----------
+const WORDS = ['cat','house','sun','fish','car','star','cloud','umbrella','apple','flower','airplane','clock','eye','key','mountain','snowman','bicycle','guitar','smiley_face','ice_cream','pizza','spider','butterfly','hat','cup','book','bird','envelope','rainbow','ladder','light_bulb','candle','crown','diamond','donut','lollipop','scissors','snake','television','wheel'];
+const GAME = {on: false, round: 0, rounds: 6, word: null, t0: 0, dur: 20000, score: 0, results: [], done: false, timer: 0, lastWord: ''};
+const gameEl = document.getElementById('game'), endEl = document.getElementById('gameEnd');
+function startGame() {
+  ensureAudio();
+  if (GAME.on) return;
+  GAME.on = true; GAME.round = 0; GAME.score = 0; GAME.results = [];
+  GAME.keep = {snap: S.snap, arrows: S.arrows}; S.snap = false; S.arrows = false; syncDock();
+  endEl.hidden = true; gameEl.hidden = false;
+  document.getElementById('gameGuess').textContent = 'Loading the guesser…';
+  loadGuesser().then(() => nextRound()).catch(() => { stopGame(); toast('The guesser could not load. Check the connection.'); });
+}
+function nextRound() {
+  clearTimeout(GAME.timer);
+  if (!GAME.on) return;
+  clearAll(false); G.sig = ''; G.top = [];
+  GAME.round++;
+  if (GAME.round > GAME.rounds) { endGame(); return; }
+  const pool = WORDS.filter(w => !GAME.results.some(r => r.word === w));
+  GAME.word = pool[Math.floor(Math.random() * pool.length)];
+  GAME.t0 = performance.now(); GAME.done = false; GAME.lastWord = '';
+  document.getElementById('gameRound').textContent = `Round ${GAME.round} of ${GAME.rounds}  ·  AI guessed ${GAME.score}`;
+  document.getElementById('gameWord').textContent = article(GAME.word);
+  document.getElementById('gameGuess').textContent = 'Start drawing…';
+  gameEl.classList.remove('won', 'lost');
+  say(`Draw ${article(GAME.word)}`, true);
+}
+function onGameGuess(top) {
+  if (!GAME.on || GAME.done || !top.length) return;
+  const g = document.getElementById('gameGuess');
+  const hit = top[0].word === GAME.word || top.some(t => t.word === GAME.word && t.p > 0.25);
+  if (hit) {
+    GAME.done = true; GAME.score++;
+    GAME.results.push({word: GAME.word, ok: true, s: (performance.now() - GAME.t0) / 1000});
+    g.textContent = `Oh, I know! It's ${article(GAME.word)}!`;
+    gameEl.classList.add('won');
+    say(`Oh, I know! It's ${article(GAME.word)}!`, true);
+    chime(NOTES[10]); setTimeout(() => chime(NOTES[12]), 140);
+    for (let i = 0; i < 40; i++) emit(W / 2 + (Math.random() - 0.5) * W * 0.6, H * 0.3, RAINBOW[i % 5], 1, 260, 1.4);
+    captureShot(true);
+    GAME.timer = setTimeout(nextRound, 2600);
+    return;
+  }
+  const a = top[0];
+  g.textContent = `I see ${pretty(a.word)}… or ${pretty(top[1].word)}?`;
+  if (a.word !== GAME.lastWord && a.p > 0.15) { GAME.lastWord = a.word; say(`${pretty(a.word)}?`); }
+}
+function gameTick(now) {
+  if (!GAME.on || GAME.done || !GAME.word) return;
+  const left = Math.max(0, GAME.dur - (now - GAME.t0));
+  document.getElementById('gameBar').style.setProperty('--left', String(left / GAME.dur));
+  document.getElementById('gameTime').textContent = `${Math.ceil(left / 1000)} s`;
+  if (left <= 0) {
+    GAME.done = true;
+    GAME.results.push({word: GAME.word, ok: false});
+    document.getElementById('gameGuess').textContent = `Sorry, I couldn't guess it. It was ${article(GAME.word)}.`;
+    gameEl.classList.add('lost');
+    say(`Sorry, I couldn't guess it. It was ${article(GAME.word)}.`, true);
+    GAME.timer = setTimeout(nextRound, 2800);
+  }
+}
+function endGame() {
+  GAME.on = false; gameEl.hidden = true; clearTimeout(GAME.timer);
+  S.snap = GAME.keep.snap; S.arrows = GAME.keep.arrows; syncDock();
+  document.getElementById('endScore').textContent = `I guessed ${GAME.score} of ${GAME.rounds}`;
+  const ul = document.getElementById('endList'); ul.replaceChildren();
+  for (const r of GAME.results) {
+    const li = document.createElement('li');
+    const w = document.createElement('span'); w.textContent = pretty(r.word);
+    const v = document.createElement('span'); v.className = r.ok ? 'ok' : 'no'; v.textContent = r.ok ? `guessed in ${r.s.toFixed(1)} s` : 'missed';
+    li.append(w, v); ul.appendChild(li);
+  }
+  endEl.hidden = false;
+  say(GAME.score >= 4 ? `I guessed ${GAME.score} of ${GAME.rounds}. You draw well!` : `I guessed ${GAME.score} of ${GAME.rounds}.`, true);
+}
+function stopGame() { GAME.on = false; clearTimeout(GAME.timer); gameEl.hidden = true; if (GAME.keep) { S.snap = GAME.keep.snap; S.arrows = GAME.keep.arrows; } syncDock(); }
+document.getElementById('gameStop').addEventListener('click', stopGame);
+document.getElementById('gameSkip').addEventListener('click', () => { if (!GAME.on || GAME.done) return; GAME.done = true; GAME.results.push({word: GAME.word, ok: false}); nextRound(); });
+document.getElementById('endAgain').addEventListener('click', () => { endEl.hidden = true; startGame(); });
+document.getElementById('endDone').addEventListener('click', () => { endEl.hidden = true; clearAll(false); });
+
 // ---------- dock (mouse and fingertip) ----------
 const dock = document.getElementById('dock');
 const DWELL_MS = 600;
@@ -552,7 +738,7 @@ function measureDock() { dockRects = [...dock.querySelectorAll('.btn')].map(b =>
 window.addEventListener('resize', measureDock);
 function inDock(p) { if (!p) return false; const r = dock.getBoundingClientRect(); return p.x > r.left - 10 && p.x < r.right + 10 && p.y > r.top - 10 && p.y < r.bottom + 10; }
 function updateDwell(h, now) {
-  const target = (!h.pinch && h.tip) ? dockRects.find(d => h.tip.x >= d.r.left && h.tip.x <= d.r.right && h.tip.y >= d.r.top && h.tip.y <= d.r.bottom) : null;
+  const target = ((!h.down || inDock(h.pen)) && h.tip) ? dockRects.find(d => h.tip.x >= d.r.left && h.tip.x <= d.r.right && h.tip.y >= d.r.top && h.tip.y <= d.r.bottom) : null;
   dockRects.forEach(d => d.el.classList.toggle('air', !!target && d === target));
   if (!target) { h.dwell = null; h.dwellDone = null; return; }
   if (h.dwellDone === target.el) return;
@@ -563,10 +749,15 @@ function activate(b) {
   ensureAudio();
   if (b.dataset.color) { S.color = b.dataset.color; }
   else if (b.dataset.brush) { S.brush = b.dataset.brush; }
-  else if (b.dataset.toggle) { S[b.dataset.toggle] = !S[b.dataset.toggle]; toast(`${b.getAttribute('aria-label')}: ${S[b.dataset.toggle] ? 'on' : 'off'}`); }
+  else if (b.dataset.toggle) {
+    S[b.dataset.toggle] = !S[b.dataset.toggle]; toast(`${b.getAttribute('aria-label')}: ${S[b.dataset.toggle] ? 'on' : 'off'}`);
+    if (b.dataset.toggle === 'guess') { G.sig = ''; renderGuess(); if (S.guess) loadGuesser().catch(() => toast('The guesser could not load. Check the connection.')); }
+  }
   else if (b.dataset.action === 'undo') { const o = S.objects.pop(); if (o && o.isTwin) S.objects.pop(); }
   else if (b.dataset.action === 'clear') { clearAll(true); toast('Cleared'); }
   else if (b.dataset.action === 'capture') captureShot();
+  else if (b.dataset.action === 'drawmode') { const m = MODE_ORDER[(MODE_ORDER.indexOf(S.drawMode) + 1) % MODE_ORDER.length]; setDrawMode(m); toast('Draw with: ' + DRAW_MODES[m].label); }
+  else if (b.dataset.action === 'play') { GAME.on ? stopGame() : startGame(); }
   else if (b.dataset.action === 'camera') { S.camLevel = (S.camLevel + 2) % 3; document.getElementById('camTip').textContent = 'Camera: ' + ['off', 'dim', 'bright'][S.camLevel]; toast('Camera: ' + ['off', 'dim', 'bright'][S.camLevel]); }
   syncDock();
 }
@@ -574,6 +765,7 @@ function syncDock() {
   dock.querySelectorAll('[data-color]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.color === S.color)));
   dock.querySelectorAll('[data-brush]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.brush === S.brush)));
   dock.querySelectorAll('[data-toggle]').forEach(b => b.setAttribute('aria-pressed', String(!!S[b.dataset.toggle])));
+  const pb = dock.querySelector('[data-action="play"]'); if (pb) pb.setAttribute('aria-pressed', String(GAME.on));
 }
 dock.addEventListener('click', e => { const b = e.target.closest('.btn'); if (b) activate(b); });
 syncDock(); measureDock();
@@ -685,19 +877,31 @@ async function startCamera() {
     return;
   }
   S.mode = 'camera'; intro.hidden = true; measureDock();
-  setStatus();
+  setStatus(); afterStart();
 }
 // ?check loads hand tracking without the camera and reports whether it works on this site
 if (new URLSearchParams(location.search).has('check')) {
   introMsg.textContent = 'Checking hand tracking…';
   const t0 = performance.now();
-  loadLandmarker().then(() => {
-    const msg = `Hand tracking loaded in ${Math.round(performance.now() - t0)} ms`;
+  loadLandmarker().then(async () => {
+    const t1 = performance.now();
+    await loadGuesser();
+    const ring = Array.from({length: 41}, (_, i) => ({x: 300 + 100 * Math.cos(i / 20 * Math.PI), y: 300 + 100 * Math.sin(i / 20 * Math.PI)}));
+    const top = classify([{type: 'stroke', pts: ring}]);
+    const msg = `Hand tracking loaded in ${Math.round(t1 - t0)} ms; guesser in ${Math.round(performance.now() - t1)} ms (a ring looks like: ${pretty(top[0].word)})`;
     introMsg.textContent = msg; console.log('HAVA_CHECK ok: ' + msg);
-  }).catch(e => { introMsg.textContent = 'Hand tracking failed: ' + (e && e.message || e); console.log('HAVA_CHECK failed: ' + (e && e.message || e)); });
+  }).catch(e => { introMsg.textContent = 'Check failed: ' + (e && e.message || e); console.log('HAVA_CHECK failed: ' + (e && e.message || e)); });
 }
 document.getElementById('startCam').addEventListener('click', startCamera);
-document.getElementById('startMouse').addEventListener('click', () => { ensureAudio(); S.mode = 'mouse'; intro.hidden = true; measureDock(); setStatus(); });
+document.getElementById('startMouse').addEventListener('click', () => { ensureAudio(); S.mode = 'mouse'; intro.hidden = true; measureDock(); setStatus(); afterStart(); });
+function afterStart() {
+  if (S.guess) loadGuesser().catch(() => {});
+  if (startWithGame) { startWithGame = false; startGame(); }
+}
+let startWithGame = false;
+document.getElementById('startGame').addEventListener('click', () => { startWithGame = true; startCamera(); });
+document.querySelectorAll('input[name="drawWith"]').forEach(r => r.addEventListener('change', () => { if (r.checked) setDrawMode(r.value); }));
+try { const m = localStorage.getItem('hava.drawMode'); if (m) setDrawMode(m); } catch (e) {}
 
 function setStatus() {
   const dot = document.getElementById('dot'), txt = document.getElementById('statusText');
@@ -715,6 +919,7 @@ function setStatus() {
 const SIM = new URLSearchParams(location.search).has('sim');
 window.HAVA = {S, simHands: [], recognize};
 if (SIM) { S.mode = 'sim'; intro.hidden = true; }
+Object.assign(window.HAVA, {G, GAME, loadGuesser, classify, setDrawMode, startGame, stopGame, sketchPixels});
 
 // ---------- main loop ----------
 let last = performance.now(), statusT = 0;
@@ -737,6 +942,7 @@ function frame(now) {
     // no new video frame: keep string plucks and dwell timers alive
   }
   if (mouse.erasing && mouse.pos && mouse.down === false) { /* hold E and move */ }
+  runGuess(now); gameTick(now);
   updateParticles(dt);
   drawBackground();
   for (const o of S.objects) o.type === 'string' ? drawString(o, now, false) : drawStroke(o, now);
