@@ -150,3 +150,51 @@ video { display: none; }
 .game-end .ok { color: #5cf2b3; } .game-end .no { color: #ff5c8a; }
 .game-end .note { color: var(--muted); font-size: 12px; margin: 0 0 14px; }
 .game-end .row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* Second row on the start screen */
+.intro .row.also { margin-top: 10px; align-items: center; }
+.intro .row.also span { font-size: 13px; color: var(--muted); margin-right: 2px; }
+.intro .row.also .cta { padding: 9px 15px; font-size: 13px; }
+
+/* One line naming the instrument, under the bar */
+.wchip { position: fixed; left: 50%; transform: translateX(-50%); top: calc(76px + env(safe-area-inset-top, 0px)); z-index: 4;
+  background: var(--glass); border: 1px solid var(--rim); border-radius: 999px; padding: 8px 16px; font-size: 13px; color: var(--muted);
+  max-width: calc(100vw - 32px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.wchip b { color: var(--saffron); font-weight: 600; }
+
+/* Ring of instruments, opened by holding the rock sign */
+.ring { position: fixed; left: 50%; top: 50%; width: 0; height: 0; z-index: 8; --r: 118px; }
+.ring::before { content: ""; position: absolute; width: calc(2 * var(--r) + 104px); height: calc(2 * var(--r) + 104px); left: calc(-1 * var(--r) - 52px); top: calc(-1 * var(--r) - 52px);
+  border-radius: 50%; background: radial-gradient(circle, rgba(13,17,30,0.35) 30%, rgba(13,17,30,0.78) 70%); border: 1px solid var(--rim);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); animation: ring-in .18s ease-out; }
+.ring-item { position: absolute; left: 0; top: 0; width: 78px; height: 78px; margin: -39px 0 0 -39px; border-radius: 50%;
+  border: 1px solid var(--rim); background: var(--glass); color: var(--text); cursor: pointer; padding: 0;
+  display: grid; place-items: center; align-content: center; gap: 4px; font: 600 11px var(--font-ui);
+  transform: rotate(var(--a)) translateY(calc(-1 * var(--r))) rotate(calc(-1 * var(--a))); transition: background .12s, border-color .12s; }
+.ring-item:nth-of-type(1) { --a: 0deg; } .ring-item:nth-of-type(2) { --a: 60deg; } .ring-item:nth-of-type(3) { --a: 120deg; }
+.ring-item:nth-of-type(4) { --a: 180deg; } .ring-item:nth-of-type(5) { --a: 240deg; } .ring-item:nth-of-type(6) { --a: 300deg; }
+.ring-item svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.ring-item[aria-current="true"] { color: var(--saffron); border-color: rgba(255,181,71,0.5); }
+.ring-item:hover, .ring-item.air { background: rgba(255,181,71,0.18); border-color: var(--saffron); }
+.ring-item:focus-visible { outline: 2px solid var(--saffron); outline-offset: 3px; }
+.ring-hint { position: absolute; transform: translate(-50%, -50%); font-size: 12px; color: var(--muted); white-space: nowrap; pointer-events: none; }
+@keyframes ring-in { from { transform: scale(0.85); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .ring::before { animation: none; } }
+
+/* Bridge game card */
+.bcard { position: fixed; left: 50%; transform: translateX(-50%); top: calc(74px + env(safe-area-inset-top, 0px)); z-index: 5;
+  width: min(540px, calc(100vw - 32px)); background: var(--glass); border: 1px solid var(--rim); border-radius: 16px; padding: 11px 16px 12px;
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.b-top { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.b-title { margin: 3px 0 2px; font-size: 21px; font-weight: 300; letter-spacing: -0.01em; }
+.b-msg { margin: 0 0 8px; font-size: 13px; line-height: 1.45; color: var(--muted); min-height: 19px; }
+.bcard.won { border-color: #5cf2b3; } .bcard.won .b-title { color: #5cf2b3; }
+.bcard.lost { border-color: #ff5c8a; } .bcard.lost .b-title { color: #ff5c8a; }
+.b-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0 0 9px; font-size: 12px; color: var(--muted); }
+.b-legend .t { color: #4de1ff; } .b-legend .c { color: #ff5c8a; }
+.bcard[data-phase="build"] .b-legend { display: none; }
+.b-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+.mini.primary { background: var(--saffron); color: #1a1205; border-color: var(--saffron); }
+.mini.primary:hover { color: #1a1205; }
+.mini.air { border-color: var(--saffron); color: var(--text); }
+.mini.primary.air { box-shadow: 0 0 0 2px rgba(255,255,255,0.6); }

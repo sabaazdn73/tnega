@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Hava: explain an idea by drawing it in the air with your hands. Runs in the browser; the camera picture never leaves your computer.">
+<meta name="description" content="Hava: explain an idea by drawing it in the air with your hands, play air instruments, or build a bridge a truck has to cross. Runs in the browser; the camera picture never leaves your computer.">
 <title>Hava Air Canvas</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -33,6 +33,7 @@
   <button class="btn" data-action="camera" aria-label="Camera brightness"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="13" height="10" rx="2"/><path d="M16 11l5-3v8l-5-3z"/></svg><span class="tip" id="camTip">Camera: bright</span></button>
   <span class="sep"></span>
   <button class="btn" data-action="play" aria-label="Play the guessing game"><svg viewBox="0 0 24 24"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7 10.5v4M5 12.5h4"/><circle cx="15.5" cy="11.5" r="1"/><circle cx="17.5" cy="13.5" r="1"/></svg><span class="tip">Play: can the AI guess?</span></button>
+  <button class="btn" data-action="menu" aria-label="Instruments and the bridge game"><svg viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg><span class="tip">Instruments and bridge (or hold 🤘)</span></button>
   <span class="sep"></span>
   <button class="btn" data-action="undo" aria-label="Undo"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span class="tip">Undo</span></button>
   <button class="btn" data-action="clear" aria-label="Clear all"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg><span class="tip">Clear</span></button>
@@ -42,24 +43,14 @@
 <div class="card status" id="status"><span class="dot" id="dot"></span><span id="statusText"><b>Mouse</b> · drag to draw</span></div>
 
 <aside class="card guide" id="guide">
-  <h2>Gestures <button id="guideToggle" aria-expanded="true">hide</button></h2>
-  <ul>
-    <li id="modeRow"><span>Pinch and move</span><span>Draw (thumb on index finger)</span></li>
-    <li><span>Close a loop</span><span>Snaps to a circle, triangle, box or star</span></li>
-    <li><span>Draw a straight line</span><span>Becomes an arrow, pointing where you ended</span></li>
-    <li><span>Hold a peace sign</span><span>Take a picture of the sketch</span></li>
-    <li><span>Wave an open hand</span><span>Wipe light away</span></li>
-    <li><span>Hold a fist</span><span>Clear everything</span></li>
-    <li><span>Pinch both hands</span><span>Stretch a string, then flick it to play</span></li>
-    <li><span>Light bulb button</span><span>The AI guesses what you are drawing</span></li>
-    <li><span>Hold a fingertip</span><span>Press a button in the bar above</span></li>
-  </ul>
+  <h2><span id="guideTitle">Gestures</span> <button id="guideToggle" aria-expanded="true">hide</button></h2>
+  <ul></ul>
 </aside>
 
 <section class="intro" id="intro" aria-label="Start">
   <div class="panel">
     <h1 class="mark"><span class="en">Hava</span><span class="fa" lang="fa">هوا</span></h1>
-    <p>Explain an idea by drawing it in the air. Sketch boxes, circles and arrows with your fingers while you talk, then hold up a peace sign to keep a picture of it.</p>
+    <p>Explain an idea by drawing it in the air. Sketch boxes, circles and arrows with your fingers while you talk, then hold up a peace sign to keep a picture of it. Hold up 🤘 to switch to air instruments or the bridge game.</p>
     <fieldset class="choose">
       <legend>Draw with</legend>
       <label><input type="radio" name="drawWith" value="pinch" checked><span>Pinch</span></label>
@@ -72,6 +63,7 @@
       <button class="cta" id="startGame">Play: can the AI guess?</button>
       <button class="cta ghost" id="startMouse">Use the mouse</button>
     </div>
+    <div class="row also"><span>Or start with</span><button class="cta" id="startMusic">Air instruments</button><button class="cta" id="startBridge">The bridge game</button></div>
     <div class="msg" id="introMsg" role="status"></div>
     <small>On a video call, share this browser tab and the others see your sketch over your face. Hand tracking runs in this browser with Google's MediaPipe; the camera picture stays on this computer and is never uploaded. Works best in Chrome, with your hands about an arm's length from the camera.</small>
   </div>
@@ -92,6 +84,31 @@
     <ul id="endList"></ul>
     <p class="note">Each round the AI guessed is saved in your pictures, bottom of the screen.</p>
     <div class="row"><button class="cta primary" id="endAgain">Play again</button><button class="cta" id="endDone">Done</button></div>
+  </div>
+</section>
+<div class="wchip" id="wchip" role="status" hidden></div>
+<div class="ring" id="ring" role="menu" aria-label="Instruments and games" hidden>
+  <button class="ring-item" role="menuitem" data-world="draw" data-air data-dwell="450"><svg viewBox="0 0 24 24"><path d="M4 20l4.5-1L19 8.5 15.5 5 5 15.5z"/><path d="M13.5 7l3.5 3.5"/></svg><span>Draw</span></button>
+  <button class="ring-item" role="menuitem" data-world="theremin" data-air data-dwell="450"><svg viewBox="0 0 24 24"><path d="M2 13c1.5-5 3-5 4.5 0s3 5 4.5 0 3-5 4.5 0 3 5 4.5 0"/><path d="M21 3v18"/></svg><span>Theremin</span></button>
+  <button class="ring-item" role="menuitem" data-world="drums" data-air data-dwell="450"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="10" rx="8" ry="3"/><path d="M4 10v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/><path d="M6 3l5 6M18 3l-5 6"/></svg><span>Drums</span></button>
+  <button class="ring-item" role="menuitem" data-world="piano" data-air data-dwell="450"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M9 12v7M15 12v7"/><path d="M7.5 5v7h3V5M13.5 5v7h3V5"/></svg><span>Piano</span></button>
+  <button class="ring-item" role="menuitem" data-world="harp" data-air data-dwell="450"><svg viewBox="0 0 24 24"><path d="M5 21V4c7 0 11 5 14 13"/><path d="M4 21h16"/><path d="M9 5v16M13 7.5v13.5M17 12v9"/></svg><span>Harp</span></button>
+  <button class="ring-item" role="menuitem" data-world="bridge" data-air data-dwell="450"><svg viewBox="0 0 24 24"><path d="M2 14h20"/><path d="M4 14l4-6 4 6 4-6 4 6"/><path d="M4 8h16"/><path d="M3 14v6M21 14v6"/></svg><span>Bridge</span></button>
+  <span class="ring-hint">Point at one</span>
+</div>
+<section class="bcard" id="bcard" hidden aria-label="Bridge game" data-phase="build">
+  <div class="b-top"><span id="bStats">0 beams</span><span id="bBest"></span></div>
+  <p class="b-title" id="bTitle">Build a bridge the truck can cross</p>
+  <p class="b-msg" id="bMsg" role="status">Draw beams between the cliffs.</p>
+  <p class="b-legend" id="bLegend"><span class="t">Blue: pulled (tension)</span><span class="c">Rose: pushed (compression)</span><span>Flat beams are road</span></p>
+  <div class="b-actions">
+    <button class="mini primary" data-air data-b="drive" data-show="build">Drive the truck</button>
+    <button class="mini primary" data-air data-b="drive" data-show="done">Drive again</button>
+    <button class="mini" data-air data-b="edit" data-show="test done">Edit the bridge</button>
+    <button class="mini" data-air data-b="example" data-show="build">Show an example</button>
+    <button class="mini" data-air data-b="undo" data-show="build">Undo</button>
+    <button class="mini" data-air data-b="clear" data-show="build">Clear</button>
+    <button class="mini" data-air data-b="leave" data-show="build test done">Leave</button>
   </div>
 </section>
 <div class="tray" id="tray" aria-label="Pictures"></div>
