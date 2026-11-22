@@ -1666,7 +1666,8 @@ function loadGuesser() {
 }
 const pretty = w => w.replace(/_/g, ' ');
 const article = w => (/^[aeiou]/.test(w) ? 'an ' : 'a ') + pretty(w);
-function guessStrokes() { return S.objects.filter(o => o.type === 'stroke' && !o.arrow && !o.isTwin && o.pts.length > 1); }
+// straight lines count too (they snap to arrows, but a sun's rays or a cat's whiskers are part of the drawing)
+function guessStrokes() { return S.objects.filter(o => o.type === 'stroke' && !o.isTwin && !o.bridge && o.pts.length > 1); }
 const g256 = document.createElement('canvas'); g256.width = g256.height = 256;
 const g28 = document.createElement('canvas'); g28.width = g28.height = 28;
 function sketchPixels(strokes) {
