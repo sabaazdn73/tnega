@@ -26,11 +26,10 @@ def main() -> int:
     # Targets are never built here any more. Selection parses a 37MB
     # leaderboard and spends the same per-IP rate budget this cycle needs, and
     # this now runs inside the Render web process where neither is affordable.
-    # scripts/hl_select_targets.py owns it, on a GitHub runner, on its own IP.
+    # scripts/hl_select_targets.py owns it; run it by hand when the set needs rebuilding.
     targets = store.load_targets(conn)
     if not targets:
-        print("[hl] no target set stored. Run scripts/hl_select_targets.py "
-              "(or the 'Hyperliquid target refresh' workflow) first.", flush=True)
+        print("[hl] no target set stored. Run scripts/hl_select_targets.py first.", flush=True)
         conn.close()
         return 1
     print(f"[hl] using stored target set: {len(targets)} addresses", flush=True)
