@@ -100,6 +100,7 @@ video { display: none; }
 .lightbox img { max-width: 100%; max-height: 78vh; border-radius: 10px; border: 1px solid var(--rim); }
 .lightbox .row { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
 .lightbox a.cta { text-decoration: none; }
+.intro .row.also a.cta { text-decoration: underline; text-underline-offset: 3px; padding-left: 0; }
 .flash { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 9; transition: opacity .35s ease-out; }
 .flash.on { opacity: 0.85; transition: none; }
 

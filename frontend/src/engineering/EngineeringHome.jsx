@@ -282,7 +282,7 @@ export default function EngineeringHome() {
             Also from Tnega: the <a href="/notebook/" className="font-semibold text-fg hover:underline">review notebook</a> for civil
             engineers evaluating frontier models; <a href="/bim/" className="font-semibold text-fg hover:underline">BIM practice</a>, a free structural BIM
             course with an automatic checker; <a href="/hava/" className="font-semibold text-fg hover:underline">Hava</a>, a sketchpad you draw
-            on in the air with your hands while you explain an idea; <a href="/finance" className="font-semibold text-fg hover:underline">Tnega Finance</a>,
+            on in the air with your hands while you explain an idea (<a href="https://www.youtube.com/watch?v=C0T4-EIfYHc" target="_blank" rel="noopener" className="hover:underline">watch the demo</a>); <a href="/finance" className="font-semibold text-fg hover:underline">Tnega Finance</a>,
             tokenized stocks and what each one really costs to buy; and Saba's{' '}
             <a href="/photography/" className="font-semibold text-fg hover:underline">photography portfolio</a>.
           </p>
