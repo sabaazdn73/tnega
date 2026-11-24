@@ -12,7 +12,7 @@
 // providers, so the home page carries none of that code.
 
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, Maximize2, FileSearch, ListChecks, Calculator, Users, ShieldAlert, Linkedin, PlayCircle, BookOpen } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ChevronDown, Maximize2, FileSearch, ListChecks, Calculator, Users, ShieldAlert, Linkedin, PlayCircle, BookOpen } from 'lucide-react';
 import Brand from '../shell/Brand';
 import ThemeToggle from '../theme/ThemeToggle';
 import { updatePageMeta } from '../seoMeta';
@@ -35,6 +35,48 @@ const STEPS = [
   { icon: ShieldAlert, title: 'The engineer decides', text: 'Disagreements, missing inputs and every life-safety finding go to an engineer first. The report cites each clause, its consequence and the fix. The engineer of record signs, not the agent.' },
 ];
 
+// The owner's small apps, grouped in the header (owner, 2026-11-24): mini apps
+// are tools that run in the browser; mini dApps are the ones that work onchain.
+// Cross-Border was the team project of the University of Zurich summer school
+// that Saba led; TrustCycle is her IOTA hackathon app. Both live off this site.
+const APP_GROUPS = [
+  { title: 'Mini apps', links: [
+    { href: '/notebook/', label: 'Review notebook', note: 'evaluating frontier models on civil engineering' },
+    { href: '/bim/', label: 'BIM practice', note: 'a free structural BIM course with an automatic checker' },
+    { href: '/hava/', label: 'Hava', note: 'draw in the air with your hands' },
+  ] },
+  { title: 'Mini dApps', links: [
+    { href: '/finance', label: 'Tnega Finance', note: 'what each tokenized stock really costs to buy' },
+    { href: 'https://f2f-uzh.vercel.app', label: 'Cross-Border', note: 'fiat-to-fiat settlement, a summer school team project', external: true },
+    { href: 'https://trustcycle.tech', label: 'TrustCycle', note: 'recommendation letters on IOTA', external: true },
+  ] },
+];
+
+// One header menu. A <details> element, so it opens with a click or the
+// keyboard without any script; the page closes it again on an outside click.
+function AppMenu({ group }) {
+  return (
+    <details className="app-menu relative">
+      <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer inline-flex items-center gap-1 hover:underline">
+        {group.title} <ChevronDown size={13} aria-hidden="true" />
+      </summary>
+      <div className="absolute right-0 top-full mt-3 z-30 w-[300px] rounded border border-line bg-page shadow-lg p-2 whitespace-normal">
+        {group.links.map((l) => (
+          <a
+            key={l.href}
+            href={l.href}
+            {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}
+            className="block rounded px-3 py-2 hover:bg-inset"
+          >
+            <span className="inline-flex items-center gap-1 font-semibold">{l.label}{l.external && <ArrowUpRight size={12} aria-hidden="true" />}</span>
+            <span className="block text-[12px] font-normal text-muted leading-[17px]">{l.note}</span>
+          </a>
+        ))}
+      </div>
+    </details>
+  );
+}
+
 const WHY = [
   ['The code edition changes the answer', 'Rules that changed between ACI 318-14 and 318-19, or between ASCE 7-10 and 7-16, are applied in their old form from memory.'],
   ['Multi-part clauses are applied in half', 'A provision with several conditions is checked for the first one, and the rest is missed.'],
@@ -43,6 +85,14 @@ const WHY = [
 
 export default function EngineeringHome() {
   useEffect(() => { updatePageMeta({ ...ENGINEERING_COPY, path: '/' }); }, []);
+  // Close an open header menu when the click lands outside it, and keep one open at a time.
+  useEffect(() => {
+    const onClick = (e) => {
+      document.querySelectorAll('details.app-menu[open]').forEach((d) => { if (!d.contains(e.target)) d.removeAttribute('open'); });
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, []);
   const [playWalkthrough, setPlayWalkthrough] = useState(false);
 
   return (
@@ -56,11 +106,8 @@ export default function EngineeringHome() {
               <a href="#town" className="hover:underline">Code town</a>
               <a href="#pipeline" className="hover:underline">Task pipeline</a>
               <a href="#talk" className="hover:underline">Talk</a>
-              <a href="/notebook/" className="inline-flex items-center gap-1 hover:underline">Review notebook <ArrowRight size={13} aria-hidden="true" /></a>
-              <a href="/bim/" className="inline-flex items-center gap-1 hover:underline">BIM practice <ArrowRight size={13} aria-hidden="true" /></a>
-              <a href="/hava/" className="inline-flex items-center gap-1 hover:underline">Hava <ArrowRight size={13} aria-hidden="true" /></a>
+              {APP_GROUPS.map((g) => <AppMenu key={g.title} group={g} />)}
               <a href="/photography/" className="inline-flex items-center gap-1 hover:underline">Photography <ArrowRight size={13} aria-hidden="true" /></a>
-              <a href="/finance" className="inline-flex items-center gap-1 hover:underline">Tnega Finance <ArrowRight size={13} aria-hidden="true" /></a>
             </nav>
             <ThemeToggle />
           </div>
@@ -72,11 +119,18 @@ export default function EngineeringHome() {
             <a href="#town" className="hidden md:inline hover:underline">Code town</a>
             <a href="#pipeline" className="hidden md:inline hover:underline">Task pipeline</a>
             <a href="#talk" className="hidden md:inline hover:underline">Talk</a>
-            <a href="/notebook/" className="hover:underline">Review notebook</a>
-            <a href="/bim/" className="hover:underline">BIM practice</a>
-            <a href="/hava/" className="hover:underline">Hava</a>
             <a href="/photography/" className="hover:underline">Photography</a>
-            <a href="/finance" className="hover:underline">Tnega Finance</a>
+          </div>
+          {/* The same two groups as the desktop menus, written out as labelled rows. */}
+          <div className="max-w-[1180px] mx-auto px-4 sm:px-6 pb-2.5 flex flex-col gap-1.5 text-[13px]">
+            {APP_GROUPS.map((g) => (
+              <p key={g.title} className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted">{g.title}</span>
+                {g.links.map((l) => (
+                  <a key={l.href} href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})} className="font-semibold hover:underline whitespace-nowrap">{l.label}</a>
+                ))}
+              </p>
+            ))}
           </div>
         </nav>
       </header>
@@ -279,11 +333,14 @@ export default function EngineeringHome() {
       <footer className="border-t border-line">
         <div className="max-w-[1180px] mx-auto px-4 sm:px-6 py-8 flex flex-wrap items-center justify-between gap-4 text-[12px] text-muted">
           <p>
-            Also from Tnega: the <a href="/notebook/" className="font-semibold text-fg hover:underline">review notebook</a> for civil
+            Mini apps: the <a href="/notebook/" className="font-semibold text-fg hover:underline">review notebook</a> for civil
             engineers evaluating frontier models; <a href="/bim/" className="font-semibold text-fg hover:underline">BIM practice</a>, a free structural BIM
             course with an automatic checker; <a href="/hava/" className="font-semibold text-fg hover:underline">Hava</a>, a sketchpad you draw
-            on in the air with your hands while you explain an idea (<a href="https://www.youtube.com/watch?v=C0T4-EIfYHc" target="_blank" rel="noopener" className="hover:underline">watch the demo</a>); <a href="/finance" className="font-semibold text-fg hover:underline">Tnega Finance</a>,
-            tokenized stocks and what each one really costs to buy; and Saba's{' '}
+            on in the air with your hands while you explain an idea (<a href="https://www.youtube.com/watch?v=C0T4-EIfYHc" target="_blank" rel="noopener" className="hover:underline">watch the demo</a>).
+            Mini dApps: <a href="/finance" className="font-semibold text-fg hover:underline">Tnega Finance</a>,
+            tokenized stocks and what each one really costs to buy; <a href="https://f2f-uzh.vercel.app" target="_blank" rel="noopener" className="font-semibold text-fg hover:underline">Cross-Border</a>,
+            fiat-to-fiat settlement, a team project from the University of Zurich summer school; <a href="https://trustcycle.tech" target="_blank" rel="noopener" className="font-semibold text-fg hover:underline">TrustCycle</a>,
+            recommendation letters on IOTA. And Saba's{' '}
             <a href="/photography/" className="font-semibold text-fg hover:underline">photography portfolio</a>.
           </p>
           <p>
