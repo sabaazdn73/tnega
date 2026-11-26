@@ -41,12 +41,22 @@ video { display: none; }
 .sw-saffron { color: #ffb547; } .sw-rose { color: #ff5c8a; } .sw-sky { color: #4de1ff; } .sw-lilac { color: #a98bff; } .sw-mint { color: #5cf2b3; }
 .sw-rainbow { color: #fff; background: conic-gradient(#ffb547, #ff5c8a, #a98bff, #4de1ff, #5cf2b3, #ffb547); }
 .btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.btn .tip {
+.btn .tip, .home .tip {
   position: absolute; top: 46px; left: 50%; transform: translateX(-50%); white-space: nowrap;
   font: 400 11px var(--font-ui); color: var(--text); background: var(--glass); border: 1px solid var(--rim);
   padding: 3px 8px; border-radius: 6px; opacity: 0; pointer-events: none; transition: opacity .15s;
 }
-.btn:hover .tip, .btn.air .tip { opacity: 1; }
+.btn:hover .tip, .btn.air .tip, .home:hover .tip, .home:focus-visible .tip { opacity: 1; }
+
+/* Back to the Tnega home page: a plain link, so a hand hovering over the bar never presses it */
+.home { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: var(--muted); position: relative; text-decoration: none; transition: background .15s, color .15s; }
+.home:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+.home:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; }
+.home svg, .intro .back svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.intro .back { display: inline-flex; align-items: center; gap: 4px; margin: 0 0 18px -4px; color: var(--muted); font-size: 13px; text-decoration: none; }
+.intro .back svg { width: 16px; height: 16px; }
+.intro .back:hover { color: var(--text); }
+.intro .back:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; border-radius: 4px; }
 
 /* Corner cards */
 .card {
